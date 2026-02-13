@@ -33,18 +33,24 @@ jobs:
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
         
-        # Show what files exist
-        echo "Files in directory:"
-        ls -la
+        # Show what we have
+        echo "Files before git add:"
+        ls -la *.xlsx
         
-        # Add Excel file
-        if ls *.xlsx 1> /dev/null 2>&1; then
-          git add *.xlsx
-          git commit -m "Update hashtags - $(date +'%Y-%m-%d')" || echo "Nothing to commit"
-          git push || echo "Nothing to push"
+        # Force add Excel files (ignores .gitignore)
+        git add -f tiktok_hashtags_*.xlsx
+        
+        # Show git status
+        echo "Git status:"
+        git status
+        
+        # Commit if there are changes
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
         else
-          echo "ERROR: No Excel files found!"
-          exit 1
+          git commit -m "Update hashtags - $(date +'%Y-%m-%d')"
+          git push
+          echo "✅ File committed and pushed!"
         fi
     
     - name: List generated files
