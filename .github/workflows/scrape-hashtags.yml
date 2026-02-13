@@ -33,16 +33,18 @@ jobs:
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
         
-        # Add all xlsx files (handles any date format)
-        git add -f *.xlsx 2>/dev/null || echo "No xlsx files to add"
+        # Show what files exist
+        echo "Files in directory:"
+        ls -la
         
-        # Check if there are changes to commit
-        if git diff --staged --quiet; then
-          echo "No changes to commit"
+        # Add Excel file
+        if ls *.xlsx 1> /dev/null 2>&1; then
+          git add *.xlsx
+          git commit -m "Update hashtags - $(date +'%Y-%m-%d')" || echo "Nothing to commit"
+          git push || echo "Nothing to push"
         else
-          git commit -m "Update hashtags - $(date +'%Y-%m-%d')"
-          git push
-          echo "Changes committed and pushed"
+          echo "ERROR: No Excel files found!"
+          exit 1
         fi
     
     - name: List generated files
