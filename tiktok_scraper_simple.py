@@ -318,7 +318,7 @@ def main():
         hashtags = create_manual_hashtag_database()
         
         # Save to Excel
-        filename = f"tiktok_hashtags_{datetime.now().strftime('%Y%m%d')}.xlsx"
+        filename = "tiktok_hashtags.xlsx"
         save_to_excel(hashtags, filename)
         
         print(f"\n💡 To get real-time data:")
