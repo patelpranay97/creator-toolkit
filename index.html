@@ -2,637 +2,945 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creator Toolkit - Free Tools for Content Creators</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;600;700&family=Satoshi:wght@400;500;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Creator Toolkit - Pro Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            /* Hyper-Modern App Theme */
+            --bg-root: #000000;
+            --bg-panel: #09090b;
+            --bg-card: #18181b;
+            --bg-hover: #27272a;
+            
+            --border-subtle: #27272a;
+            --border-focus: #52525b;
+            
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            
+            --accent-glow: rgba(139, 92, 246, 0.4);
+            --gradient-brand: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+            --gradient-card: linear-gradient(180deg, rgba(39, 39, 42, 0) 0%, rgba(39, 39, 42, 0.4) 100%);
+            
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            
+            --shadow-float: 0 20px 40px -10px rgba(0,0,0,0.5);
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #FF6B35;
-            --secondary: #F7931E;
-            --dark: #1a1a2e;
-            --darker: #0f0f1e;
-            --light: #f5f5f5;
-            --accent: #00D9FF;
-            --success: #00F5A0;
-            --purple: #9D4EDD;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Satoshi', sans-serif;
-            background: var(--darker);
-            color: var(--light);
-            overflow-x: hidden;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-root);
+            color: var(--text-primary);
+            height: 100dvh;
+            display: flex;
+            overflow: hidden;
+            background-image: radial-gradient(circle at 50% -20%, var(--accent-glow), transparent 40%);
         }
 
-        /* Animated Background */
-        .bg-gradient {
-            position: fixed;
-            top: 0;
-            left: 0;
+        /* --- APP LAYOUT --- */
+        #app-container {
+            display: flex;
             width: 100%;
             height: 100%;
-            z-index: -1;
-            background: linear-gradient(135deg, var(--darker) 0%, #16213e 50%, var(--darker) 100%);
         }
 
-        .bg-gradient::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(255, 107, 53, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(0, 217, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(157, 78, 221, 0.08) 0%, transparent 70%);
-            animation: breathe 8s ease-in-out infinite;
+        /* SIDEBAR (Desktop) */
+        .sidebar {
+            width: 280px;
+            background: rgba(9, 9, 11, 0.6);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            z-index: 50;
         }
 
-        @keyframes breathe {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
-        }
-
-        /* Header */
-        header {
-            padding: 2rem 5%;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(15, 15, 30, 0.8);
-        }
-
-        .logo {
-            font-family: 'Clash Display', sans-serif;
-            font-size: 2rem;
+        .brand {
+            font-size: 1.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        /* Hero Section */
-        .hero {
-            padding: 5rem 5% 3rem;
-            text-align: center;
+        .brand-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient-brand);
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            font-size: 1rem;
         }
 
-        .hero h1 {
-            font-family: 'Clash Display', sans-serif;
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 700;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: slideDown 0.8s ease-out;
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-grow: 1;
         }
 
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 16px;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
         }
 
-        .hero p {
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+            box-shadow: inset 2px 0 0 #a855f7;
+        }
+
+        .nav-icon {
             font-size: 1.25rem;
-            color: rgba(255, 255, 255, 0.7);
-            max-width: 600px;
-            margin: 0 auto 2rem;
-            animation: fadeIn 1s ease-out 0.3s both;
+        }
+
+        /* MAIN CONTENT AREA */
+        .main-content {
+            flex-grow: 1;
+            position: relative;
+            overflow-y: auto;
+            background: var(--bg-panel);
+            border-top-left-radius: var(--radius-lg);
+            border-bottom-left-radius: var(--radius-lg);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+            scroll-behavior: smooth;
+        }
+
+        .view-section {
+            display: none;
+            padding: 40px 60px;
+            max-width: 1000px;
+            margin: 0 auto;
+            animation: fadeIn 0.4s ease-out forwards;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .view-section.active {
+            display: block;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .badge {
-            display: inline-block;
-            padding: 0.5rem 1.5rem;
-            background: rgba(0, 245, 160, 0.1);
-            border: 1px solid var(--success);
-            border-radius: 50px;
-            color: var(--success);
-            font-weight: 600;
+        /* TYPOGRAPHY & HEADERS */
+        .view-header {
+            margin-bottom: 40px;
+        }
+
+        .view-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 8px;
+        }
+
+        .view-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* UI COMPONENTS */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 32px;
+            box-shadow: var(--shadow-float);
+            background-image: var(--gradient-card);
+            margin-bottom: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
             font-size: 0.9rem;
-            margin-bottom: 2rem;
-            animation: pulse 2s ease-in-out infinite;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        select, input, textarea {
+            width: 100%;
+            background: var(--bg-root);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 16px;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+            appearance: none;
+            line-height: 1.5;
         }
 
-        /* Tools Grid */
-        .tools-container {
-            padding: 2rem 5% 5rem;
-            max-width: 1400px;
-            margin: 0 auto;
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9L12 15L18 9' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 48px;
         }
 
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
+        select:focus, textarea:focus {
+            outline: none;
+            border-color: #a855f7;
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
         }
 
-        .tool-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 2rem;
-            backdrop-filter: blur(10px);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: slideUp 0.6s ease-out both;
-        }
-
-        .tool-card:nth-child(1) { animation-delay: 0.1s; }
-        .tool-card:nth-child(2) { animation-delay: 0.2s; }
-        .tool-card:nth-child(3) { animation-delay: 0.3s; }
-        .tool-card:nth-child(4) { animation-delay: 0.4s; }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .tool-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--primary);
-            box-shadow: 0 20px 60px rgba(255, 107, 53, 0.2);
-        }
-
-        .tool-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 15px;
-            display: flex;
+        .btn {
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-            animation: float 3s ease-in-out infinite;
+            gap: 8px;
+            width: 100%;
+            padding: 16px 24px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
         }
 
-        .tool-card:nth-child(1) .tool-icon {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            animation-delay: 0s;
+        .btn-primary {
+            background: var(--text-primary);
+            color: var(--bg-root);
         }
 
-        .tool-card:nth-child(2) .tool-icon {
-            background: linear-gradient(135deg, var(--accent), #0099CC);
-            animation-delay: 0.5s;
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            background: #e4e4e7;
+            box-shadow: 0 10px 20px rgba(255,255,255,0.1);
         }
 
-        .tool-card:nth-child(3) .tool-icon {
-            background: linear-gradient(135deg, var(--purple), #D946EF);
-            animation-delay: 1s;
+        .btn-gradient {
+            background: var(--gradient-brand);
+            color: white;
         }
 
-        .tool-card:nth-child(4) .tool-icon {
-            background: linear-gradient(135deg, var(--success), #00CC88);
-            animation-delay: 1.5s;
+        .btn-gradient:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(236, 72, 153, 0.3);
         }
 
-        .tool-card h3 {
-            font-family: 'Clash Display', sans-serif;
-            font-size: 1.5rem;
-            margin-bottom: 0.75rem;
-            color: #fff;
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-focus);
+            color: var(--text-primary);
+        }
+        
+        .btn-outline:hover:not(:disabled) {
+            background: rgba(255,255,255,0.05);
         }
 
-        .tool-card p {
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-
-        /* Form Elements */
-        .tool-content {
-            display: none;
-            margin-top: 1.5rem;
-            animation: expandIn 0.3s ease-out;
-        }
-
-        .tool-content.active {
-            display: block;
-        }
-
-        @keyframes expandIn {
-            from {
-                opacity: 0;
-                max-height: 0;
-            }
-            to {
-                opacity: 1;
-                max-height: 1000px;
-            }
-        }
-
-        .file-upload {
-            border: 2px dashed rgba(255, 255, 255, 0.3);
-            border-radius: 15px;
-            padding: 2rem;
+        /* Drag & Drop Area */
+        .dropzone {
+            border: 2px dashed var(--border-focus);
+            border-radius: var(--radius-md);
+            padding: 40px 20px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.02);
+            transition: var(--transition);
+            background: rgba(0,0,0,0.2);
         }
 
-        .file-upload:hover {
-            border-color: var(--primary);
-            background: rgba(255, 107, 53, 0.05);
+        .dropzone:hover, .dropzone.dragover {
+            border-color: #a855f7;
+            background: rgba(168, 85, 247, 0.05);
         }
 
-        .file-upload.dragover {
-            border-color: var(--accent);
-            background: rgba(0, 217, 255, 0.1);
+        .drop-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            opacity: 0.7;
         }
 
-        input[type="file"] {
-            display: none;
-        }
-
-        select, input[type="text"], textarea {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            color: #fff;
-            font-family: 'Satoshi', sans-serif;
-            margin: 0.5rem 0;
-            transition: all 0.3s ease;
-        }
-
-        select:focus, input[type="text"]:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        button, .btn {
-            padding: 0.875rem 2rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border: none;
-            border-radius: 12px;
-            color: #fff;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Satoshi', sans-serif;
-            display: inline-block;
-            text-decoration: none;
-        }
-
-        button:hover, .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
-        }
-
-        button:active, .btn:active {
-            transform: translateY(0);
-        }
-
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
-        }
-
-        /* Results */
-        .result {
-            margin-top: 1.5rem;
-            padding: 1.5rem;
-            background: rgba(0, 245, 160, 0.05);
-            border: 1px solid rgba(0, 245, 160, 0.2);
-            border-radius: 12px;
-            display: none;
-        }
-
-        .result.show {
-            display: block;
-            animation: slideIn 0.4s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .hashtag-list {
+        /* Hashtags Grid */
+        .hashtag-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 1rem;
+            gap: 12px;
+            margin-top: 24px;
         }
 
-        .hashtag {
-            padding: 0.5rem 1rem;
-            background: rgba(157, 78, 221, 0.2);
-            border: 1px solid rgba(157, 78, 221, 0.4);
-            border-radius: 20px;
-            font-size: 0.9rem;
+        .tag-pill {
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            color: #d8b4fe;
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 0.95rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: var(--transition);
         }
 
-        .hashtag:hover {
-            background: rgba(157, 78, 221, 0.3);
+        .tag-pill:hover {
+            background: #a855f7;
+            color: white;
             transform: scale(1.05);
         }
 
-        .time-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .time-card {
-            padding: 1rem;
-            background: rgba(0, 217, 255, 0.1);
-            border: 1px solid rgba(0, 217, 255, 0.3);
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .time-card h4 {
-            color: var(--accent);
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        .time-card .time {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #fff;
-        }
-
-        .loading {
+        /* Results / Output States */
+        .output-box {
             display: none;
-            text-align: center;
-            padding: 2rem;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-subtle);
+            animation: fadeIn 0.3s ease;
         }
 
-        .loading.show {
+        .output-box.show {
             display: block;
         }
 
-        .spinner {
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
+        .formatted-output {
+            background: var(--bg-root);
+            padding: 24px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .formatted-output strong {
+            color: #d8b4fe;
+        }
+
+        /* AI Loading Spinner */
+        .ai-spinner-container {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .ai-spinner {
             width: 40px;
             height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
+            border: 3px solid rgba(168, 85, 247, 0.2);
+            border-radius: 50%;
+            border-top-color: #a855f7;
+            animation: spin 1s ease-in-out infinite;
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            to { transform: rotate(360deg); }
         }
 
-        /* Footer */
-        footer {
-            padding: 3rem 5%;
+        /* Time Grid Layout */
+        .times-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .time-slot {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border-subtle);
+            padding: 20px;
+            border-radius: var(--radius-sm);
             text-align: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.5);
         }
 
-        footer a {
-            color: var(--primary);
-            text-decoration: none;
+        .time-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
         }
 
-        /* Responsive */
+        .time-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: var(--text-primary);
+            color: var(--bg-root);
+            padding: 12px 24px;
+            border-radius: 100px;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 9999;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .toast.visible {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* FLEX UTILS */
+        .row {
+            display: flex;
+            gap: 12px;
+        }
+        .row > * { flex: 1; }
+
+        /* --- MOBILE ADAPTATION (Bottom Nav App Feel) --- */
         @media (max-width: 768px) {
-            .tools-grid {
-                grid-template-columns: 1fr;
+            #app-container {
+                flex-direction: column;
+            }
+
+            .main-content {
+                border-radius: 0;
+                box-shadow: none;
+                padding-bottom: 90px; /* Space for bottom nav */
+            }
+
+            .view-section {
+                padding: 32px 20px;
+            }
+
+            .view-title {
+                font-size: 2rem;
+            }
+
+            .sidebar {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                padding: 12px 16px;
+                border-right: none;
+                border-top: 1px solid var(--border-subtle);
+                background: rgba(9, 9, 11, 0.85);
+                z-index: 100;
+                /* iOS safe area support */
+                padding-bottom: calc(12px + env(safe-area-inset-bottom));
+            }
+
+            .brand {
+                display: none; /* Hide logo on mobile bottom nav */
+            }
+
+            .nav-menu {
+                flex-direction: row;
+                justify-content: space-around;
+                width: 100%;
+            }
+
+            .nav-item {
+                flex-direction: column;
+                gap: 4px;
+                padding: 8px;
+                flex: 1;
+                font-size: 0.7rem;
+                text-align: center;
+                border-radius: 12px;
+            }
+
+            .nav-item.active {
+                box-shadow: none;
+                background: transparent;
+                color: #a855f7;
+            }
+
+            .nav-item.active .nav-icon {
+                transform: scale(1.1);
+            }
+
+            .nav-icon {
+                font-size: 1.5rem;
+                transition: var(--transition);
+            }
+
+            .card {
+                padding: 24px 20px;
             }
             
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            header, .hero, .tools-container {
-                padding-left: 1rem;
-                padding-right: 1rem;
+            .row {
+                flex-direction: column;
             }
         }
     </style>
 </head>
 <body>
-    <div class="bg-gradient"></div>
 
-    <header>
-        <div class="logo">⚡ Creator Toolkit</div>
-    </header>
+    <div id="toast" class="toast">Action Successful</div>
 
-    <section class="hero">
-        <div class="badge">100% Free • No Sign Up Required</div>
-        <h1>Everything You Need<br>to Create & Grow</h1>
-        <p>Professional-grade tools for content creators. Convert images, transcribe audio, find trending hashtags, and optimize posting times—all in one place.</p>
-    </section>
-
-    <section class="tools-container">
-        <div class="tools-grid">
-            <!-- Image Converter -->
-            <div class="tool-card">
-                <div class="tool-icon">🖼️</div>
-                <h3>Image Converter</h3>
-                <p>Convert images between formats: JPG, PNG, WebP. Optimize for web and social media.</p>
-                <button onclick="toggleTool('image-converter')" class="btn">Open Tool</button>
-                
-                <div id="image-converter" class="tool-content">
-                    <div class="file-upload" id="image-upload-area">
-                        <p>📁 Drop an image here or click to upload</p>
-                        <input type="file" id="image-input" accept="image/*">
-                    </div>
-                    <select id="image-format">
-                        <option value="png">PNG</option>
-                        <option value="jpeg">JPEG</option>
-                        <option value="webp">WebP</option>
-                    </select>
-                    <button onclick="convertImage()" class="btn">Convert Image</button>
-                    <div id="image-result" class="result">
-                        <canvas id="image-canvas" style="max-width: 100%; border-radius: 10px;"></canvas>
-                        <button onclick="downloadImage()" class="btn" style="margin-top: 1rem;">Download</button>
-                    </div>
+    <div id="app-container">
+        
+        <!-- SIDEBAR / BOTTOM NAV -->
+        <nav class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">⚡</div>
+                Toolkit
+            </div>
+            <div class="nav-menu">
+                <!-- NEW AI STUDIO TAB -->
+                <div class="nav-item active" onclick="switchView('view-ai', this)">
+                    <span class="nav-icon">✨</span>
+                    <span>AI Studio</span>
+                </div>
+                <div class="nav-item" onclick="switchView('view-image', this)">
+                    <span class="nav-icon">🖼️</span>
+                    <span>Converter</span>
+                </div>
+                <div class="nav-item" onclick="switchView('view-audio', this)">
+                    <span class="nav-icon">🎙️</span>
+                    <span>Voice to Text</span>
+                </div>
+                <div class="nav-item" onclick="switchView('view-hashtags', this)">
+                    <span class="nav-icon">#️⃣</span>
+                    <span>Hashtags</span>
+                </div>
+                <div class="nav-item" onclick="switchView('view-times', this)">
+                    <span class="nav-icon">⏱️</span>
+                    <span>Post Times</span>
                 </div>
             </div>
+        </nav>
 
-            <!-- Audio Transcriber -->
-            <div class="tool-card">
-                <div class="tool-icon">🎙️</div>
-                <h3>Audio Transcriber</h3>
-                <p>Record live audio and get instant transcription using your browser. 100% free, no signup required.</p>
-                <button onclick="toggleTool('audio-transcriber')" class="btn">Open Tool</button>
+        <!-- MAIN WORKSPACE -->
+        <main class="main-content">
+            
+            <!-- NEW: AI STUDIO VIEW -->
+            <section id="view-ai" class="view-section active">
+                <div class="view-header">
+                    <h1 class="view-title">✨ AI Studio</h1>
+                    <p class="view-subtitle">Your personal AI creative director. Generate viral ideas, hooks, and full scripts instantly.</p>
+                </div>
                 
-                <div id="audio-transcriber" class="tool-content">
-                    <div style="background: rgba(0, 217, 255, 0.1); border: 1px solid rgba(0, 217, 255, 0.3); border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem;">
-                        <h4 style="color: var(--accent); margin-bottom: 0.5rem; font-size: 0.95rem;">🎤 Live Transcription</h4>
-                        <p style="font-size: 0.85rem; color: rgba(255,255,255,0.7); margin-bottom: 1rem;">Click record and speak - instant, free transcription using your browser.</p>
-                        <button id="record-btn" onclick="toggleRecording()" class="btn">🎤 Start Recording</button>
+                <div class="card">
+                    <div class="input-group">
+                        <label class="input-label">What's your topic or niche?</label>
+                        <textarea id="ai-topic-input" rows="3" placeholder="e.g., A day in the life of a software engineer, 5 tips for healthy eating, or 'Tech Gadgets 2026'"></textarea>
                     </div>
                     
-                    <div style="background: rgba(255, 107, 53, 0.1); border: 1px solid rgba(255, 107, 53, 0.3); border-radius: 12px; padding: 1rem;">
-                        <h4 style="color: var(--primary); margin-bottom: 0.5rem; font-size: 0.95rem;">📁 File Upload Transcription</h4>
-                        <p style="font-size: 0.85rem; color: rgba(255,255,255,0.7); margin-bottom: 0.75rem;">For audio file uploads, we recommend these free tools:</p>
-                        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                            <a href="https://voicetotextonline.com/" target="_blank" class="btn btn-secondary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">Voice to Text Online</a>
-                            <a href="https://synthronai.com/free-audio-transcription-tool/" target="_blank" class="btn btn-secondary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">SynthronAI</a>
+                    <div class="row">
+                        <button id="btn-ai-ideas" class="btn btn-gradient" onclick="generateAIVideo('ideas')">✨ Generate Viral Ideas</button>
+                        <button id="btn-ai-script" class="btn btn-outline" onclick="generateAIVideo('script')">✨ Write Full Script</button>
+                    </div>
+
+                    <div id="ai-loading" class="ai-spinner-container">
+                        <div class="ai-spinner"></div>
+                        <p style="color: var(--text-secondary); font-weight: 500;">Gemini is brainstorming...</p>
+                    </div>
+
+                    <div id="ai-result" class="output-box">
+                        <div class="row" style="margin-bottom: 16px; align-items: center; justify-content: space-between;">
+                            <label class="input-label" style="margin: 0;">AI Output</label>
+                            <button class="btn btn-outline" style="width: auto; padding: 8px 16px; font-size: 0.85rem;" onclick="copyFormattedText('ai-output-text')">Copy to Clipboard</button>
                         </div>
-                        <p style="font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 0.75rem;">💡 These tools don't require signup and work directly in your browser!</p>
+                        <div id="ai-output-text" class="formatted-output"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- IMAGE CONVERTER VIEW -->
+            <section id="view-image" class="view-section">
+                <div class="view-header">
+                    <h1 class="view-title">Image Converter</h1>
+                    <p class="view-subtitle">Format images locally in milliseconds. Zero server uploads.</p>
+                </div>
+                
+                <div class="card">
+                    <div class="dropzone" id="image-upload-area">
+                        <div class="drop-icon">📸</div>
+                        <h3 style="margin-bottom: 8px;">Tap to Upload or Drop File</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">Supports JPG, PNG, WEBP</p>
+                        <input type="file" id="image-input" accept="image/*" style="display: none;">
                     </div>
                     
-                    <div id="transcription-result" class="result" style="margin-top: 1.5rem;">
-                        <h4 style="margin-bottom: 1rem; color: var(--success);">Transcription:</h4>
-                        <textarea id="transcription-text" rows="8" readonly style="background: rgba(0,0,0,0.3);"></textarea>
-                        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-                            <button onclick="copyTranscription()" class="btn">Copy Text</button>
-                            <button onclick="downloadTranscription()" class="btn btn-secondary">Download as TXT</button>
-                            <button onclick="clearTranscription()" class="btn btn-secondary">Clear</button>
+                    <div class="row" style="margin-top: 24px;">
+                        <div class="input-group" style="margin: 0; flex: 2;">
+                            <label class="input-label">Output Format</label>
+                            <select id="image-format">
+                                <option value="png">PNG (Lossless)</option>
+                                <option value="jpeg">JPEG (Compressed)</option>
+                                <option value="webp">WebP (Next-Gen)</option>
+                            </select>
+                        </div>
+                        <div style="flex: 1; display: flex; align-items: flex-end;">
+                            <button class="btn btn-gradient" onclick="convertImage()">Convert</button>
+                        </div>
+                    </div>
+
+                    <div id="image-result" class="output-box">
+                        <label class="input-label">Result Preview</label>
+                        <canvas id="image-canvas" style="max-width: 100%; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); background: var(--bg-root); display: block; margin-bottom: 16px;"></canvas>
+                        <button class="btn btn-primary" onclick="downloadImage()">⬇️ Download Asset</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AUDIO TRANSCRIBER VIEW -->
+            <section id="view-audio" class="view-section">
+                <div class="view-header">
+                    <h1 class="view-title">Voice to Text</h1>
+                    <p class="view-subtitle">Live, on-device transcription for scripting and captions.</p>
+                </div>
+                
+                <div class="card">
+                    <div style="text-align: center; padding: 20px 0 40px;">
+                        <button id="record-btn" onclick="toggleRecording()" class="btn btn-gradient" style="border-radius: 100px; padding: 20px 40px; font-size: 1.1rem; width: auto;">
+                            🎤 Start Listening
+                        </button>
+                    </div>
+
+                    <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 24px;">
+                        <h4 style="color: var(--text-secondary); margin-bottom: 12px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">📁 Have an audio file?</h4>
+                        <div class="row">
+                            <a href="https://voicetotextonline.com/" target="_blank" class="btn btn-outline" style="font-size: 0.85rem; padding: 10px; text-decoration: none;">Voice to Text Online ↗</a>
+                            <a href="https://synthronai.com/free-audio-transcription-tool/" target="_blank" class="btn btn-outline" style="font-size: 0.85rem; padding: 10px; text-decoration: none;">SynthronAI ↗</a>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Live Transcript</label>
+                        <textarea id="transcription-text" rows="8" placeholder="Speech will appear here in real-time..."></textarea>
+                    </div>
+
+                    <div class="row">
+                        <button class="btn btn-primary" onclick="copyTranscription()">Copy Text</button>
+                        <button class="btn btn-outline" onclick="clearTranscription()">Clear Canvas</button>
+                    </div>
+
+                    <!-- NEW: Gemini Enhance Feature -->
+                    <div style="margin-top: 24px; border-top: 1px solid var(--border-subtle); padding-top: 24px;">
+                        <button id="btn-enhance-transcript" class="btn btn-gradient" onclick="enhanceTranscriptWithAI()">✨ Turn into Social Post</button>
+                        
+                        <div id="audio-ai-loading" class="ai-spinner-container">
+                            <div class="ai-spinner"></div>
+                            <p style="color: var(--text-secondary); font-weight: 500;">Gemini is writing your post...</p>
+                        </div>
+
+                        <div id="audio-ai-result" class="output-box">
+                            <div class="row" style="margin-bottom: 16px; align-items: center; justify-content: space-between;">
+                                <label class="input-label" style="margin: 0;">AI Generated Caption</label>
+                                <button class="btn btn-outline" style="width: auto; padding: 8px 16px; font-size: 0.85rem;" onclick="copyFormattedText('audio-ai-output-text')">Copy to Clipboard</button>
+                            </div>
+                            <div id="audio-ai-output-text" class="formatted-output"></div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- Trending Hashtags -->
-            <div class="tool-card">
-                <div class="tool-icon">#️⃣</div>
-                <h3>Trending Hashtags</h3>
-                <p>Generate relevant hashtags for your niche. Boost discoverability across platforms.</p>
-                <button onclick="toggleTool('hashtag-generator')" class="btn">Open Tool</button>
+            <!-- HASHTAGS VIEW -->
+            <section id="view-hashtags" class="view-section">
+                <div class="view-header">
+                    <h1 class="view-title">Trending Tags</h1>
+                    <p class="view-subtitle">Generate high-performing hashtag clusters based on your niche.</p>
+                </div>
                 
-                <div id="hashtag-generator" class="tool-content">
-                    <select id="niche-select">
-                        <option value="fitness">Fitness & Health</option>
-                        <option value="food">Food & Cooking</option>
-                        <option value="fashion">Fashion & Beauty</option>
-                        <option value="tech">Tech & Gaming</option>
-                        <option value="travel">Travel & Adventure</option>
-                        <option value="business">Business & Finance</option>
-                        <option value="art">Art & Design</option>
-                        <option value="music">Music & Entertainment</option>
-                        <option value="lifestyle">Lifestyle & Wellness</option>
-                        <option value="education">Education & Learning</option>
-                    </select>
-                    <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
-                        <button onclick="generateHashtags()" class="btn">Generate Hashtags</button>
-                        <a href="https://ads.tiktok.com/business/creativecenter/inspiration/popular/hashtag/pc/en" target="_blank" class="btn btn-secondary" style="display: flex; align-items: center; gap: 0.5rem; text-decoration: none;">
-                            <span>📊</span> Live TikTok Trends
-                        </a>
-                    </div>
-                    <div id="hashtag-result" class="result">
-                        <h4 style="margin-bottom: 1rem;">Click to copy:</h4>
-                        <div id="hashtag-list" class="hashtag-list"></div>
-                        <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(0, 217, 255, 0.05); border: 1px solid rgba(0, 217, 255, 0.2); border-radius: 10px;">
-                            <p style="font-size: 0.85rem; color: rgba(255,255,255,0.7);">
-                                💡 <strong>Pro Tip:</strong> Use 3-5 niche hashtags + 3-5 broader hashtags for best reach. Check our "Live TikTok Trends" button above to see what's trending right now!
-                            </p>
+                <div class="card">
+                    <div class="row">
+                        <div class="input-group" style="margin: 0; flex: 2;">
+                            <label class="input-label">Content Category</label>
+                            <select id="niche-select">
+                                <option value="fitness">Fitness & Health</option>
+                                <option value="food">Food & Cooking</option>
+                                <option value="fashion">Fashion & Beauty</option>
+                                <option value="tech">Tech & Gaming</option>
+                                <option value="travel">Travel & Adventure</option>
+                                <option value="business">Business & Finance</option>
+                                <option value="art">Art & Design</option>
+                                <option value="music">Music & Entertainment</option>
+                            </select>
+                        </div>
+                        <div style="flex: 1; display: flex; align-items: flex-end;">
+                            <button class="btn btn-gradient" onclick="generateHashtags()">Generate</button>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Peak Posting Times -->
-            <div class="tool-card">
-                <div class="tool-icon">⏰</div>
-                <h3>Peak Posting Times</h3>
-                <p>Find the best times to post based on platform and audience demographics.</p>
-                <button onclick="toggleTool('posting-times')" class="btn">Open Tool</button>
-                
-                <div id="posting-times" class="tool-content">
-                    <select id="platform-select">
-                        <option value="instagram">Instagram</option>
-                        <option value="tiktok">TikTok</option>
-                        <option value="youtube">YouTube</option>
-                        <option value="twitter">X (Twitter)</option>
-                        <option value="linkedin">LinkedIn</option>
-                        <option value="facebook">Facebook</option>
-                    </select>
-                    <select id="timezone-select">
-                        <option value="EST">Eastern (EST)</option>
-                        <option value="CST">Central (CST)</option>
-                        <option value="MST">Mountain (MST)</option>
-                        <option value="PST">Pacific (PST)</option>
-                        <option value="GMT">GMT (London)</option>
-                        <option value="CET">CET (Europe)</option>
-                    </select>
-                    <button onclick="getPostingTimes()" class="btn">Get Best Times</button>
-                    <div id="times-result" class="result">
-                        <div id="times-grid" class="time-grid"></div>
+                    <div id="hashtag-result" class="output-box">
+                        <label class="input-label">Tap tags to copy</label>
+                        <div id="hashtag-list" class="hashtag-container"></div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
+            </section>
 
-    <footer>
-        <p>Made with ❤️ for content creators | 100% Free & Open Source</p>
-        <p style="margin-top: 1rem; font-size: 0.9rem;">All tools run in your browser. No data is stored or transmitted.</p>
-    </footer>
+            <!-- POSTING TIMES VIEW -->
+            <section id="view-times" class="view-section">
+                <div class="view-header">
+                    <h1 class="view-title">Algorithm Times</h1>
+                    <p class="view-subtitle">Statistically optimized posting windows tailored to your timezone.</p>
+                </div>
+                
+                <div class="card">
+                    <div class="row">
+                        <div class="input-group">
+                            <label class="input-label">Platform</label>
+                            <select id="platform-select">
+                                <option value="tiktok">TikTok</option>
+                                <option value="instagram">Instagram Reels</option>
+                                <option value="youtube">YouTube Shorts</option>
+                                <option value="twitter">X (Twitter)</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Your Timezone</label>
+                            <select id="timezone-select">
+                                <option value="EST">Eastern (EST)</option>
+                                <option value="CST">Central (CST)</option>
+                                <option value="MST">Mountain (MST)</option>
+                                <option value="PST">Pacific (PST)</option>
+                                <option value="GMT">GMT (London)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-gradient" onclick="getPostingTimes()">Analyze Best Times</button>
+                    
+                    <div id="times-result" class="output-box">
+                        <label class="input-label">Suggested Windows</label>
+                        <div id="times-grid" class="times-grid"></div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
 
     <script>
-        // Toggle tool visibility
-        function toggleTool(toolId) {
-            const tool = document.getElementById(toolId);
-            tool.classList.toggle('active');
+        // --- Gemini API Setup ---
+        const apiKey = ""; // Global API Key for Gemini
+
+        // Helper function for API calls with Exponential Backoff
+        async function fetchGeminiWithBackoff(prompt) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }]
+            };
+            
+            // Retry delays: 1s, 2s, 4s, 8s, 16s
+            const backoffDelays = [1000, 2000, 4000, 8000, 16000];
+
+            for (let attempt = 0; attempt < 6; attempt++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP Error: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts) {
+                        return data.candidates[0].content.parts[0].text;
+                    } else {
+                        throw new Error("Invalid response structure from Gemini API.");
+                    }
+                } catch (error) {
+                    if (attempt === 5) {
+                        console.error("Gemini API failed after all retries.", error);
+                        throw new Error("Unable to connect to AI server. Please try again later.");
+                    }
+                    // Wait before retrying (exponential backoff)
+                    await new Promise(resolve => setTimeout(resolve, backoffDelays[attempt]));
+                }
+            }
         }
 
-        // Image Converter
+        // Parse markdown bold (**text**) to HTML <strong>text</strong>
+        function parseMarkdownToHTML(text) {
+            // Escape HTML slightly to be safe
+            let html = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            // Parse bold tags
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            // Ensure double line breaks are preserved
+            return html;
+        }
+
+        // --- New AI Studio Features ---
+        async function generateAIVideo(type) {
+            const topicInput = document.getElementById('ai-topic-input').value.trim();
+            if (!topicInput) {
+                showToast("Please enter a topic or niche first!");
+                return;
+            }
+
+            // UI state management
+            document.getElementById('ai-result').classList.remove('show');
+            document.getElementById('ai-loading').style.display = 'flex';
+            document.getElementById('btn-ai-ideas').disabled = true;
+            document.getElementById('btn-ai-script').disabled = true;
+
+            let prompt = "";
+            if (type === 'ideas') {
+                prompt = `Act as an expert social media strategist. Generate 3 highly engaging, viral-worthy short-form video ideas for the following topic/niche: "${topicInput}". 
+                For each idea, provide:
+                1. A catchy Title
+                2. A strong Hook (first 3 seconds)
+                3. A brief description of the visual/audio concept.
+                Keep it concise, actionable, and formatted clearly.`;
+            } else if (type === 'script') {
+                prompt = `Act as a viral content creator. Write a compelling 30-to-60-second short-form video script for TikTok/Reels about: "${topicInput}".
+                Format the response with:
+                - Hook (0-3s)
+                - Body/Value Proposition
+                - Call to Action
+                Include visual cues [in brackets] alongside the spoken audio. Make it punchy and engaging.`;
+            }
+
+            try {
+                const responseText = await fetchGeminiWithBackoff(prompt);
+                
+                // Display result
+                const outputDiv = document.getElementById('ai-output-text');
+                outputDiv.innerHTML = parseMarkdownToHTML(responseText);
+                
+                document.getElementById('ai-loading').style.display = 'none';
+                document.getElementById('ai-result').classList.add('show');
+                
+                // Scroll down to see result
+                setTimeout(() => {
+                    document.getElementById('ai-result').scrollIntoView({ behavior: 'smooth', block: 'end' });
+                }, 100);
+
+            } catch (error) {
+                document.getElementById('ai-loading').style.display = 'none';
+                showToast(error.message);
+            } finally {
+                document.getElementById('btn-ai-ideas').disabled = false;
+                document.getElementById('btn-ai-script').disabled = false;
+            }
+        }
+
+        // --- New Audio Transcript AI Enhancer ---
+        async function enhanceTranscriptWithAI() {
+            const transcript = document.getElementById('transcription-text').value.trim();
+            if (!transcript) {
+                showToast("Record or paste a transcript first!");
+                return;
+            }
+
+            // UI state management
+            document.getElementById('audio-ai-result').classList.remove('show');
+            document.getElementById('audio-ai-loading').style.display = 'flex';
+            document.getElementById('btn-enhance-transcript').disabled = true;
+
+            const prompt = `Turn the following raw, messy spoken transcript into a highly engaging social media caption (for Instagram or TikTok). 
+            Fix any obvious grammar errors from the speech-to-text.
+            Add an attention-grabbing hook at the beginning, relevant emojis throughout, and 5-7 targeted hashtags at the end.
+            
+            Raw Transcript:
+            "${transcript}"`;
+
+            try {
+                const responseText = await fetchGeminiWithBackoff(prompt);
+                
+                // Display result
+                const outputDiv = document.getElementById('audio-ai-output-text');
+                outputDiv.innerHTML = parseMarkdownToHTML(responseText);
+                
+                document.getElementById('audio-ai-loading').style.display = 'none';
+                document.getElementById('audio-ai-result').classList.add('show');
+
+            } catch (error) {
+                document.getElementById('audio-ai-loading').style.display = 'none';
+                showToast(error.message);
+            } finally {
+                document.getElementById('btn-enhance-transcript').disabled = false;
+            }
+        }
+
+
+        // --- UI Navigation Logic ---
+        function switchView(viewId, navElement) {
+            // Update nav styles
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            navElement.classList.add('active');
+
+            // Switch content sections
+            document.querySelectorAll('.view-section').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.getElementById(viewId).classList.add('active');
+            
+            // Scroll to top on mobile when switching views
+            document.querySelector('.main-content').scrollTop = 0;
+        }
+
+        // --- Global Toast & Copy Logic ---
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('visible');
+            setTimeout(() => toast.classList.remove('visible'), 2500);
+        }
+
+        function copyFormattedText(elementId) {
+            const element = document.getElementById(elementId);
+            const textToCopy = element.innerText; // grabs raw text without html tags
+            
+            // Safe copy method compatible with embedded iframes
+            const textarea = document.createElement('textarea');
+            textarea.value = textToCopy;
+            textarea.style.position = 'fixed';
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                showToast('Text Copied!');
+            } catch (err) {
+                showToast('Failed to copy');
+            }
+            
+            document.body.removeChild(textarea);
+        }
+
+        // --- Image Converter Logic ---
         let uploadedImage = null;
         const imageInput = document.getElementById('image-input');
         const imageUploadArea = document.getElementById('image-upload-area');
@@ -652,9 +960,7 @@
             e.preventDefault();
             imageUploadArea.classList.remove('dragover');
             const file = e.dataTransfer.files[0];
-            if (file && file.type.startsWith('image/')) {
-                loadImage(file);
-            }
+            if (file && file.type.startsWith('image/')) loadImage(file);
         });
 
         imageInput.addEventListener('change', (e) => {
@@ -668,7 +974,7 @@
                 const img = new Image();
                 img.onload = () => {
                     uploadedImage = img;
-                    imageUploadArea.innerHTML = `<p style="color: var(--success);">✓ ${file.name} loaded</p>`;
+                    imageUploadArea.innerHTML = `<div class="drop-icon" style="color: #a855f7;">✅</div><h3 style="margin-bottom: 8px;">${file.name}</h3><p style="color: var(--text-secondary); font-size: 0.9rem;">Ready to convert</p>`;
                 };
                 img.src = e.target.result;
             };
@@ -676,256 +982,170 @@
         }
 
         function convertImage() {
-            if (!uploadedImage) {
-                alert('Please upload an image first');
-                return;
-            }
-
+            if (!uploadedImage) return showToast('Upload an image first!');
             const canvas = document.getElementById('image-canvas');
             const ctx = canvas.getContext('2d');
-            const format = document.getElementById('image-format').value;
-
             canvas.width = uploadedImage.width;
             canvas.height = uploadedImage.height;
             ctx.drawImage(uploadedImage, 0, 0);
-
             document.getElementById('image-result').classList.add('show');
+            showToast('Conversion Complete');
         }
 
         function downloadImage() {
             const canvas = document.getElementById('image-canvas');
             const format = document.getElementById('image-format').value;
-            const mimeType = format === 'jpeg' ? 'image/jpeg' : `image/${format}`;
-            
             canvas.toBlob((blob) => {
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `converted-image.${format}`;
+                a.download = `converted.${format}`;
                 a.click();
-                URL.revokeObjectURL(url);
-            }, mimeType, 0.95);
+            }, `image/${format}`);
         }
 
-        // Audio Transcriber with Web Speech API (Browser Built-in)
+        // --- Audio Transcriber Logic ---
         let recognition = null;
         let isRecording = false;
 
         function toggleRecording() {
             if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                alert('Speech recognition is not supported in your browser. Please use Chrome, Edge, or Safari.');
-                return;
+                return showToast('Voice API not supported here.');
             }
-
-            if (!isRecording) {
-                startRecording();
-            } else {
-                stopRecording();
-            }
+            if (!isRecording) startRecording();
+            else stopRecording();
         }
 
         function startRecording() {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            recognition = new SpeechRecognition();
+            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRec();
             recognition.continuous = true;
             recognition.interimResults = true;
-            recognition.lang = 'en-US';
-
-            const resultDiv = document.getElementById('transcription-result');
-            const textarea = document.getElementById('transcription-text');
             
-            resultDiv.classList.add('show');
-            textarea.value = '';
-
-            let finalTranscript = '';
+            const textarea = document.getElementById('transcription-text');
+            let finalTranscript = textarea.value ? textarea.value + " " : "";
 
             recognition.onresult = (event) => {
-                let interimTranscript = '';
-                
+                let interim = '';
                 for (let i = event.resultIndex; i < event.results.length; i++) {
-                    const transcript = event.results[i][0].transcript;
-                    if (event.results[i].isFinal) {
-                        finalTranscript += transcript + ' ';
-                    } else {
-                        interimTranscript += transcript;
-                    }
+                    if (event.results[i].isFinal) finalTranscript += event.results[i][0].transcript + ' ';
+                    else interim += event.results[i][0].transcript;
                 }
-                
-                textarea.value = finalTranscript + interimTranscript;
+                textarea.value = finalTranscript + interim;
             };
 
-            recognition.onerror = (event) => {
-                console.error('Speech recognition error:', event.error);
-                if (event.error === 'no-speech') {
-                    console.log('No speech detected. Keep talking...');
-                } else {
-                    alert('Error: ' + event.error);
-                    stopRecording();
-                }
-            };
-
-            recognition.onend = () => {
-                if (isRecording) {
-                    // Restart if still recording (handles automatic stops)
-                    recognition.start();
-                }
-            };
-
+            recognition.onend = () => { if (isRecording) recognition.start(); };
             recognition.start();
             isRecording = true;
-            document.getElementById('record-btn').textContent = '⏹️ Stop Recording';
-            document.getElementById('record-btn').style.background = 'linear-gradient(135deg, #ff4444, #cc0000)';
+            
+            const btn = document.getElementById('record-btn');
+            btn.innerHTML = '⏹️ Stop & Save';
+            btn.style.background = '#ef4444';
+            btn.style.boxShadow = '0 0 20px rgba(239, 68, 68, 0.4)';
         }
 
         function stopRecording() {
             if (recognition) {
                 isRecording = false;
                 recognition.stop();
-                document.getElementById('record-btn').textContent = '🎤 Start Recording';
-                document.getElementById('record-btn').style.background = '';
+                const btn = document.getElementById('record-btn');
+                btn.innerHTML = '🎤 Start Listening';
+                btn.style.background = 'var(--gradient-brand)';
+                btn.style.boxShadow = 'none';
+                showToast('Recording Stopped');
             }
         }
 
         function copyTranscription() {
             const text = document.getElementById('transcription-text').value;
-            if (!text) {
-                alert('No transcription to copy!');
-                return;
+            if(!text) return showToast('Nothing to copy');
+            
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                showToast('Text Copied!');
+            } catch (err) {
+                showToast('Failed to copy');
             }
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Transcription copied to clipboard!');
-            });
-        }
-
-        function downloadTranscription() {
-            const text = document.getElementById('transcription-text').value;
-            if (!text) {
-                alert('No transcription to download!');
-                return;
-            }
-            const blob = new Blob([text], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'transcription.txt';
-            a.click();
-            URL.revokeObjectURL(url);
+            
+            document.body.removeChild(textarea);
         }
 
         function clearTranscription() {
             document.getElementById('transcription-text').value = '';
+            document.getElementById('audio-ai-result').classList.remove('show');
         }
 
-        // Hashtag Generator
-        const hashtagDatabase = {
-            fitness: ['#fitness', '#workout', '#gym', '#fitfam', '#fitspo', '#training', '#exercise', '#health', '#motivation', '#bodybuilding', '#fitnessmotivation', '#gymlife', '#healthy', '#muscle', '#gains', '#fitlife', '#strengthtraining', '#cardio', '#wellness', '#lifestyle'],
-            food: ['#food', '#foodie', '#foodporn', '#instafood', '#delicious', '#yummy', '#cooking', '#foodphotography', '#homemade', '#foodblogger', '#dinner', '#lunch', '#tasty', '#foodlover', '#recipe', '#chef', '#foodstagram', '#healthy', '#breakfast', '#dessert'],
-            fashion: ['#fashion', '#style', '#ootd', '#fashionblogger', '#fashionista', '#outfit', '#instafashion', '#beauty', '#model', '#stylish', '#fashionstyle', '#fashionable', '#clothes', '#shopping', '#streetstyle', '#mensfashion', '#womensfashion', '#trend', '#fashionweek', '#designer'],
-            tech: ['#tech', '#technology', '#gaming', '#gamer', '#pc', '#innovation', '#gadgets', '#ai', '#coding', '#programming', '#developer', '#software', '#techie', '#geek', '#startup', '#mobile', '#computer', '#electronics', '#digital', '#future'],
-            travel: ['#travel', '#wanderlust', '#adventure', '#explore', '#travelgram', '#instatravel', '#travelphotography', '#vacation', '#trip', '#traveling', '#nature', '#photography', '#photooftheday', '#beautiful', '#landscape', '#beach', '#travelblogger', '#instagood', '#summer', '#mountains'],
-            business: ['#business', '#entrepreneur', '#marketing', '#success', '#motivation', '#startup', '#businessowner', '#entrepreneurship', '#smallbusiness', '#hustle', '#money', '#finance', '#leadership', '#investment', '#branding', '#sales', '#digitalmarketing', '#innovation', '#mindset', '#growth'],
-            art: ['#art', '#artist', '#artwork', '#drawing', '#illustration', '#design', '#creative', '#painting', '#sketch', '#instaart', '#artoftheday', '#artistsoninstagram', '#digitalart', '#artistic', '#graphics', '#creativity', '#arte', '#contemporaryart', '#modernart', '#fineart'],
-            music: ['#music', '#musician', '#song', '#sing', '#singer', '#guitar', '#producer', '#dj', '#beats', '#hiphop', '#rap', '#rock', '#pop', '#newmusic', '#musicproducer', '#studio', '#artist', '#band', '#concert', '#livemusic'],
-            lifestyle: ['#lifestyle', '#life', '#instagood', '#motivation', '#inspiration', '#love', '#happy', '#goals', '#positivevibes', '#mindset', '#selfcare', '#wellness', '#healthylifestyle', '#goodvibes', '#blessed', '#gratitude', '#photooftheday', '#dailymotivation', '#selflove', '#balance'],
-            education: ['#education', '#learning', '#school', '#student', '#study', '#teacher', '#knowledge', '#students', '#university', '#college', '#elearning', '#teaching', '#onlinelearning', '#studygram', '#educational', '#science', '#facts', '#learn', '#studytime', '#edtech']
+        // --- Hashtag Logic ---
+        const hashtagDb = {
+            fitness: ['#fitness', '#workout', '#gym', '#fitfam', '#fitspo', '#training', '#exercise', '#health', '#motivation', '#bodybuilding', '#fitnessmotivation', '#gymlife', '#healthy'],
+            food: ['#food', '#foodie', '#foodporn', '#instafood', '#delicious', '#yummy', '#cooking', '#foodphotography', '#homemade', '#foodblogger', '#dinner', '#lunch', '#tasty'],
+            fashion: ['#fashion', '#style', '#ootd', '#fashionblogger', '#fashionista', '#outfit', '#instafashion', '#beauty', '#model', '#stylish', '#fashionstyle'],
+            tech: ['#tech', '#technology', '#gaming', '#gamer', '#pc', '#innovation', '#gadgets', '#ai', '#coding', '#programming', '#developer', '#software'],
+            travel: ['#travel', '#wanderlust', '#adventure', '#explore', '#travelgram', '#instatravel', '#travelphotography', '#vacation', '#trip', '#traveling', '#nature'],
+            business: ['#business', '#entrepreneur', '#marketing', '#success', '#motivation', '#startup', '#businessowner', '#entrepreneurship', '#smallbusiness', '#hustle', '#money'],
+            art: ['#art', '#artist', '#artwork', '#drawing', '#illustration', '#design', '#creative', '#painting', '#sketch', '#instaart', '#artoftheday'],
+            music: ['#music', '#musician', '#song', '#sing', '#singer', '#guitar', '#producer', '#dj', '#beats', '#hiphop', '#rap', '#rock', '#pop']
         };
 
         function generateHashtags() {
             const niche = document.getElementById('niche-select').value;
-            const hashtags = hashtagDatabase[niche];
-            const selectedHashtags = hashtags.sort(() => 0.5 - Math.random()).slice(0, 15);
+            const hashtags = hashtagDb[niche];
+            const selected = hashtags.sort(() => 0.5 - Math.random()).slice(0, 12);
             
-            const hashtagList = document.getElementById('hashtag-list');
-            hashtagList.innerHTML = '';
+            const list = document.getElementById('hashtag-list');
+            list.innerHTML = '';
             
-            selectedHashtags.forEach(tag => {
-                const span = document.createElement('span');
-                span.className = 'hashtag';
-                span.textContent = tag;
-                span.onclick = () => {
-                    navigator.clipboard.writeText(tag);
-                    span.style.background = 'rgba(0, 245, 160, 0.3)';
-                    setTimeout(() => {
-                        span.style.background = '';
-                    }, 500);
+            selected.forEach(tag => {
+                const pill = document.createElement('div');
+                pill.className = 'tag-pill';
+                pill.textContent = tag;
+                pill.onclick = () => {
+                    const textarea = document.createElement('textarea');
+                    textarea.value = tag;
+                    textarea.style.position = 'fixed';
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    try {
+                        document.execCommand('copy');
+                        showToast('Copied: ' + tag);
+                    } catch (err) {}
+                    document.body.removeChild(textarea);
                 };
-                hashtagList.appendChild(span);
+                list.appendChild(pill);
             });
-            
             document.getElementById('hashtag-result').classList.add('show');
         }
 
-        // Posting Times
-        const postingTimesData = {
-            instagram: {
-                EST: ['9:00 AM', '11:00 AM', '2:00 PM', '5:00 PM'],
-                CST: ['8:00 AM', '10:00 AM', '1:00 PM', '4:00 PM'],
-                MST: ['7:00 AM', '9:00 AM', '12:00 PM', '3:00 PM'],
-                PST: ['6:00 AM', '8:00 AM', '11:00 AM', '2:00 PM'],
-                GMT: ['2:00 PM', '4:00 PM', '7:00 PM', '10:00 PM'],
-                CET: ['3:00 PM', '5:00 PM', '8:00 PM', '11:00 PM']
-            },
-            tiktok: {
-                EST: ['6:00 AM', '10:00 AM', '7:00 PM', '9:00 PM'],
-                CST: ['5:00 AM', '9:00 AM', '6:00 PM', '8:00 PM'],
-                MST: ['4:00 AM', '8:00 AM', '5:00 PM', '7:00 PM'],
-                PST: ['3:00 AM', '7:00 AM', '4:00 PM', '6:00 PM'],
-                GMT: ['11:00 AM', '3:00 PM', '12:00 AM', '2:00 AM'],
-                CET: ['12:00 PM', '4:00 PM', '1:00 AM', '3:00 AM']
-            },
-            youtube: {
-                EST: ['12:00 PM', '3:00 PM', '6:00 PM', '9:00 PM'],
-                CST: ['11:00 AM', '2:00 PM', '5:00 PM', '8:00 PM'],
-                MST: ['10:00 AM', '1:00 PM', '4:00 PM', '7:00 PM'],
-                PST: ['9:00 AM', '12:00 PM', '3:00 PM', '6:00 PM'],
-                GMT: ['5:00 PM', '8:00 PM', '11:00 PM', '2:00 AM'],
-                CET: ['6:00 PM', '9:00 PM', '12:00 AM', '3:00 AM']
-            },
-            twitter: {
-                EST: ['8:00 AM', '12:00 PM', '3:00 PM', '6:00 PM'],
-                CST: ['7:00 AM', '11:00 AM', '2:00 PM', '5:00 PM'],
-                MST: ['6:00 AM', '10:00 AM', '1:00 PM', '4:00 PM'],
-                PST: ['5:00 AM', '9:00 AM', '12:00 PM', '3:00 PM'],
-                GMT: ['1:00 PM', '5:00 PM', '8:00 PM', '11:00 PM'],
-                CET: ['2:00 PM', '6:00 PM', '9:00 PM', '12:00 AM']
-            },
-            linkedin: {
-                EST: ['7:00 AM', '12:00 PM', '5:00 PM'],
-                CST: ['6:00 AM', '11:00 AM', '4:00 PM'],
-                MST: ['5:00 AM', '10:00 AM', '3:00 PM'],
-                PST: ['4:00 AM', '9:00 AM', '2:00 PM'],
-                GMT: ['12:00 PM', '5:00 PM', '10:00 PM'],
-                CET: ['1:00 PM', '6:00 PM', '11:00 PM']
-            },
-            facebook: {
-                EST: ['9:00 AM', '1:00 PM', '3:00 PM'],
-                CST: ['8:00 AM', '12:00 PM', '2:00 PM'],
-                MST: ['7:00 AM', '11:00 AM', '1:00 PM'],
-                PST: ['6:00 AM', '10:00 AM', '12:00 PM'],
-                GMT: ['2:00 PM', '6:00 PM', '8:00 PM'],
-                CET: ['3:00 PM', '7:00 PM', '9:00 PM']
-            }
+        // --- Times Logic ---
+        const timesDb = {
+            instagram: { EST: ['9:00 AM', '2:00 PM', '5:00 PM'], CST: ['8:00 AM', '1:00 PM', '4:00 PM'], MST: ['7:00 AM', '12:00 PM', '3:00 PM'], PST: ['6:00 AM', '11:00 AM', '2:00 PM'], GMT: ['2:00 PM', '7:00 PM', '10:00 PM'] },
+            tiktok: { EST: ['6:00 AM', '7:00 PM', '9:00 PM'], CST: ['5:00 AM', '6:00 PM', '8:00 PM'], MST: ['4:00 AM', '5:00 PM', '7:00 PM'], PST: ['3:00 AM', '4:00 PM', '6:00 PM'], GMT: ['11:00 AM', '12:00 AM', '2:00 AM'] },
+            youtube: { EST: ['3:00 PM', '6:00 PM', '9:00 PM'], CST: ['2:00 PM', '5:00 PM', '8:00 PM'], MST: ['1:00 PM', '4:00 PM', '7:00 PM'], PST: ['12:00 PM', '3:00 PM', '6:00 PM'], GMT: ['8:00 PM', '11:00 PM', '2:00 AM'] },
+            twitter: { EST: ['8:00 AM', '12:00 PM', '3:00 PM'], CST: ['7:00 AM', '11:00 AM', '2:00 PM'], MST: ['6:00 AM', '10:00 AM', '1:00 PM'], PST: ['5:00 AM', '9:00 AM', '12:00 PM'], GMT: ['1:00 PM', '5:00 PM', '8:00 PM'] }
         };
 
         function getPostingTimes() {
             const platform = document.getElementById('platform-select').value;
-            const timezone = document.getElementById('timezone-select').value;
-            const times = postingTimesData[platform][timezone];
+            const tz = document.getElementById('timezone-select').value;
+            const times = timesDb[platform][tz];
             
-            const timesGrid = document.getElementById('times-grid');
-            timesGrid.innerHTML = '';
+            const grid = document.getElementById('times-grid');
+            grid.innerHTML = '';
             
-            const labels = ['Best Time', '2nd Best', '3rd Best', 'Alternative'];
-            times.forEach((time, index) => {
-                const card = document.createElement('div');
-                card.className = 'time-card';
-                card.innerHTML = `
-                    <h4>${labels[index] || 'Good Time'}</h4>
-                    <div class="time">${time}</div>
-                `;
-                timesGrid.appendChild(card);
+            const labels = ['Prime Peak', 'Secondary', 'Night Owl'];
+            times.forEach((time, i) => {
+                grid.innerHTML += `
+                    <div class="time-slot">
+                        <div class="time-label">${labels[i]}</div>
+                        <div class="time-value">${time}</div>
+                    </div>`;
             });
-            
             document.getElementById('times-result').classList.add('show');
         }
     </script>
