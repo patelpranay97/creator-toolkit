@@ -750,15 +750,12 @@
 
     <script>
         // --- Gemini API Setup ---
-        const apiKey = "AIzaSyBU8AjoSqgxHbBOk79ikMX37VHDZBtwm88"; // Global API Key for Gemini
+        // Your personal API key for hosting on GitHub Pages / live web
+        const apiKey = "AIzaSyBU8AjoSqgxHbBOk79ikMX37VHDZBtwm88"; 
 
         // Helper function for API calls with Exponential Backoff
         async function fetchGeminiWithBackoff(prompt) {
-            if (!apiKey || apiKey.trim() === "") {
-                throw new Error("API Key is missing. Please add your Gemini API key in the code.");
-            }
-
-            // Using the correct gemini-2.0-flash model from your Google AI Studio settings
+            // Pointing to the public gemini-2.0-flash model for live web hosting
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{ parts: [{ text: prompt }] }]
@@ -776,7 +773,6 @@
                     });
                     
                     if (!response.ok) {
-                        // Capture the actual error from Google's servers for easier debugging
                         const errorText = await response.text();
                         throw new Error(`API Error ${response.status}: ${errorText}`);
                     }
