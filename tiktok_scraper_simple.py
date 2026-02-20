@@ -240,6 +240,40 @@ def create_manual_hashtag_database():
     
     return all_hashtags
 
+def save_to_json(hashtags_data, filename="hashtags.json"):
+    """Format and save hashtag data to JSON for the website"""
+    if not hashtags_data:
+        return
+        
+    # Map the scraper industries to the keys expected by index.html
+    industry_mapping = {
+        "Fitness & Health": "fitness",
+        "Food & Beverage": "food",
+        "Beauty & Personal Care": "lifestyle", # Mapping beauty to lifestyle for the site
+        "Fashion": "fashion",
+        "Tech & Gaming": "tech",
+        "Travel": "travel",
+        "Business & Finance": "business",
+        "All": "general"
+    }
+    
+    website_data = {}
+    for item in hashtags_data:
+        original_industry = item['industry']
+        tag = item['hashtag']
+        
+        # Get the mapped key, fallback to a lowercase version of the industry name
+        key = industry_mapping.get(original_industry, original_industry.lower().replace(' ', '_'))
+        
+        if key not in website_data:
+            website_data[key] = []
+        website_data[key].append(tag)
+        
+    with open(filename, 'w', encoding='utf-8') as f:
+        json.dump(website_data, f, indent=4)
+        
+    print(f"✅ JSON data saved to {filename} for the website!")
+
 def save_to_excel(hashtags_data, filename="tiktok_hashtags.xlsx"):
     """Save hashtag data to a nice formatted Excel file"""
     
@@ -316,6 +350,9 @@ def main():
         
         # Fallback: Use curated data
         hashtags = create_manual_hashtag_database()
+        
+        # Save to JSON for the website
+        save_to_json(hashtags, "hashtags.json")
         
         # Save to Excel
         filename = "tiktok_hashtags.xlsx"
