@@ -338,31 +338,18 @@ def main():
     print(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 60)
     
-    # Method 1: Try API (will likely fail without proper auth)
-    print("\n🔍 Attempting to scrape via API...")
-    api_data = get_tiktok_hashtags_api()
+    # Always use curated data (most reliable)
+    print("\nUsing curated hashtag database...")
+    hashtags = create_manual_hashtag_database()
     
-    if api_data:
-        print("✅ API method successful!")
-        # Process API data here
-    else:
-        print("⚠️  API method failed. Using manual curated database...")
-        
-        # Fallback: Use curated data
-        hashtags = create_manual_hashtag_database()
-        
-        # Save to JSON for the website
-        save_to_json(hashtags, "hashtags.json")
-        
-        # Save to Excel
-        filename = "tiktok_hashtags.xlsx"
-        save_to_excel(hashtags, filename)
-        
-        print(f"\n💡 To get real-time data:")
-        print("   1. Visit https://ads.tiktok.com/business/creativecenter/inspiration/popular/hashtag/pc/en")
-        print("   2. Open browser DevTools (F12) → Network tab")
-        print("   3. Look for API calls containing 'hashtag'")
-        print("   4. Copy the API endpoint and update this script")
+    # Save to JSON for the website
+    save_to_json(hashtags, "hashtags.json")
+    
+    # Save to Excel with TODAY'S date
+    filename = f"tiktok_hashtags_{datetime.now().strftime('%Y%m%d')}.xlsx"
+    save_to_excel(hashtags, filename)
+    
+    print(f"\n✅ All files created successfully!")
 
 if __name__ == "__main__":
     main()
