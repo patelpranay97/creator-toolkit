@@ -758,8 +758,8 @@
                 throw new Error("API Key is missing. Please add your Gemini API key in the code.");
             }
 
-            // Updated to use the widely accessible public gemini-1.5-flash model
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+            // Using the correct gemini-2.0-flash model from your Google AI Studio settings
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{ parts: [{ text: prompt }] }]
             };
@@ -790,7 +790,7 @@
                 } catch (error) {
                     if (attempt === 5) {
                         console.error("Gemini API failed after all retries.", error);
-                        throw new Error("Unable to connect to AI server. Please check your API key or try again later.");
+                        throw new Error("Unable to connect to AI server. Please try again later.");
                     }
                     // Wait before retrying (exponential backoff)
                     await new Promise(resolve => setTimeout(resolve, backoffDelays[attempt]));
