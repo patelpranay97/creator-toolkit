@@ -32,19 +32,19 @@ jobs:
         python tiktok_scraper_simple.py
         echo "✅ Scraper completed"
     
-    - name: Verify file was created
+    - name: Verify files were created
       run: |
-        echo "Looking for Excel files..."
-        ls -lah *.xlsx || echo "❌ No Excel files found!"
+        echo "Looking for generated files..."
+        ls -lah *.xlsx *.json || echo "❌ Missing expected files!"
     
-    - name: Commit and push updated Excel file
+    - name: Commit and push updated files
       run: |
         # Configure git
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         
-        # Add the file explicitly
-        git add -f *.xlsx
+        # Add BOTH the Excel and JSON files explicitly
+        git add -f *.xlsx *.json
         
         # Show what's staged
         echo "Staged files:"
@@ -53,8 +53,8 @@ jobs:
         # Commit and push
         git commit -m "Update hashtags - $(date +'%Y-%m-%d')" && git push || echo "No changes or push failed"
     
-    - name: Verify file in repo
+    - name: Verify files in repo
       run: |
         git pull
         echo "Files in repo after push:"
-        ls -lah *.xlsx || echo "Still no files!"
+        ls -lah *.xlsx *.json || echo "Still no files!"
