@@ -6,7 +6,7 @@ on:
   workflow_dispatch:  # Allows manual triggering
 
 permissions:
-  contents: write  # IMPORTANT: Allows pushing to repo
+  contents: write
 
 jobs:
   scrape-and-update:
@@ -15,8 +15,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -30,31 +28,26 @@ jobs:
     - name: Run hashtag scraper
       run: |
         python tiktok_scraper_simple.py
-        echo "✅ Scraper completed"
     
     - name: Verify files were created
       run: |
-        echo "Looking for generated files..."
-        ls -lah *.xlsx *.json || echo "❌ Missing expected files!"
+        echo "Files created:"
+        ls -lah *.xlsx *.json 2>/dev/null || echo "No files found"
     
     - name: Commit and push updated files
       run: |
-        # Configure git
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         
-        # Add BOTH the Excel and JSON files explicitly
-        git add -f *.xlsx *.json
+        # Add files
+        git add *.xlsx 2>/dev/null || true
+        git add *.json 2>/dev/null || true
         
-        # Show what's staged
-        echo "Staged files:"
-        git diff --staged --name-only
-        
-        # Commit and push
-        git commit -m "Update hashtags - $(date +'%Y-%m-%d')" && git push || echo "No changes or push failed"
-    
-    - name: Verify files in repo
-      run: |
-        git pull
-        echo "Files in repo after push:"
-        ls -lah *.xlsx *.json || echo "Still no files!"
+        # Commit if there are changes
+        if ! git diff --staged --quiet; then
+          git commit -m "Update hashtags - $(date +'%Y-%m-%d')"
+          git push
+          echo "✅ Files committed and pushed!"
+        else
+          echo "No changes to commit"
+        fi
