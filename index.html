@@ -192,7 +192,7 @@
             letter-spacing: 0.05em;
         }
 
-        select, input, textarea {
+        select, input[type="text"], input[type="number"], textarea {
             width: 100%;
             background: var(--bg-root);
             border: 1px solid var(--border-subtle);
@@ -204,6 +204,17 @@
             transition: var(--transition);
             appearance: none;
             line-height: 1.5;
+        }
+
+        /* Prevent standard inputs from matching type="range" */
+        input[type="range"] {
+            width: 100%;
+            background: transparent;
+            padding: 0;
+            appearance: auto;
+            border: none;
+            height: auto;
+            cursor: pointer;
         }
 
         select {
@@ -384,6 +395,12 @@
             transform: translateX(-50%) translateY(0);
         }
 
+        /* Custom Keyframes */
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
         /* FLEX UTILS */
         .row {
             display: flex;
@@ -489,6 +506,10 @@
                     <span class="nav-icon">🖼️</span>
                     <span>Converter</span>
                 </div>
+                <div class="nav-item" onclick="switchView('view-teleprompter', this)">
+                    <span class="nav-icon">📹</span>
+                    <span>Teleprompter</span>
+                </div>
                 <div class="nav-item" onclick="switchView('view-audio', this)">
                     <span class="nav-icon">🎙️</span>
                     <span>Voice to Text</span>
@@ -540,6 +561,78 @@
                         <label class="input-label">Result Preview</label>
                         <canvas id="image-canvas" style="max-width: 100%; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); background: var(--bg-root); display: block; margin-bottom: 16px;"></canvas>
                         <button class="btn btn-primary" onclick="downloadImage()">⬇️ Download Asset</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TELEPROMPTER STUDIO VIEW -->
+            <section id="view-teleprompter" class="view-section">
+                <div class="view-header">
+                    <h1 class="view-title">Video Teleprompter</h1>
+                    <p class="view-subtitle">Record videos perfectly while maintaining eye contact with your camera.</p>
+                </div>
+
+                <div class="card">
+                    <div class="row">
+                        <!-- Script & Settings -->
+                        <div style="flex: 1.2;">
+                            <div class="input-group">
+                                <label class="input-label">Your Script</label>
+                                <textarea id="tp-script" rows="8" placeholder="Paste your video script here..."></textarea>
+                            </div>
+
+                            <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 20px; margin-bottom: 24px;">
+                                <label class="input-label" style="margin-bottom: 16px;">Teleprompter Settings</label>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">
+                                        <span>Scroll Speed</span>
+                                        <span id="tp-speed-val">2x</span>
+                                    </div>
+                                    <input type="range" id="tp-speed" min="1" max="5" step="0.5" value="2" oninput="document.getElementById('tp-speed-val').innerText = this.value + 'x'">
+                                </div>
+
+                                <div style="margin-bottom: 16px;">
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">
+                                        <span>Text Size</span>
+                                        <span id="tp-size-val">48px</span>
+                                    </div>
+                                    <input type="range" id="tp-size" min="24" max="72" value="48" oninput="document.getElementById('tp-size-val').innerText = this.value + 'px'">
+                                </div>
+
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">
+                                        <span>Edge Brightness</span>
+                                        <span id="tp-brightness-val">80%</span>
+                                    </div>
+                                    <input type="range" id="tp-brightness" min="0" max="100" value="80" oninput="tpUpdateBrightness(this.value)">
+                                </div>
+                            </div>
+
+                            <div id="tp-controls" style="display: flex; flex-direction: column; gap: 12px;">
+                                <button id="btn-tp-camera" class="btn btn-primary" onclick="tpStartCamera()">📹 Enable Camera</button>
+                                <button id="btn-tp-record" class="btn btn-gradient" style="display: none;" onclick="tpStartCountdown()">🔴 Start Recording (Fullscreen)</button>
+                                
+                                <div id="tp-result-controls" class="row" style="display: none;">
+                                    <button class="btn btn-primary" onclick="tpDownload()">⬇️ Download Video</button>
+                                    <button class="btn btn-outline" onclick="tpReset()">🔄 New Recording</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Camera Preview -->
+                        <div style="flex: 1;">
+                            <label class="input-label">Camera Preview</label>
+                            <div style="background: var(--bg-root); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); overflow: hidden; aspect-ratio: 9/16; position: relative; max-width: 320px; margin: 0 auto;">
+                                <!-- Local brightness preview -->
+                                <div id="tp-preview-brightness" style="position: absolute; inset: 0; pointer-events: none; z-index: 10; box-shadow: inset 0 0 100px 80px rgba(255, 255, 255, 0.8);"></div>
+                                <video id="tp-preview-video" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1);"></video>
+                                <div id="tp-preview-placeholder" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-secondary); z-index: 5; background: var(--bg-card); padding: 20px; text-align: center;">
+                                    <span style="font-size: 2rem; margin-bottom: 8px;">📹</span>
+                                    <span style="font-size: 0.9rem;">Click "Enable Camera" to begin</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -654,6 +747,24 @@
         </main>
     </div>
 
+    <!-- TELEPROMPTER FULLSCREEN OVERLAY -->
+    <div id="tp-fullscreen-overlay" style="display:none; position: fixed; inset: 0; z-index: 9999; background: #000;">
+        <div id="tp-record-brightness" style="position: absolute; inset: 0; pointer-events: none; z-index: 10; box-shadow: inset 0 0 100px 80px rgba(255, 255, 255, 0.8);"></div>
+        <video id="tp-record-video" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1);"></video>
+
+        <div id="tp-countdown-display" style="display:none; position: absolute; inset: 0; align-items: center; justify-content: center; z-index: 30; font-size: 8rem; font-weight: bold; color: white; text-shadow: 0 10px 30px rgba(0,0,0,0.5);"></div>
+
+        <div style="position: absolute; inset: 0; display: flex; justify-content: center; pointer-events: none; z-index: 20; overflow: hidden; padding-top: 5vh;">
+            <div id="tp-scrolling-text" style="text-align: center; padding: 0 2rem; color: white; font-weight: 600; text-shadow: 3px 3px 12px rgba(0,0,0,0.95), -3px -3px 12px rgba(0,0,0,0.95), 0 0 20px rgba(0,0,0,0.9); max-width: 90%; white-space: pre-wrap; transform: translateY(0px); line-height: 1.6;"></div>
+        </div>
+
+        <div id="tp-rec-indicator" style="display:none; position: absolute; top: 1.5rem; right: 1.5rem; z-index: 30; background: #ef4444; color: white; padding: 0.5rem 1rem; border-radius: 100px; font-weight: bold; display: flex; align-items: center; gap: 0.5rem; font-family: 'Plus Jakarta Sans', sans-serif;">
+            <div style="width:12px; height:12px; background:white; border-radius:50%; animation: pulse-dot 1s infinite;"></div> REC
+        </div>
+        
+        <button id="btn-tp-stop" class="btn" style="display:none; position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); z-index: 30; width: auto; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 12px 32px;" onclick="tpStopRecording()">⏹️ Stop Recording</button>
+    </div>
+
     <script>
         // --- UI Navigation Logic ---
         function switchView(viewId, navElement) {
@@ -742,6 +853,179 @@
                 a.click();
             }, `image/${format}`);
         }
+
+        // --- Video Teleprompter Logic ---
+        let tpStream = null;
+        let tpMediaRecorder = null;
+        let tpChunks = [];
+        let tpBlob = null;
+        let tpScrollInterval = null;
+        let tpScrollPos = 0;
+        let tpIsRecording = false;
+
+        function tpUpdateBrightness(value) {
+            document.getElementById('tp-brightness-val').innerText = value + '%';
+            const shadowStyle = `inset 0 0 100px ${value}px rgba(255, 255, 255, ${value / 100})`;
+            document.getElementById('tp-preview-brightness').style.boxShadow = shadowStyle;
+            document.getElementById('tp-record-brightness').style.boxShadow = shadowStyle;
+        }
+
+        async function tpStartCamera() {
+            try {
+                // Request 4K ideal resolution. Safari will fall back to its absolute maximum (1080p/4k).
+                // We also specify facingMode to ensure it grabs the front selfie camera.
+                tpStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        width: { ideal: 3840 }, 
+                        height: { ideal: 2160 },
+                        facingMode: "user"
+                    }, 
+                    audio: true 
+                });
+                
+                const previewVideo = document.getElementById('tp-preview-video');
+                previewVideo.srcObject = tpStream;
+                document.getElementById('tp-record-video').srcObject = tpStream;
+                
+                document.getElementById('tp-preview-placeholder').style.display = 'none';
+                document.getElementById('btn-tp-camera').style.display = 'none';
+                document.getElementById('btn-tp-record').style.display = 'inline-flex';
+                
+            } catch (err) {
+                console.error(err);
+                showToast('Camera/Microphone access denied. Please grant permissions.');
+            }
+        }
+
+        function tpStartCountdown() {
+            const script = document.getElementById('tp-script').value;
+            if (!script.trim()) return showToast('Please enter a script first!');
+
+            // Apply Settings to scrolling text
+            const textSize = document.getElementById('tp-size').value;
+            const textEl = document.getElementById('tp-scrolling-text');
+            textEl.innerText = script;
+            textEl.style.fontSize = `${textSize}px`;
+            textEl.style.transform = `translateY(0px)`;
+            tpScrollPos = 0;
+
+            // Show Overlay & Request Fullscreen
+            const overlay = document.getElementById('tp-fullscreen-overlay');
+            overlay.style.display = 'block';
+            
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) { elem.requestFullscreen(); }
+            else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); }
+
+            // Start 3-second countdown
+            const countdownEl = document.getElementById('tp-countdown-display');
+            countdownEl.style.display = 'flex';
+            document.getElementById('tp-rec-indicator').style.display = 'none';
+            document.getElementById('btn-tp-stop').style.display = 'none';
+            
+            let count = 3;
+            countdownEl.innerText = count;
+
+            const timer = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    countdownEl.innerText = count;
+                } else {
+                    clearInterval(timer);
+                    countdownEl.style.display = 'none';
+                    tpBeginRecording();
+                }
+            }, 1000);
+        }
+
+        function tpBeginRecording() {
+            tpChunks = [];
+            
+            // Try MP4 first, then WebM. We add a high bitrate (8 Mbps) to prevent compression artifacting on high res video.
+            let options = { mimeType: 'video/mp4', videoBitsPerSecond: 8000000 };
+            if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                options = { mimeType: 'video/webm;codecs=vp9,opus', videoBitsPerSecond: 8000000 };
+                if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                    options = { mimeType: 'video/webm', videoBitsPerSecond: 8000000 };
+                }
+            }
+
+            try {
+                tpMediaRecorder = new MediaRecorder(tpStream, options);
+                
+                tpMediaRecorder.ondataavailable = (e) => {
+                    if (e.data.size > 0) tpChunks.push(e.data);
+                };
+                
+                tpMediaRecorder.onstop = () => {
+                    tpBlob = new Blob(tpChunks, { type: tpMediaRecorder.mimeType });
+                    document.getElementById('btn-tp-record').style.display = 'none';
+                    document.getElementById('tp-result-controls').style.display = 'flex';
+                };
+
+                tpMediaRecorder.start();
+                tpIsRecording = true;
+                
+                document.getElementById('tp-rec-indicator').style.display = 'flex';
+                document.getElementById('btn-tp-stop').style.display = 'inline-flex';
+
+                // Begin auto-scrolling
+                const speed = parseFloat(document.getElementById('tp-speed').value);
+                const textEl = document.getElementById('tp-scrolling-text');
+                
+                tpScrollInterval = setInterval(() => {
+                    tpScrollPos += speed;
+                    textEl.style.transform = `translateY(-${tpScrollPos}px)`;
+                }, 50);
+
+            } catch (err) {
+                console.error(err);
+                showToast('Error starting recording.');
+                tpStopRecording();
+            }
+        }
+
+        function tpStopRecording() {
+            if (tpMediaRecorder && tpIsRecording) {
+                tpMediaRecorder.stop();
+            }
+            
+            tpIsRecording = false;
+            clearInterval(tpScrollInterval);
+            
+            // Exit fullscreen & hide overlay
+            document.getElementById('tp-fullscreen-overlay').style.display = 'none';
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch(()=>{});
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
+        }
+
+        function tpDownload() {
+            if (tpBlob) {
+                const url = URL.createObjectURL(tpBlob);
+                const a = document.createElement('a');
+                a.href = url;
+                const ext = tpBlob.type.includes('mp4') ? 'mp4' : 'webm';
+                a.download = `teleprompter-${Date.now()}.${ext}`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+        }
+
+        function tpReset() {
+            tpBlob = null;
+            document.getElementById('tp-result-controls').style.display = 'none';
+            document.getElementById('btn-tp-record').style.display = 'inline-flex';
+        }
+
+        // Handle user pressing ESC to exit fullscreen
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement && tpIsRecording) {
+                tpStopRecording();
+            }
+        });
 
         // --- Audio Transcriber Logic ---
         let recognition = null;
