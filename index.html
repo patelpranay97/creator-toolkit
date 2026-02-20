@@ -754,7 +754,12 @@
 
         // Helper function for API calls with Exponential Backoff
         async function fetchGeminiWithBackoff(prompt) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            if (!apiKey || apiKey.trim() === "") {
+                throw new Error("API Key is missing. Please add your Gemini API key in the code.");
+            }
+
+            // Updated to use the widely accessible public gemini-1.5-flash model
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{ parts: [{ text: prompt }] }]
             };
@@ -771,7 +776,9 @@
                     });
                     
                     if (!response.ok) {
-                        throw new Error(`HTTP Error: ${response.status}`);
+                        // Capture the actual error from Google's servers for easier debugging
+                        const errorText = await response.text();
+                        throw new Error(`API Error ${response.status}: ${errorText}`);
                     }
                     
                     const data = await response.json();
@@ -783,7 +790,7 @@
                 } catch (error) {
                     if (attempt === 5) {
                         console.error("Gemini API failed after all retries.", error);
-                        throw new Error("Unable to connect to AI server. Please try again later.");
+                        throw new Error("Unable to connect to AI server. Please check your API key or try again later.");
                     }
                     // Wait before retrying (exponential backoff)
                     await new Promise(resolve => setTimeout(resolve, backoffDelays[attempt]));
@@ -850,6 +857,7 @@
             } catch (error) {
                 document.getElementById('ai-loading').style.display = 'none';
                 showToast(error.message);
+                console.error(error);
             } finally {
                 document.getElementById('btn-ai-ideas').disabled = false;
                 document.getElementById('btn-ai-script').disabled = false;
@@ -889,6 +897,7 @@
             } catch (error) {
                 document.getElementById('audio-ai-loading').style.display = 'none';
                 showToast(error.message);
+                console.error(error);
             } finally {
                 document.getElementById('btn-enhance-transcript').disabled = false;
             }
@@ -916,7 +925,7 @@
             const toast = document.getElementById('toast');
             toast.textContent = message;
             toast.classList.add('visible');
-            setTimeout(() => toast.classList.remove('visible'), 2500);
+            setTimeout(() => toast.classList.remove('visible'), 3500);
         }
 
         function copyFormattedText(elementId) {
