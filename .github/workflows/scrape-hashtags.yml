@@ -5,6 +5,9 @@ on:
     - cron: '0 3 * * 1'  # Every Monday at 3 AM UTC
   workflow_dispatch:  # Allows manual triggering
 
+permissions:
+  contents: write  # IMPORTANT: Allows pushing to repo
+
 jobs:
   scrape-and-update:
     runs-on: ubuntu-latest
@@ -12,6 +15,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -25,35 +30,31 @@ jobs:
     - name: Run hashtag scraper
       run: |
         python tiktok_scraper_simple.py
-        echo "Scraper completed"
-        ls -la *.xlsx || echo "No xlsx files found"
+        echo "✅ Scraper completed"
+    
+    - name: Verify file was created
+      run: |
+        echo "Looking for Excel files..."
+        ls -lah *.xlsx || echo "❌ No Excel files found!"
     
     - name: Commit and push updated Excel file
       run: |
-        git config --local user.email "github-actions[bot]@users.noreply.github.com"
-        git config --local user.name "github-actions[bot]"
+        # Configure git
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
         
-        # Show what we have
-        echo "Files before git add:"
-        ls -la *.xlsx
+        # Add the file explicitly
+        git add -f *.xlsx
         
-        # Force add Excel files (ignores .gitignore)
-        git add -f tiktok_hashtags_*.xlsx
+        # Show what's staged
+        echo "Staged files:"
+        git diff --staged --name-only
         
-        # Show git status
-        echo "Git status:"
-        git status
-        
-        # Commit if there are changes
-        if git diff --staged --quiet; then
-          echo "No changes to commit"
-        else
-          git commit -m "Update hashtags - $(date +'%Y-%m-%d')"
-          git push
-          echo "✅ File committed and pushed!"
-        fi
+        # Commit and push
+        git commit -m "Update hashtags - $(date +'%Y-%m-%d')" && git push || echo "No changes or push failed"
     
-    - name: List generated files
+    - name: Verify file in repo
       run: |
-        echo "Generated files:"
-        ls -lh *.xlsx || echo "No Excel files found"
+        git pull
+        echo "Files in repo after push:"
+        ls -lah *.xlsx || echo "Still no files!"
