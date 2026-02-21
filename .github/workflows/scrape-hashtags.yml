@@ -41,15 +41,16 @@ jobs:
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         
-        # Add files
         git add hashtags.json 2>/dev/null || true
         git add *.xlsx 2>/dev/null || true
         
-        # Commit if there are changes
+        SOURCE=$(python3 -c "import json; d=json.load(open('hashtags.json')); print(d.get('_meta',{}).get('source','unknown'))" 2>/dev/null || echo "unknown")
+        DATE=$(date +'%Y-%m-%d')
+        
         if ! git diff --staged --quiet; then
-          git commit -m "Update trending hashtags — $(date +'%Y-%m-%d') [$(python -c "import json; d=json.load(open('hashtags.json')); print(d.get('_meta',{}).get('source','unknown'))")"]"
+          git commit -m "Update trending hashtags - ${DATE} [${SOURCE}]"
           git push
-          echo "✅ Files committed and pushed!"
+          echo "Files committed and pushed"
         else
-          echo "ℹ️  No changes to commit"
+          echo "No changes to commit"
         fi
