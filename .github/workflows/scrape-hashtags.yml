@@ -49,6 +49,7 @@ jobs:
         
         if ! git diff --staged --quiet; then
           git commit -m "Update trending hashtags - ${DATE} [${SOURCE}]"
+          git pull --rebase origin main
           git push
           echo "Files committed and pushed"
         else
