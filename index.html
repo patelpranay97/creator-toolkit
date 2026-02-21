@@ -30,14 +30,12 @@
             --shadow-float: 0 20px 40px -10px rgba(0,0,0,0.5);
             --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
-
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg-root);
@@ -47,14 +45,12 @@
             overflow: hidden;
             background-image: radial-gradient(circle at 50% -20%, var(--accent-glow), transparent 40%);
         }
-
         /* --- APP LAYOUT --- */
         #app-container {
             display: flex;
             width: 100%;
             height: 100%;
         }
-
         /* SIDEBAR (Desktop) */
         .sidebar {
             width: 280px;
@@ -66,7 +62,6 @@
             padding: 24px;
             z-index: 50;
         }
-
         .brand {
             font-size: 1.5rem;
             font-weight: 700;
@@ -75,7 +70,6 @@
             align-items: center;
             gap: 12px;
         }
-
         .brand-icon {
             width: 32px;
             height: 32px;
@@ -85,14 +79,12 @@
             place-items: center;
             font-size: 1rem;
         }
-
         .nav-menu {
             display: flex;
             flex-direction: column;
             gap: 8px;
             flex-grow: 1;
         }
-
         .nav-item {
             display: flex;
             align-items: center;
@@ -104,22 +96,18 @@
             cursor: pointer;
             transition: var(--transition);
         }
-
         .nav-item:hover {
             background: rgba(255, 255, 255, 0.03);
             color: var(--text-primary);
         }
-
         .nav-item.active {
             background: var(--bg-hover);
             color: var(--text-primary);
             box-shadow: inset 2px 0 0 #a855f7;
         }
-
         .nav-icon {
             font-size: 1.25rem;
         }
-
         /* MAIN CONTENT AREA */
         .main-content {
             flex-grow: 1;
@@ -131,7 +119,6 @@
             box-shadow: -10px 0 30px rgba(0,0,0,0.5);
             scroll-behavior: smooth;
         }
-
         .view-section {
             display: none;
             padding: 40px 60px;
@@ -141,32 +128,26 @@
             opacity: 0;
             transform: translateY(10px);
         }
-
         .view-section.active {
             display: block;
         }
-
         @keyframes fadeIn {
             to { opacity: 1; transform: translateY(0); }
         }
-
         /* TYPOGRAPHY & HEADERS */
         .view-header {
             margin-bottom: 40px;
         }
-
         .view-title {
             font-size: 2.5rem;
             font-weight: 700;
             letter-spacing: -0.03em;
             margin-bottom: 8px;
         }
-
         .view-subtitle {
             color: var(--text-secondary);
             font-size: 1.1rem;
         }
-
         /* UI COMPONENTS */
         .card {
             background: var(--bg-card);
@@ -177,11 +158,9 @@
             background-image: var(--gradient-card);
             margin-bottom: 24px;
         }
-
         .input-group {
             margin-bottom: 24px;
         }
-
         .input-label {
             display: block;
             margin-bottom: 8px;
@@ -191,7 +170,6 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
-
         select, input[type="text"], input[type="number"], textarea {
             width: 100%;
             background: var(--bg-root);
@@ -205,8 +183,6 @@
             appearance: none;
             line-height: 1.5;
         }
-
-        /* Prevent standard inputs from matching type="range" */
         input[type="range"] {
             width: 100%;
             background: transparent;
@@ -216,20 +192,17 @@
             height: auto;
             cursor: pointer;
         }
-
         select {
             background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9L12 15L18 9' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 16px center;
             padding-right: 48px;
         }
-
         select:focus, textarea:focus {
             outline: none;
             border-color: #a855f7;
             box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
         }
-
         .btn {
             display: inline-flex;
             align-items: center;
@@ -245,45 +218,37 @@
             transition: var(--transition);
             font-family: inherit;
         }
-
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
             transform: none !important;
             box-shadow: none !important;
         }
-
         .btn-primary {
             background: var(--text-primary);
             color: var(--bg-root);
         }
-
         .btn-primary:hover:not(:disabled) {
             transform: translateY(-2px);
             background: #e4e4e7;
             box-shadow: 0 10px 20px rgba(255,255,255,0.1);
         }
-
         .btn-gradient {
             background: var(--gradient-brand);
             color: white;
         }
-
         .btn-gradient:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(236, 72, 153, 0.3);
         }
-
         .btn-outline {
             background: transparent;
             border: 1px solid var(--border-focus);
             color: var(--text-primary);
         }
-        
         .btn-outline:hover:not(:disabled) {
             background: rgba(255,255,255,0.05);
         }
-
         /* Drag & Drop Area */
         .dropzone {
             border: 2px dashed var(--border-focus);
@@ -294,18 +259,15 @@
             transition: var(--transition);
             background: rgba(0,0,0,0.2);
         }
-
         .dropzone:hover, .dropzone.dragover {
             border-color: #a855f7;
             background: rgba(168, 85, 247, 0.05);
         }
-
         .drop-icon {
             font-size: 2.5rem;
             margin-bottom: 12px;
             opacity: 0.7;
         }
-
         /* Hashtags Grid */
         .hashtag-container {
             display: flex;
@@ -313,7 +275,6 @@
             gap: 12px;
             margin-top: 24px;
         }
-
         .tag-pill {
             background: rgba(168, 85, 247, 0.1);
             border: 1px solid rgba(168, 85, 247, 0.3);
@@ -325,13 +286,11 @@
             cursor: pointer;
             transition: var(--transition);
         }
-
         .tag-pill:hover {
             background: #a855f7;
             color: white;
             transform: scale(1.05);
         }
-
         /* Results / Output States */
         .output-box {
             display: none;
@@ -340,11 +299,9 @@
             border-top: 1px solid var(--border-subtle);
             animation: fadeIn 0.3s ease;
         }
-
         .output-box.show {
             display: block;
         }
-
         /* Time Grid Layout */
         .times-grid {
             display: grid;
@@ -352,7 +309,6 @@
             gap: 16px;
             margin-top: 24px;
         }
-
         .time-slot {
             background: rgba(0,0,0,0.4);
             border: 1px solid var(--border-subtle);
@@ -360,7 +316,6 @@
             border-radius: var(--radius-sm);
             text-align: center;
         }
-
         .time-label {
             font-size: 0.8rem;
             color: var(--text-secondary);
@@ -368,13 +323,11 @@
             letter-spacing: 0.05em;
             margin-bottom: 8px;
         }
-
         .time-value {
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--text-primary);
         }
-
         /* Toast Notification */
         .toast {
             position: fixed;
@@ -390,44 +343,58 @@
             z-index: 9999;
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        
         .toast.visible {
             transform: translateX(-50%) translateY(0);
         }
-
+        /* Data freshness badge */
+        .freshness-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+        .freshness-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #52525b;
+        }
+        .freshness-dot.live {
+            background: #22c55e;
+            box-shadow: 0 0 6px rgba(34, 197, 94, 0.5);
+        }
+        .freshness-dot.fallback {
+            background: #f59e0b;
+        }
         /* Custom Keyframes */
         @keyframes pulse-dot {
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.5; transform: scale(0.8); }
         }
-
         /* FLEX UTILS */
         .row {
             display: flex;
             gap: 12px;
         }
         .row > * { flex: 1; }
-
-        /* --- MOBILE ADAPTATION (Bottom Nav App Feel) --- */
+        /* --- MOBILE ADAPTATION --- */
         @media (max-width: 768px) {
             #app-container {
                 flex-direction: column;
             }
-
             .main-content {
                 border-radius: 0;
                 box-shadow: none;
-                padding-bottom: 90px; /* Space for bottom nav */
+                padding-bottom: 90px;
             }
-
             .view-section {
                 padding: 32px 20px;
             }
-
             .view-title {
                 font-size: 2rem;
             }
-
             .sidebar {
                 position: fixed;
                 bottom: 0;
@@ -440,20 +407,16 @@
                 border-top: 1px solid var(--border-subtle);
                 background: rgba(9, 9, 11, 0.85);
                 z-index: 100;
-                /* iOS safe area support */
                 padding-bottom: calc(12px + env(safe-area-inset-bottom));
             }
-
             .brand {
-                display: none; /* Hide logo on mobile bottom nav */
+                display: none;
             }
-
             .nav-menu {
                 flex-direction: row;
                 justify-content: space-around;
                 width: 100%;
             }
-
             .nav-item {
                 flex-direction: column;
                 gap: 4px;
@@ -463,26 +426,21 @@
                 text-align: center;
                 border-radius: 12px;
             }
-
             .nav-item.active {
                 box-shadow: none;
                 background: transparent;
                 color: #a855f7;
             }
-
             .nav-item.active .nav-icon {
                 transform: scale(1.1);
             }
-
             .nav-icon {
                 font-size: 1.5rem;
                 transition: var(--transition);
             }
-
             .card {
                 padding: 24px 20px;
             }
-            
             .row {
                 flex-direction: column;
             }
@@ -490,9 +448,7 @@
     </style>
 </head>
 <body>
-
     <div id="toast" class="toast">Action Successful</div>
-
     <div id="app-container">
         
         <!-- SIDEBAR / BOTTOM NAV -->
@@ -556,7 +512,6 @@
                             <button class="btn btn-gradient" onclick="convertImage()">Convert</button>
                         </div>
                     </div>
-
                     <div id="image-result" class="output-box">
                         <label class="input-label">Result Preview</label>
                         <canvas id="image-canvas" style="max-width: 100%; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); background: var(--bg-root); display: block; margin-bottom: 16px;"></canvas>
@@ -571,19 +526,15 @@
                     <h1 class="view-title">Video Teleprompter</h1>
                     <p class="view-subtitle">Record videos perfectly while maintaining eye contact with your camera.</p>
                 </div>
-
                 <div class="card">
                     <div class="row">
-                        <!-- Script & Settings -->
                         <div style="flex: 1.2;">
                             <div class="input-group">
                                 <label class="input-label">Your Script</label>
                                 <textarea id="tp-script" rows="8" placeholder="Paste your video script here..."></textarea>
                             </div>
-
                             <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 20px; margin-bottom: 24px;">
                                 <label class="input-label" style="margin-bottom: 16px;">Teleprompter Settings</label>
-                                
                                 <div style="margin-bottom: 16px;">
                                     <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">
                                         <span>Scroll Speed</span>
@@ -591,7 +542,6 @@
                                     </div>
                                     <input type="range" id="tp-speed" min="1" max="5" step="0.5" value="2" oninput="document.getElementById('tp-speed-val').innerText = this.value + 'x'">
                                 </div>
-
                                 <div style="margin-bottom: 16px;">
                                     <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">
                                         <span>Text Size</span>
@@ -599,7 +549,6 @@
                                     </div>
                                     <input type="range" id="tp-size" min="24" max="72" value="48" oninput="document.getElementById('tp-size-val').innerText = this.value + 'px'">
                                 </div>
-
                                 <div>
                                     <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">
                                         <span>Edge Brightness</span>
@@ -608,23 +557,18 @@
                                     <input type="range" id="tp-brightness" min="0" max="100" value="80" oninput="tpUpdateBrightness(this.value)">
                                 </div>
                             </div>
-
                             <div id="tp-controls" style="display: flex; flex-direction: column; gap: 12px;">
                                 <button id="btn-tp-camera" class="btn btn-primary" onclick="tpStartCamera()">📹 Enable Camera</button>
                                 <button id="btn-tp-record" class="btn btn-gradient" style="display: none;" onclick="tpStartCountdown()">🔴 Start Recording (Fullscreen)</button>
-                                
                                 <div id="tp-result-controls" class="row" style="display: none;">
                                     <button class="btn btn-primary" onclick="tpDownload()">⬇️ Download Video</button>
                                     <button class="btn btn-outline" onclick="tpReset()">🔄 New Recording</button>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Camera Preview -->
                         <div style="flex: 1;">
                             <label class="input-label">Camera Preview</label>
                             <div style="background: var(--bg-root); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); overflow: hidden; aspect-ratio: 9/16; position: relative; max-width: 320px; margin: 0 auto;">
-                                <!-- Local brightness preview -->
                                 <div id="tp-preview-brightness" style="position: absolute; inset: 0; pointer-events: none; z-index: 10; box-shadow: inset 0 0 100px 80px rgba(255, 255, 255, 0.8);"></div>
                                 <video id="tp-preview-video" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1);"></video>
                                 <div id="tp-preview-placeholder" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-secondary); z-index: 5; background: var(--bg-card); padding: 20px; text-align: center;">
@@ -650,7 +594,6 @@
                             🎤 Start Listening
                         </button>
                     </div>
-
                     <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 24px;">
                         <h4 style="color: var(--text-secondary); margin-bottom: 12px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">📁 Have an audio file?</h4>
                         <div class="row">
@@ -658,12 +601,10 @@
                             <a href="https://synthronai.com/free-audio-transcription-tool/" target="_blank" class="btn btn-outline" style="font-size: 0.85rem; padding: 10px; text-decoration: none;">SynthronAI ↗</a>
                         </div>
                     </div>
-
                     <div class="input-group">
                         <label class="input-label">Live Transcript</label>
                         <textarea id="transcription-text" rows="8" placeholder="Speech will appear here in real-time..."></textarea>
                     </div>
-
                     <div class="row">
                         <button class="btn btn-primary" onclick="copyTranscription()">Copy Text</button>
                         <button class="btn btn-outline" onclick="clearTranscription()">Clear Canvas</button>
@@ -675,7 +616,11 @@
             <section id="view-hashtags" class="view-section">
                 <div class="view-header">
                     <h1 class="view-title">Trending Tags</h1>
-                    <p class="view-subtitle">Generate high-performing hashtag clusters based on your niche.</p>
+                    <p class="view-subtitle">Auto-updated hashtag clusters scraped weekly from TikTok Creative Center.</p>
+                    <div id="hashtag-freshness" class="freshness-badge">
+                        <div class="freshness-dot"></div>
+                        <span>Loading data source...</span>
+                    </div>
                 </div>
                 
                 <div class="card">
@@ -683,23 +628,26 @@
                         <div class="input-group" style="margin: 0; flex: 2;">
                             <label class="input-label">Content Category</label>
                             <select id="niche-select">
+                                <option value="general">General / Viral</option>
                                 <option value="fitness">Fitness & Health</option>
                                 <option value="food">Food & Cooking</option>
-                                <option value="fashion">Fashion & Beauty</option>
+                                <option value="lifestyle">Beauty & Personal Care</option>
+                                <option value="fashion">Fashion & Style</option>
                                 <option value="tech">Tech & Gaming</option>
                                 <option value="travel">Travel & Adventure</option>
                                 <option value="business">Business & Finance</option>
-                                <option value="art">Art & Design</option>
-                                <option value="music">Music & Entertainment</option>
                             </select>
                         </div>
                         <div style="flex: 1; display: flex; align-items: flex-end;">
-                            <button class="btn btn-gradient" onclick="generateHashtags()">Generate</button>
+                            <button id="btn-generate-tags" class="btn btn-gradient" onclick="generateHashtags()">Generate</button>
                         </div>
                     </div>
 
                     <div id="hashtag-result" class="output-box">
-                        <label class="input-label">Tap tags to copy</label>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <label class="input-label" style="margin: 0;">Tap tags to copy individually</label>
+                            <button class="btn btn-outline" style="width: auto; padding: 8px 16px; font-size: 0.8rem;" onclick="copyAllHashtags()">Copy All</button>
+                        </div>
                         <div id="hashtag-list" class="hashtag-container"></div>
                     </div>
                 </div>
@@ -743,7 +691,6 @@
                     </div>
                 </div>
             </section>
-
         </main>
     </div>
 
@@ -751,38 +698,28 @@
     <div id="tp-fullscreen-overlay" style="display:none; position: fixed; inset: 0; z-index: 9999; background: #000;">
         <div id="tp-record-brightness" style="position: absolute; inset: 0; pointer-events: none; z-index: 10; box-shadow: inset 0 0 100px 80px rgba(255, 255, 255, 0.8);"></div>
         <video id="tp-record-video" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1);"></video>
-
         <div id="tp-countdown-display" style="display:none; position: absolute; inset: 0; align-items: center; justify-content: center; z-index: 30; font-size: 8rem; font-weight: bold; color: white; text-shadow: 0 10px 30px rgba(0,0,0,0.5);"></div>
-
         <div style="position: absolute; inset: 0; display: flex; justify-content: center; pointer-events: none; z-index: 20; overflow: hidden; padding-top: 5vh;">
             <div id="tp-scrolling-text" style="text-align: center; padding: 0 2rem; color: white; font-weight: 600; text-shadow: 3px 3px 12px rgba(0,0,0,0.95), -3px -3px 12px rgba(0,0,0,0.95), 0 0 20px rgba(0,0,0,0.9); max-width: 90%; white-space: pre-wrap; transform: translateY(0px); line-height: 1.6;"></div>
         </div>
-
         <div id="tp-rec-indicator" style="display:none; position: absolute; top: 1.5rem; right: 1.5rem; z-index: 30; background: #ef4444; color: white; padding: 0.5rem 1rem; border-radius: 100px; font-weight: bold; display: flex; align-items: center; gap: 0.5rem; font-family: 'Plus Jakarta Sans', sans-serif;">
             <div style="width:12px; height:12px; background:white; border-radius:50%; animation: pulse-dot 1s infinite;"></div> REC
         </div>
-        
         <button id="btn-tp-stop" class="btn" style="display:none; position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); z-index: 30; width: auto; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 12px 32px;" onclick="tpStopRecording()">⏹️ Stop Recording</button>
     </div>
 
     <script>
-        // --- UI Navigation Logic ---
+        // =============================================
+        // UI Navigation
+        // =============================================
         function switchView(viewId, navElement) {
-            // Update nav styles
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             navElement.classList.add('active');
-
-            // Switch content sections
-            document.querySelectorAll('.view-section').forEach(el => {
-                el.classList.remove('active');
-            });
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
-            
-            // Scroll to top on mobile when switching views
             document.querySelector('.main-content').scrollTop = 0;
         }
 
-        // --- Global Toast Logic ---
         function showToast(message) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -790,33 +727,42 @@
             setTimeout(() => toast.classList.remove('visible'), 3500);
         }
 
-        // --- Image Converter Logic ---
+        // Modern clipboard helper
+        async function copyToClipboard(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+                return true;
+            } catch {
+                // Fallback for older browsers / insecure contexts
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                let ok = false;
+                try { ok = document.execCommand('copy'); } catch {}
+                document.body.removeChild(ta);
+                return ok;
+            }
+        }
+
+        // =============================================
+        // Image Converter
+        // =============================================
         let uploadedImage = null;
         const imageInput = document.getElementById('image-input');
         const imageUploadArea = document.getElementById('image-upload-area');
-
         imageUploadArea.addEventListener('click', () => imageInput.click());
-        
-        imageUploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            imageUploadArea.classList.add('dragover');
-        });
-        
-        imageUploadArea.addEventListener('dragleave', () => {
-            imageUploadArea.classList.remove('dragover');
-        });
-        
+        imageUploadArea.addEventListener('dragover', (e) => { e.preventDefault(); imageUploadArea.classList.add('dragover'); });
+        imageUploadArea.addEventListener('dragleave', () => imageUploadArea.classList.remove('dragover'));
         imageUploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
             imageUploadArea.classList.remove('dragover');
             const file = e.dataTransfer.files[0];
             if (file && file.type.startsWith('image/')) loadImage(file);
         });
-
-        imageInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) loadImage(file);
-        });
+        imageInput.addEventListener('change', (e) => { if (e.target.files[0]) loadImage(e.target.files[0]); });
 
         function loadImage(file) {
             const reader = new FileReader();
@@ -851,17 +797,15 @@
                 a.href = url;
                 a.download = `converted.${format}`;
                 a.click();
+                URL.revokeObjectURL(url);
             }, `image/${format}`);
         }
 
-        // --- Video Teleprompter Logic ---
-        let tpStream = null;
-        let tpMediaRecorder = null;
-        let tpChunks = [];
-        let tpBlob = null;
-        let tpScrollInterval = null;
-        let tpScrollPos = 0;
-        let tpIsRecording = false;
+        // =============================================
+        // Video Teleprompter
+        // =============================================
+        let tpStream = null, tpMediaRecorder = null, tpChunks = [], tpBlob = null;
+        let tpScrollInterval = null, tpScrollPos = 0, tpIsRecording = false;
 
         function tpUpdateBrightness(value) {
             document.getElementById('tp-brightness-val').innerText = value + '%';
@@ -872,25 +816,15 @@
 
         async function tpStartCamera() {
             try {
-                // Request 4K ideal resolution. Safari will fall back to its absolute maximum (1080p/4k).
-                // We also specify facingMode to ensure it grabs the front selfie camera.
-                tpStream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { 
-                        width: { ideal: 3840 }, 
-                        height: { ideal: 2160 },
-                        facingMode: "user"
-                    }, 
-                    audio: true 
+                tpStream = await navigator.mediaDevices.getUserMedia({
+                    video: { width: { ideal: 3840 }, height: { ideal: 2160 }, facingMode: "user" },
+                    audio: true
                 });
-                
-                const previewVideo = document.getElementById('tp-preview-video');
-                previewVideo.srcObject = tpStream;
+                document.getElementById('tp-preview-video').srcObject = tpStream;
                 document.getElementById('tp-record-video').srcObject = tpStream;
-                
                 document.getElementById('tp-preview-placeholder').style.display = 'none';
                 document.getElementById('btn-tp-camera').style.display = 'none';
                 document.getElementById('btn-tp-record').style.display = 'inline-flex';
-                
             } catch (err) {
                 console.error(err);
                 showToast('Camera/Microphone access denied. Please grant permissions.');
@@ -900,84 +834,56 @@
         function tpStartCountdown() {
             const script = document.getElementById('tp-script').value;
             if (!script.trim()) return showToast('Please enter a script first!');
-
-            // Apply Settings to scrolling text
             const textSize = document.getElementById('tp-size').value;
             const textEl = document.getElementById('tp-scrolling-text');
             textEl.innerText = script;
             textEl.style.fontSize = `${textSize}px`;
             textEl.style.transform = `translateY(0px)`;
             tpScrollPos = 0;
-
-            // Show Overlay & Request Fullscreen
             const overlay = document.getElementById('tp-fullscreen-overlay');
             overlay.style.display = 'block';
-            
             const elem = document.documentElement;
-            if (elem.requestFullscreen) { elem.requestFullscreen(); }
-            else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); }
-
-            // Start 3-second countdown
+            if (elem.requestFullscreen) elem.requestFullscreen();
+            else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
             const countdownEl = document.getElementById('tp-countdown-display');
             countdownEl.style.display = 'flex';
             document.getElementById('tp-rec-indicator').style.display = 'none';
             document.getElementById('btn-tp-stop').style.display = 'none';
-            
             let count = 3;
             countdownEl.innerText = count;
-
             const timer = setInterval(() => {
                 count--;
-                if (count > 0) {
-                    countdownEl.innerText = count;
-                } else {
-                    clearInterval(timer);
-                    countdownEl.style.display = 'none';
-                    tpBeginRecording();
-                }
+                if (count > 0) { countdownEl.innerText = count; }
+                else { clearInterval(timer); countdownEl.style.display = 'none'; tpBeginRecording(); }
             }, 1000);
         }
 
         function tpBeginRecording() {
             tpChunks = [];
-            
-            // Try MP4 first, then WebM. We add a high bitrate (8 Mbps) to prevent compression artifacting on high res video.
             let options = { mimeType: 'video/mp4', videoBitsPerSecond: 8000000 };
             if (!MediaRecorder.isTypeSupported(options.mimeType)) {
                 options = { mimeType: 'video/webm;codecs=vp9,opus', videoBitsPerSecond: 8000000 };
-                if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+                if (!MediaRecorder.isTypeSupported(options.mimeType))
                     options = { mimeType: 'video/webm', videoBitsPerSecond: 8000000 };
-                }
             }
-
             try {
                 tpMediaRecorder = new MediaRecorder(tpStream, options);
-                
-                tpMediaRecorder.ondataavailable = (e) => {
-                    if (e.data.size > 0) tpChunks.push(e.data);
-                };
-                
+                tpMediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) tpChunks.push(e.data); };
                 tpMediaRecorder.onstop = () => {
                     tpBlob = new Blob(tpChunks, { type: tpMediaRecorder.mimeType });
                     document.getElementById('btn-tp-record').style.display = 'none';
                     document.getElementById('tp-result-controls').style.display = 'flex';
                 };
-
                 tpMediaRecorder.start();
                 tpIsRecording = true;
-                
                 document.getElementById('tp-rec-indicator').style.display = 'flex';
                 document.getElementById('btn-tp-stop').style.display = 'inline-flex';
-
-                // Begin auto-scrolling
                 const speed = parseFloat(document.getElementById('tp-speed').value);
                 const textEl = document.getElementById('tp-scrolling-text');
-                
                 tpScrollInterval = setInterval(() => {
                     tpScrollPos += speed;
                     textEl.style.transform = `translateY(-${tpScrollPos}px)`;
                 }, 50);
-
             } catch (err) {
                 console.error(err);
                 showToast('Error starting recording.');
@@ -986,32 +892,22 @@
         }
 
         function tpStopRecording() {
-            if (tpMediaRecorder && tpIsRecording) {
-                tpMediaRecorder.stop();
-            }
-            
+            if (tpMediaRecorder && tpIsRecording) tpMediaRecorder.stop();
             tpIsRecording = false;
             clearInterval(tpScrollInterval);
-            
-            // Exit fullscreen & hide overlay
             document.getElementById('tp-fullscreen-overlay').style.display = 'none';
-            if (document.exitFullscreen) {
-                document.exitFullscreen().catch(()=>{});
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            }
+            if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
         }
 
         function tpDownload() {
-            if (tpBlob) {
-                const url = URL.createObjectURL(tpBlob);
-                const a = document.createElement('a');
-                a.href = url;
-                const ext = tpBlob.type.includes('mp4') ? 'mp4' : 'webm';
-                a.download = `teleprompter-${Date.now()}.${ext}`;
-                a.click();
-                URL.revokeObjectURL(url);
-            }
+            if (!tpBlob) return;
+            const url = URL.createObjectURL(tpBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `teleprompter-${Date.now()}.${tpBlob.type.includes('mp4') ? 'mp4' : 'webm'}`;
+            a.click();
+            URL.revokeObjectURL(url);
         }
 
         function tpReset() {
@@ -1020,23 +916,19 @@
             document.getElementById('btn-tp-record').style.display = 'inline-flex';
         }
 
-        // Handle user pressing ESC to exit fullscreen
         document.addEventListener('fullscreenchange', () => {
-            if (!document.fullscreenElement && tpIsRecording) {
-                tpStopRecording();
-            }
+            if (!document.fullscreenElement && tpIsRecording) tpStopRecording();
         });
 
-        // --- Audio Transcriber Logic ---
-        let recognition = null;
-        let isRecording = false;
+        // =============================================
+        // Audio Transcriber
+        // =============================================
+        let recognition = null, isRecording = false;
 
         function toggleRecording() {
-            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window))
                 return showToast('Voice API not supported here.');
-            }
-            if (!isRecording) startRecording();
-            else stopRecording();
+            if (!isRecording) startRecording(); else stopRecording();
         }
 
         function startRecording() {
@@ -1044,10 +936,8 @@
             recognition = new SpeechRec();
             recognition.continuous = true;
             recognition.interimResults = true;
-            
             const textarea = document.getElementById('transcription-text');
             let finalTranscript = textarea.value ? textarea.value + " " : "";
-
             recognition.onresult = (event) => {
                 let interim = '';
                 for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -1056,11 +946,9 @@
                 }
                 textarea.value = finalTranscript + interim;
             };
-
             recognition.onend = () => { if (isRecording) recognition.start(); };
             recognition.start();
             isRecording = true;
-            
             const btn = document.getElementById('record-btn');
             btn.innerHTML = '⏹️ Stop & Save';
             btn.style.background = '#ef4444';
@@ -1068,83 +956,132 @@
         }
 
         function stopRecording() {
-            if (recognition) {
-                isRecording = false;
-                recognition.stop();
-                const btn = document.getElementById('record-btn');
-                btn.innerHTML = '🎤 Start Listening';
-                btn.style.background = 'var(--gradient-brand)';
-                btn.style.boxShadow = 'none';
-                showToast('Recording Stopped');
-            }
+            if (!recognition) return;
+            isRecording = false;
+            recognition.stop();
+            const btn = document.getElementById('record-btn');
+            btn.innerHTML = '🎤 Start Listening';
+            btn.style.background = 'var(--gradient-brand)';
+            btn.style.boxShadow = 'none';
+            showToast('Recording Stopped');
         }
 
-        function copyTranscription() {
+        async function copyTranscription() {
             const text = document.getElementById('transcription-text').value;
-            if(!text) return showToast('Nothing to copy');
-            
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            textarea.style.position = 'fixed';
-            document.body.appendChild(textarea);
-            textarea.select();
-            
-            try {
-                document.execCommand('copy');
-                showToast('Text Copied!');
-            } catch (err) {
-                showToast('Failed to copy');
-            }
-            
-            document.body.removeChild(textarea);
+            if (!text) return showToast('Nothing to copy');
+            const ok = await copyToClipboard(text);
+            showToast(ok ? 'Text Copied!' : 'Failed to copy');
         }
 
         function clearTranscription() {
             document.getElementById('transcription-text').value = '';
         }
 
-        // --- Hashtag Logic ---
-        const hashtagDb = {
-            fitness: ['#fitness', '#workout', '#gym', '#fitfam', '#fitspo', '#training', '#exercise', '#health', '#motivation', '#bodybuilding', '#fitnessmotivation', '#gymlife', '#healthy'],
-            food: ['#food', '#foodie', '#foodporn', '#instafood', '#delicious', '#yummy', '#cooking', '#foodphotography', '#homemade', '#foodblogger', '#dinner', '#lunch', '#tasty'],
-            fashion: ['#fashion', '#style', '#ootd', '#fashionblogger', '#fashionista', '#outfit', '#instafashion', '#beauty', '#model', '#stylish', '#fashionstyle'],
-            tech: ['#tech', '#technology', '#gaming', '#gamer', '#pc', '#innovation', '#gadgets', '#ai', '#coding', '#programming', '#developer', '#software'],
-            travel: ['#travel', '#wanderlust', '#adventure', '#explore', '#travelgram', '#instatravel', '#travelphotography', '#vacation', '#trip', '#traveling', '#nature'],
-            business: ['#business', '#entrepreneur', '#marketing', '#success', '#motivation', '#startup', '#businessowner', '#entrepreneurship', '#smallbusiness', '#hustle', '#money'],
-            art: ['#art', '#artist', '#artwork', '#drawing', '#illustration', '#design', '#creative', '#painting', '#sketch', '#instaart', '#artoftheday'],
-            music: ['#music', '#musician', '#song', '#sing', '#singer', '#guitar', '#producer', '#dj', '#beats', '#hiphop', '#rap', '#rock', '#pop']
+        // =============================================
+        // Hashtag Generator — Dynamic with JSON fetch
+        // =============================================
+
+        // Fallback data in case the fetch fails (matches the keys the scraper outputs)
+        const hashtagFallback = {
+            general: ['#fyp', '#foryou', '#viral', '#trending', '#foryoupage', '#tiktok', '#xyzbca', '#tiktokviral', '#viralvideo', '#fypシ'],
+            fitness: ['#fitness', '#workout', '#gym', '#fitfam', '#healthylifestyle', '#weightloss', '#motivation', '#fitnessmotivation', '#health', '#wellness', '#fittok', '#gymtok'],
+            food: ['#food', '#foodie', '#cooking', '#recipe', '#foodtok', '#baking', '#chef', '#foodporn', '#homecooking', '#easyrecipe', '#cookingtiktok', '#yummy'],
+            lifestyle: ['#beauty', '#makeup', '#skincare', '#beautytips', '#makeuptutorial', '#beautytok', '#skincareroutine', '#grwm', '#beautyhacks', '#skintok', '#makeupartist'],
+            fashion: ['#fashion', '#style', '#ootd', '#outfit', '#streetstyle', '#fashiontok', '#fashioninspo', '#outfitinspo', '#styleinspo', '#fashiontrends', '#fashionblogger'],
+            tech: ['#tech', '#technology', '#gaming', '#gamer', '#ai', '#techtok', '#gamedev', '#pc', '#gamingsetup', '#techreview', '#esports', '#twitch'],
+            travel: ['#travel', '#traveltok', '#adventure', '#wanderlust', '#vacation', '#explore', '#traveling', '#travelgram', '#travelphotography', '#travelblogger', '#travelvlog'],
+            business: ['#business', '#entrepreneur', '#marketing', '#money', '#investing', '#financetok', '#businesstips', '#hustle', '#stocks', '#entrepreneurship', '#sidehustle', '#moneytok']
         };
 
+        let hashtagDb = null;       // Will hold the loaded data
+        let hashtagSource = null;    // 'live' | 'fallback'
+        let lastGeneratedTags = [];  // For "Copy All"
+
+        /**
+         * Fetch hashtags.json from the same directory (GitHub Pages serves it from repo root).
+         * Falls back to hardcoded data on any error.
+         */
+        async function loadHashtags() {
+            const badge = document.getElementById('hashtag-freshness');
+            const dot = badge.querySelector('.freshness-dot');
+            const label = badge.querySelector('span');
+
+            try {
+                const res = await fetch('hashtags.json', { cache: 'no-cache' });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+
+                // Basic validation: must be an object with at least one array
+                const keys = Object.keys(data);
+                if (keys.length === 0 || !Array.isArray(data[keys[0]])) throw new Error('Invalid JSON shape');
+
+                hashtagDb = data;
+                hashtagSource = 'live';
+
+                dot.classList.add('live');
+                dot.classList.remove('fallback');
+                label.textContent = 'Live data from weekly scraper';
+
+                console.log(`[Hashtags] Loaded ${keys.length} categories from hashtags.json`);
+            } catch (err) {
+                console.warn('[Hashtags] Could not load hashtags.json, using fallback:', err.message);
+                hashtagDb = hashtagFallback;
+                hashtagSource = 'fallback';
+
+                dot.classList.add('fallback');
+                dot.classList.remove('live');
+                label.textContent = 'Using built-in data (hashtags.json unavailable)';
+            }
+        }
+
         function generateHashtags() {
+            if (!hashtagDb) {
+                showToast('Hashtag data still loading...');
+                return;
+            }
+
             const niche = document.getElementById('niche-select').value;
             const hashtags = hashtagDb[niche];
-            const selected = hashtags.sort(() => 0.5 - Math.random()).slice(0, 12);
-            
+
+            if (!hashtags || hashtags.length === 0) {
+                showToast('No tags found for this category');
+                return;
+            }
+
+            // Shuffle and pick up to 15
+            const selected = [...hashtags].sort(() => 0.5 - Math.random()).slice(0, 15);
+            lastGeneratedTags = selected;
+
             const list = document.getElementById('hashtag-list');
             list.innerHTML = '';
-            
+
             selected.forEach(tag => {
                 const pill = document.createElement('div');
                 pill.className = 'tag-pill';
                 pill.textContent = tag;
-                pill.onclick = () => {
-                    const textarea = document.createElement('textarea');
-                    textarea.value = tag;
-                    textarea.style.position = 'fixed';
-                    document.body.appendChild(textarea);
-                    textarea.select();
-                    try {
-                        document.execCommand('copy');
-                        showToast('Copied: ' + tag);
-                    } catch (err) {}
-                    document.body.removeChild(textarea);
+                pill.onclick = async () => {
+                    const ok = await copyToClipboard(tag);
+                    if (ok) showToast('Copied: ' + tag);
                 };
                 list.appendChild(pill);
             });
+
             document.getElementById('hashtag-result').classList.add('show');
         }
 
-        // --- Times Logic ---
+        async function copyAllHashtags() {
+            if (!lastGeneratedTags.length) return showToast('Generate tags first');
+            const text = lastGeneratedTags.join(' ');
+            const ok = await copyToClipboard(text);
+            showToast(ok ? 'All tags copied!' : 'Failed to copy');
+        }
+
+        // Load hashtags on page init
+        loadHashtags();
+
+        // =============================================
+        // Posting Times
+        // =============================================
         const timesDb = {
             instagram: { EST: ['9:00 AM', '2:00 PM', '5:00 PM'], CST: ['8:00 AM', '1:00 PM', '4:00 PM'], MST: ['7:00 AM', '12:00 PM', '3:00 PM'], PST: ['6:00 AM', '11:00 AM', '2:00 PM'], GMT: ['2:00 PM', '7:00 PM', '10:00 PM'] },
             tiktok: { EST: ['6:00 AM', '7:00 PM', '9:00 PM'], CST: ['5:00 AM', '6:00 PM', '8:00 PM'], MST: ['4:00 AM', '5:00 PM', '7:00 PM'], PST: ['3:00 AM', '4:00 PM', '6:00 PM'], GMT: ['11:00 AM', '12:00 AM', '2:00 AM'] },
@@ -1156,10 +1093,8 @@
             const platform = document.getElementById('platform-select').value;
             const tz = document.getElementById('timezone-select').value;
             const times = timesDb[platform][tz];
-            
             const grid = document.getElementById('times-grid');
             grid.innerHTML = '';
-            
             const labels = ['Prime Peak', 'Secondary', 'Night Owl'];
             times.forEach((time, i) => {
                 grid.innerHTML += `
