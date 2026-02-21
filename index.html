@@ -1220,70 +1220,96 @@
         // Rate Calculator
         // =============================================
 
-        // Base CPM rates by platform ($ per 1,000 views)
-        // Source: Industry averages from influencer marketing reports
-        const baseCPM = {
-            tiktok:    { low: 4,  mid: 8,   high: 15  },
-            instagram: { low: 5,  mid: 12,  high: 25  },
-            youtube:   { low: 10, mid: 22,  high: 50  },
-            twitter:   { low: 3,  mid: 6,   high: 12  },
+        /*
+         * PRICING MODEL — Two-layer approach:
+         *
+         * Layer 1: LABOR FLOOR — the minimum any creator should charge
+         *   Creating a sponsored video takes real work: scripting, filming,
+         *   editing, revisions, posting. Even a nano creator spends 2-4 hours.
+         *   At a reasonable creative freelance rate ($25-50/hr), that's $75-150
+         *   minimum before you even look at metrics.
+         *
+         * Layer 2: CPM VALUE — what your reach is worth to a brand
+         *   (Avg Views ÷ 1,000) × effective CPM
+         *   This scales up as your audience grows.
+         *
+         * FINAL RATE = whichever is HIGHER (labor floor or CPM value)
+         *   Small creators get protected by the labor floor.
+         *   Bigger creators get paid for their reach.
+         *   The crossover happens naturally around 15K-25K avg views.
+         */
+
+        // Labor floor minimums by platform (accounts for content effort)
+        // TikTok/Reels = shorter content but still real production work
+        // YouTube = longer content, more editing, higher floor
+        const laborFloor = {
+            tiktok:    { low: 75,   mid: 125,  high: 200  },
+            instagram: { low: 100,  mid: 150,  high: 250  },
+            youtube:   { low: 150,  mid: 250,  high: 500  },
+            twitter:   { low: 50,   mid: 80,   high: 150  },
         };
 
-        // Niche multipliers — some niches command higher rates
+        // CPM rates by platform ($ per 1,000 views)
+        const baseCPM = {
+            tiktok:    { low: 8,   mid: 15,  high: 25  },
+            instagram: { low: 10,  mid: 20,  high: 40  },
+            youtube:   { low: 15,  mid: 30,  high: 60  },
+            twitter:   { low: 5,   mid: 10,  high: 20  },
+        };
+
+        // Niche multipliers — some niches pay more
         const nicheMultiplier = {
             general:   1.0,
             beauty:    1.2,
             fitness:   1.1,
             tech:      1.3,
             food:      1.0,
-            finance:   1.5,   // Finance/business brands pay premium
+            finance:   1.5,
             travel:    1.15,
             education: 1.2,
         };
 
-        // Engagement rate tier bonuses
+        // Engagement rate scoring
         function getEngagementMultiplier(engRate) {
-            if (engRate >= 8)  return { mult: 1.5,  label: 'Exceptional', color: '#22c55e' };
-            if (engRate >= 5)  return { mult: 1.3,  label: 'Excellent',   color: '#a855f7' };
-            if (engRate >= 3)  return { mult: 1.15, label: 'Great',       color: '#3b82f6' };
+            if (engRate >= 8)   return { mult: 1.5,  label: 'Exceptional', color: '#22c55e' };
+            if (engRate >= 5)   return { mult: 1.3,  label: 'Excellent',   color: '#a855f7' };
+            if (engRate >= 3)   return { mult: 1.15, label: 'Great',       color: '#3b82f6' };
             if (engRate >= 1.5) return { mult: 1.0,  label: 'Average',     color: '#f59e0b' };
-            return              { mult: 0.8,  label: 'Below Avg',   color: '#ef4444' };
+            return                { mult: 0.85, label: 'Below Avg',   color: '#ef4444' };
         }
 
         // Creator tier by follower count
         function getCreatorTier(followers) {
-            if (followers >= 1000000) return { name: 'Mega',       range: '1M+',       tierMult: 1.2 };
-            if (followers >= 500000)  return { name: 'Macro',      range: '500K–1M',   tierMult: 1.1 };
-            if (followers >= 100000)  return { name: 'Mid-Tier',   range: '100K–500K', tierMult: 1.0 };
-            if (followers >= 10000)   return { name: 'Micro',      range: '10K–100K',  tierMult: 0.95 };
-            if (followers >= 1000)    return { name: 'Nano',       range: '1K–10K',    tierMult: 0.85 };
-            return                     { name: 'Starter',    range: '<1K',       tierMult: 0.7 };
+            if (followers >= 1000000) return { name: 'Mega',     range: '1M+',       tierMult: 1.2 };
+            if (followers >= 500000)  return { name: 'Macro',    range: '500K–1M',   tierMult: 1.1 };
+            if (followers >= 100000)  return { name: 'Mid-Tier', range: '100K–500K', tierMult: 1.0 };
+            if (followers >= 10000)   return { name: 'Micro',    range: '10K–100K',  tierMult: 1.0 };
+            if (followers >= 1000)    return { name: 'Nano',     range: '1K–10K',    tierMult: 1.0 };
+            return                      { name: 'Starter',  range: '<1K',       tierMult: 0.9 };
         }
 
         let lastRateCardText = '';
 
         function calculateRates() {
-            const platform  = document.getElementById('rate-platform').value;
-            const niche     = document.getElementById('rate-niche').value;
-            const followers = parseInt(document.getElementById('rate-followers').value) || 0;
-            const avgViews  = parseInt(document.getElementById('rate-views').value) || 0;
-            const avgLikes  = parseInt(document.getElementById('rate-likes').value) || 0;
+            const platform    = document.getElementById('rate-platform').value;
+            const niche       = document.getElementById('rate-niche').value;
+            const followers   = parseInt(document.getElementById('rate-followers').value) || 0;
+            const avgViews    = parseInt(document.getElementById('rate-views').value) || 0;
+            const avgLikes    = parseInt(document.getElementById('rate-likes').value) || 0;
             const avgComments = parseInt(document.getElementById('rate-comments').value) || 0;
 
             if (!followers || !avgViews) {
                 return showToast('Enter your followers and average views');
             }
 
-            // 1. Calculate engagement rate
-            const engRate = followers > 0
-                ? ((avgLikes + avgComments) / followers) * 100
-                : 0;
+            // 1. Engagement rate
+            const engRate = ((avgLikes + avgComments) / followers) * 100;
             const engData = getEngagementMultiplier(engRate);
 
             // 2. Creator tier
             const tier = getCreatorTier(followers);
 
-            // 3. Compute effective CPM
+            // 3. CPM-based value (what your reach is worth)
             const cpmBase = baseCPM[platform];
             const nMult   = nicheMultiplier[niche];
             const effectiveCPM = {
@@ -1292,44 +1318,58 @@
                 high: cpmBase.high * nMult * engData.mult * tier.tierMult,
             };
 
-            // 4. Calculate rates per deliverable type using avg views
+            const cpmValue = {
+                low:  (avgViews / 1000) * effectiveCPM.low,
+                mid:  (avgViews / 1000) * effectiveCPM.mid,
+                high: (avgViews / 1000) * effectiveCPM.high,
+            };
+
+            // 4. Labor floor (minimum for the work involved)
+            const floor = laborFloor[platform];
+
+            // 5. FINAL RATE = max(labor floor, CPM value)
+            // This is the key: small creators get the labor floor,
+            // bigger creators get the CPM value once it exceeds it
+            const sponsoredPost = {
+                low:  Math.max(floor.low,  cpmValue.low),
+                mid:  Math.max(floor.mid,  cpmValue.mid),
+                high: Math.max(floor.high, cpmValue.high),
+            };
+
+            // Which pricing model won?
+            const pricingModel = cpmValue.mid >= floor.mid ? 'reach' : 'labor';
+
+            // 6. Build deliverable rates from the sponsored post base
             const deliverables = [
                 {
                     type: 'Sponsored Post / Video',
                     desc: 'Single in-feed video featuring brand',
-                    low:  (avgViews / 1000) * effectiveCPM.low,
-                    mid:  (avgViews / 1000) * effectiveCPM.mid,
-                    high: (avgViews / 1000) * effectiveCPM.high,
+                    low:  sponsoredPost.low,
+                    mid:  sponsoredPost.mid,
+                    high: sponsoredPost.high,
                 },
                 {
                     type: 'Story / Repost',
                     desc: 'Story mention or reshare (24hr)',
-                    low:  (avgViews / 1000) * effectiveCPM.low * 0.35,
-                    mid:  (avgViews / 1000) * effectiveCPM.mid * 0.35,
-                    high: (avgViews / 1000) * effectiveCPM.high * 0.35,
+                    low:  Math.max(25,  sponsoredPost.low  * 0.35),
+                    mid:  Math.max(40,  sponsoredPost.mid  * 0.35),
+                    high: Math.max(75,  sponsoredPost.high * 0.35),
                 },
                 {
                     type: 'Brand Deal Package',
                     desc: '3 posts + stories over 30 days',
-                    low:  (avgViews / 1000) * effectiveCPM.low * 2.5,
-                    mid:  (avgViews / 1000) * effectiveCPM.mid * 2.5,
-                    high: (avgViews / 1000) * effectiveCPM.high * 2.5,
+                    low:  sponsoredPost.low  * 2.5,
+                    mid:  sponsoredPost.mid  * 2.5,
+                    high: sponsoredPost.high * 2.5,
                 },
                 {
                     type: 'Usage Rights (30 days)',
                     desc: 'Brand can reuse your content in ads',
-                    low:  (avgViews / 1000) * effectiveCPM.low * 0.5,
-                    mid:  (avgViews / 1000) * effectiveCPM.mid * 0.5,
-                    high: (avgViews / 1000) * effectiveCPM.high * 0.5,
+                    low:  Math.max(50,  sponsoredPost.low  * 0.5),
+                    mid:  Math.max(75,  sponsoredPost.mid  * 0.5),
+                    high: Math.max(125, sponsoredPost.high * 0.5),
                 },
             ];
-
-            // Enforce minimum rates
-            deliverables.forEach(d => {
-                d.low  = Math.max(d.low, 15);
-                d.mid  = Math.max(d.mid, 25);
-                d.high = Math.max(d.high, 50);
-            });
 
             // ── Render results ──
 
@@ -1365,15 +1405,18 @@
 
             // Explanation text
             const platformNames = { tiktok: 'TikTok', instagram: 'Instagram', youtube: 'YouTube', twitter: 'X (Twitter)' };
+            const pricingExplanation = pricingModel === 'labor'
+                ? `Your rate is based on the <strong style="color: #a855f7;">creative labor floor</strong> — the minimum value of the work involved in producing a sponsored video (scripting, filming, editing, revisions). As your average views grow past ~${Math.ceil(floor.mid / effectiveCPM.mid * 1000).toLocaleString()} views, your rate will start scaling with your reach instead.`
+                : `Your rate is based on <strong style="color: #a855f7;">audience reach</strong> — your ${avgViews.toLocaleString()} average views exceed the labor floor, so brands are paying for the exposure you deliver.`;
+
             document.getElementById('rate-explanation').innerHTML = `
                 <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7;">
                     <strong style="color: var(--text-primary);">How this is calculated:</strong>
-                    Rates are based on your average views (${avgViews.toLocaleString()}) multiplied by the effective CPM for ${platformNames[platform]}.
+                    ${pricingExplanation}
                     Your ${engRate.toFixed(1)}% engagement rate earns a <span style="color: ${engData.color};">${engData.mult}x</span> multiplier,
-                    and the ${niche} niche commands a ${nMult}x rate.
-                    The range reflects low–high market rates. Use the middle number as your starting ask, and negotiate up from there.
+                    and the ${niche} niche commands a ${nMult}x premium on ${platformNames[platform]}.
                     <br><br>
-                    <strong style="color: var(--text-primary);">Pro tip:</strong> Always charge for usage rights separately — if a brand wants to run your content as a paid ad, that's worth 50–100% extra on top.
+                    <strong style="color: var(--text-primary);">Pro tip:</strong> These are starting points — always negotiate. If a brand wants exclusivity (you can't post competitors for 30-90 days), add 25-50% on top. Usage rights for paid ads should always be charged separately.
                 </div>`;
 
             // Build copy text
