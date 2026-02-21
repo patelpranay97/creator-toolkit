@@ -1,355 +1,440 @@
 """
-TikTok Trending Hashtags Scraper (API Method)
-This version attempts to call TikTok's API directly instead of using Selenium
-Much faster and more reliable if we can find the API endpoint
+TikTok Trending Hashtags Scraper
+================================
+Fetches trending hashtags from TikTok's Creative Center.
+
+Strategy (in priority order):
+  1. Hit TikTok Creative Center's internal API directly (fast, structured JSON)
+  2. Scrape the server-rendered HTML from the Creative Center page (no browser needed)
+  3. Fall back to a curated static database (always works)
+
+Designed to run in GitHub Actions with zero browser dependencies.
+Only requires: requests, beautifulsoup4, pandas, openpyxl
 """
 
-import time
 import json
+import re
+import time
 import requests
 from datetime import datetime
-import pandas as pd
-from openpyxl import Workbook
-from openpyxl.styles import Font, PatternFill, Alignment
+from bs4 import BeautifulSoup
 
-def get_tiktok_hashtags_api(country_code="US", period=7, count=100):
+# ─────────────────────────────────────────────
+# Configuration
+# ─────────────────────────────────────────────
+
+COUNTRY_CODE = ""          # Empty = all regions (matches the default Creative Center view)
+PERIOD = 7                 # 7-day trending window
+MAX_HASHTAGS = 100         # How many to try to fetch
+
+# TikTok Creative Center industry filter codes (from the site's dropdown)
+# These are the numeric IDs TikTok uses internally for industry filtering.
+INDUSTRY_IDS = {
+    "All":                    "",
+    "Apparel & Accessories":  "2",
+    "Beauty & Personal Care": "3",
+    "Education":              "6",
+    "Financial Services":     "9",
+    "Food & Beverage":        "15",
+    "Games":                  "18",
+    "Health":                 "36",
+    "Home Improvement":       "21",
+    "News & Entertainment":   "24",
+    "Pets":                   "28",
+    "Sports & Outdoor":       "31",
+    "Tech & Electronics":     "33",
+    "Travel":                 "35",
+    "Vehicle & Transportation": "37",
+}
+
+# Map TikTok industry names → your website's JSON keys
+WEBSITE_KEY_MAP = {
+    "All":                    "general",
+    "Beauty & Personal Care": "lifestyle",
+    "Food & Beverage":        "food",
+    "Health":                 "fitness",
+    "Apparel & Accessories":  "fashion",
+    "Tech & Electronics":     "tech",
+    "Games":                  "tech",        # Merge gaming into tech
+    "Travel":                 "travel",
+    "Financial Services":     "business",
+    "News & Entertainment":   "entertainment",
+    "Sports & Outdoor":       "sports",
+    "Education":              "education",
+    "Home Improvement":       "home",
+    "Pets":                   "pets",
+    "Vehicle & Transportation": "auto",
+}
+
+# Standard headers to look like a normal browser
+HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/124.0.0.0 Safari/537.36"
+    ),
+    "Accept": "application/json, text/html, */*",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Referer": "https://ads.tiktok.com/business/creativecenter/inspiration/popular/hashtag/pc/en",
+}
+
+
+# ─────────────────────────────────────────────
+# Method 1: TikTok Creative Center Internal API
+# ─────────────────────────────────────────────
+
+def fetch_via_api(industry_name="All", industry_id="", country_code="", period=7, limit=50):
     """
-    Attempt to call TikTok's internal API
-    Note: This endpoint may require authentication or may change
+    Call TikTok Creative Center's internal API endpoint.
+    This is the same endpoint the website's JavaScript calls.
+    Returns a list of hashtag strings, or None on failure.
     """
-    
-    # TikTok Creative Center API endpoint (approximate - may need adjustment)
-    # You'll need to inspect the Network tab in browser DevTools to find the exact endpoint
     url = "https://ads.tiktok.com/creative_radar_api/v1/popular_trend/hashtag/list"
-    
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': 'application/json',
-        'Accept-Language': 'en-US,en;q=0.9',
-        'Referer': 'https://ads.tiktok.com/business/creativecenter/inspiration/popular/hashtag/pc/en',
-    }
-    
+
     params = {
-        'period': period,  # 7 days
-        'country_code': country_code,
-        'limit': count,
+        "period":       period,
+        "country_code": country_code,
+        "page":         1,
+        "limit":        limit,
+        "sort_by":      "popular",
     }
-    
+    if industry_id:
+        params["industry_id"] = industry_id
+
     try:
-        response = requests.get(url, headers=headers, params=params, timeout=10)
-        
-        if response.status_code == 200:
-            data = response.json()
-            return data
-        else:
-            print(f"API returned status code: {response.status_code}")
+        resp = requests.get(url, headers=HEADERS, params=params, timeout=15)
+        if resp.status_code != 200:
+            print(f"  [API] HTTP {resp.status_code} for {industry_name}")
             return None
-            
+
+        data = resp.json()
+
+        # The API returns: { "code": 0, "data": { "list": [ { "hashtag_name": "...", ... }, ... ] } }
+        if data.get("code") != 0:
+            print(f"  [API] Non-zero response code: {data.get('code')} — {data.get('msg', '')}")
+            return None
+
+        items = data.get("data", {}).get("list", [])
+        if not items:
+            print(f"  [API] Empty list for {industry_name}")
+            return None
+
+        hashtags = []
+        for item in items:
+            name = item.get("hashtag_name", "").strip()
+            if name:
+                tag = f"#{name}" if not name.startswith("#") else name
+                hashtags.append(tag)
+
+        print(f"  [API] ✅ Got {len(hashtags)} hashtags for {industry_name}")
+        return hashtags
+
     except Exception as e:
-        print(f"Error calling API: {e}")
+        print(f"  [API] Error for {industry_name}: {e}")
         return None
 
-def scrape_with_selenium_alternative():
+
+# ─────────────────────────────────────────────
+# Method 2: Scrape the server-rendered HTML
+# ─────────────────────────────────────────────
+
+def fetch_via_html(country_code="", period=7):
     """
-    Alternative method: Use browser automation to capture API calls
+    Fetch the Creative Center hashtags page and parse the SSR HTML.
+    The page renders ~20 hashtags in the initial HTML without JavaScript.
+    Returns a list of hashtag strings, or None on failure.
     """
-    from selenium import webdriver
-    from selenium.webdriver.chrome.options import Options
-    from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-    
-    # Enable network logging
-    caps = DesiredCapabilities.CHROME
-    caps['goog:loggingPrefs'] = {'performance': 'ALL'}
-    
-    chrome_options = Options()
-    chrome_options.add_argument('--headless')
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--disable-dev-shm-usage')
-    
-    driver = webdriver.Chrome(options=chrome_options, desired_capabilities=caps)
-    
+    url = "https://ads.tiktok.com/business/creativecenter/inspiration/popular/hashtag/pc/en"
+
+    params = {}
+    if country_code:
+        params["countryCode"] = country_code
+    if period:
+        params["period"] = period
+
     try:
-        driver.get("https://ads.tiktok.com/business/creativecenter/inspiration/popular/hashtag/pc/en")
-        time.sleep(10)  # Wait for API calls
-        
-        # Get network logs
-        logs = driver.get_log('performance')
-        
-        hashtag_data = []
-        
-        for entry in logs:
-            log = json.loads(entry['message'])['message']
-            
-            # Look for API responses
-            if 'Network.responseReceived' in log['method']:
-                url = log['params']['response']['url']
-                
-                # Check if this is a hashtag API call
-                if 'hashtag' in url.lower() and 'api' in url.lower():
-                    print(f"Found API endpoint: {url}")
-                    
-                    # Try to get the response body
-                    request_id = log['params']['requestId']
-                    try:
-                        response_body = driver.execute_cdp_cmd('Network.getResponseBody', {'requestId': request_id})
-                        data = json.loads(response_body['body'])
-                        
-                        # Extract hashtag data (structure will vary)
-                        if 'data' in data:
-                            hashtag_data = data['data']
-                            break
-                    except:
-                        continue
-        
-        return hashtag_data
-        
-    finally:
-        driver.quit()
+        resp = requests.get(url, headers=HEADERS, params=params, timeout=20)
+        if resp.status_code != 200:
+            print(f"  [HTML] HTTP {resp.status_code}")
+            return None
 
-def create_manual_hashtag_database():
-    """
-    Fallback: Create a curated hashtag database manually
-    This can be updated weekly by visiting TikTok and manually copying trends
-    """
-    
-    hashtags_by_industry = {
-        "All": [
-            {"hashtag": "#fyp", "posts": "28.5B+"},
-            {"hashtag": "#foryou", "posts": "12.3B+"},
-            {"hashtag": "#viral", "posts": "8.2B+"},
-            {"hashtag": "#trending", "posts": "5.1B+"},
-            {"hashtag": "#foryoupage", "posts": "4.8B+"},
-            {"hashtag": "#tiktok", "posts": "3.2B+"},
-            {"hashtag": "#xyzbca", "posts": "2.1B+"},
-            {"hashtag": "#tiktokviral", "posts": "1.8B+"},
-            {"hashtag": "#viralvideo", "posts": "1.5B+"},
-            {"hashtag": "#fypシ", "posts": "1.2B+"},
+        soup = BeautifulSoup(resp.text, "html.parser")
+        hashtags = []
+
+        # Strategy A: Look for hashtag text in the structured list items
+        # The page renders hashtags as "# hashtagname" in heading/link elements
+        for el in soup.find_all(["a", "div", "span", "h3", "p"]):
+            text = el.get_text(strip=True)
+            # Match patterns like "# shabebarat" or "#home"
+            if text.startswith("# ") or text.startswith("#"):
+                tag = text.replace("# ", "#").strip()
+                if tag.startswith("#") and len(tag) > 1 and " " not in tag:
+                    if tag.lower() not in [h.lower() for h in hashtags]:
+                        hashtags.append(tag)
+
+        # Strategy B: Parse from links like /hashtag/HASHTAGNAME/pc/en
+        if len(hashtags) < 5:
+            for link in soup.find_all("a", href=True):
+                href = link["href"]
+                match = re.search(r"/hashtag/([^/?]+)", href)
+                if match:
+                    name = match.group(1)
+                    tag = f"#{name}"
+                    if tag.lower() not in [h.lower() for h in hashtags]:
+                        hashtags.append(tag)
+
+        # Strategy C: Look for JSON data embedded in script tags
+        if len(hashtags) < 5:
+            for script in soup.find_all("script"):
+                script_text = script.string or ""
+                # Look for hashtag_name in JSON blobs
+                for match in re.finditer(r'"hashtag_name"\s*:\s*"([^"]+)"', script_text):
+                    tag = f"#{match.group(1)}"
+                    if tag.lower() not in [h.lower() for h in hashtags]:
+                        hashtags.append(tag)
+
+        if hashtags:
+            print(f"  [HTML] ✅ Parsed {len(hashtags)} hashtags from page HTML")
+            return hashtags
+        else:
+            print("  [HTML] No hashtags found in page HTML")
+            return None
+
+    except Exception as e:
+        print(f"  [HTML] Error: {e}")
+        return None
+
+
+# ─────────────────────────────────────────────
+# Method 3: Static fallback database
+# ─────────────────────────────────────────────
+
+def get_fallback_data():
+    """Last resort: hardcoded hashtag sets that are always valid."""
+    return {
+        "general": [
+            "#fyp", "#foryou", "#viral", "#trending", "#foryoupage",
+            "#tiktok", "#xyzbca", "#tiktokviral", "#viralvideo", "#fypシ",
         ],
-        "Fitness & Health": [
-            {"hashtag": "#fitness", "posts": "450M+"},
-            {"hashtag": "#workout", "posts": "380M+"},
-            {"hashtag": "#gym", "posts": "320M+"},
-            {"hashtag": "#fitfam", "posts": "210M+"},
-            {"hashtag": "#healthylifestyle", "posts": "180M+"},
-            {"hashtag": "#weightloss", "posts": "165M+"},
-            {"hashtag": "#motivation", "posts": "890M+"},
-            {"hashtag": "#fitnessmotivation", "posts": "125M+"},
-            {"hashtag": "#health", "posts": "280M+"},
-            {"hashtag": "#wellness", "posts": "145M+"},
-            {"hashtag": "#fittok", "posts": "98M+"},
-            {"hashtag": "#gymtok", "posts": "87M+"},
+        "fitness": [
+            "#fitness", "#workout", "#gym", "#fitfam", "#healthylifestyle",
+            "#weightloss", "#fitnessmotivation", "#health", "#wellness",
+            "#fittok", "#gymtok", "#motivation",
         ],
-        "Food & Beverage": [
-            {"hashtag": "#food", "posts": "520M+"},
-            {"hashtag": "#foodie", "posts": "410M+"},
-            {"hashtag": "#cooking", "posts": "380M+"},
-            {"hashtag": "#recipe", "posts": "290M+"},
-            {"hashtag": "#foodtok", "posts": "180M+"},
-            {"hashtag": "#baking", "posts": "165M+"},
-            {"hashtag": "#chef", "posts": "142M+"},
-            {"hashtag": "#foodporn", "posts": "198M+"},
-            {"hashtag": "#homecooking", "posts": "112M+"},
-            {"hashtag": "#easyrecipe", "posts": "95M+"},
-            {"hashtag": "#cookingtiktok", "posts": "88M+"},
-            {"hashtag": "#yummy", "posts": "156M+"},
+        "food": [
+            "#food", "#foodie", "#cooking", "#recipe", "#foodtok",
+            "#baking", "#chef", "#foodporn", "#homecooking", "#easyrecipe",
+            "#cookingtiktok", "#yummy",
         ],
-        "Beauty & Personal Care": [
-            {"hashtag": "#beauty", "posts": "480M+"},
-            {"hashtag": "#makeup", "posts": "420M+"},
-            {"hashtag": "#skincare", "posts": "350M+"},
-            {"hashtag": "#beautytips", "posts": "210M+"},
-            {"hashtag": "#makeuptutorial", "posts": "190M+"},
-            {"hashtag": "#beautytok", "posts": "145M+"},
-            {"hashtag": "#skincareroutine", "posts": "128M+"},
-            {"hashtag": "#makeuplook", "posts": "165M+"},
-            {"hashtag": "#grwm", "posts": "185M+"},
-            {"hashtag": "#beautyhacks", "posts": "98M+"},
-            {"hashtag": "#skintok", "posts": "87M+"},
-            {"hashtag": "#makeupartist", "posts": "156M+"},
+        "lifestyle": [
+            "#beauty", "#makeup", "#skincare", "#beautytips", "#makeuptutorial",
+            "#beautytok", "#skincareroutine", "#grwm", "#beautyhacks",
+            "#skintok", "#makeupartist",
         ],
-        "Fashion": [
-            {"hashtag": "#fashion", "posts": "580M+"},
-            {"hashtag": "#style", "posts": "450M+"},
-            {"hashtag": "#ootd", "posts": "380M+"},
-            {"hashtag": "#outfit", "posts": "320M+"},
-            {"hashtag": "#streetstyle", "posts": "180M+"},
-            {"hashtag": "#fashiontok", "posts": "145M+"},
-            {"hashtag": "#fashioninspo", "posts": "125M+"},
-            {"hashtag": "#outfitinspo", "posts": "165M+"},
-            {"hashtag": "#styleinspo", "posts": "112M+"},
-            {"hashtag": "#fashiontrends", "posts": "98M+"},
-            {"hashtag": "#ootdfashion", "posts": "87M+"},
-            {"hashtag": "#fashionblogger", "posts": "134M+"},
+        "fashion": [
+            "#fashion", "#style", "#ootd", "#outfit", "#streetstyle",
+            "#fashiontok", "#fashioninspo", "#outfitinspo", "#styleinspo",
+            "#fashiontrends", "#fashionblogger",
         ],
-        "Tech & Gaming": [
-            {"hashtag": "#tech", "posts": "280M+"},
-            {"hashtag": "#technology", "posts": "210M+"},
-            {"hashtag": "#gaming", "posts": "520M+"},
-            {"hashtag": "#gamer", "posts": "410M+"},
-            {"hashtag": "#ai", "posts": "165M+"},
-            {"hashtag": "#techtok", "posts": "125M+"},
-            {"hashtag": "#gamedev", "posts": "98M+"},
-            {"hashtag": "#pc", "posts": "187M+"},
-            {"hashtag": "#gamingsetup", "posts": "142M+"},
-            {"hashtag": "#techreview", "posts": "87M+"},
-            {"hashtag": "#esports", "posts": "156M+"},
-            {"hashtag": "#twitch", "posts": "198M+"},
+        "tech": [
+            "#tech", "#technology", "#gaming", "#gamer", "#ai",
+            "#techtok", "#gamedev", "#pc", "#gamingsetup", "#techreview",
+            "#esports", "#twitch",
         ],
-        "Travel": [
-            {"hashtag": "#travel", "posts": "490M+"},
-            {"hashtag": "#traveltok", "posts": "220M+"},
-            {"hashtag": "#adventure", "posts": "280M+"},
-            {"hashtag": "#wanderlust", "posts": "190M+"},
-            {"hashtag": "#vacation", "posts": "165M+"},
-            {"hashtag": "#explore", "posts": "345M+"},
-            {"hashtag": "#traveling", "posts": "187M+"},
-            {"hashtag": "#travelgram", "posts": "156M+"},
-            {"hashtag": "#travelphotography", "posts": "134M+"},
-            {"hashtag": "#travelblogger", "posts": "112M+"},
-            {"hashtag": "#instatravel", "posts": "98M+"},
-            {"hashtag": "#travelvlog", "posts": "87M+"},
+        "travel": [
+            "#travel", "#traveltok", "#adventure", "#wanderlust", "#vacation",
+            "#explore", "#traveling", "#travelgram", "#travelphotography",
+            "#travelblogger", "#travelvlog",
         ],
-        "Business & Finance": [
-            {"hashtag": "#business", "posts": "320M+"},
-            {"hashtag": "#entrepreneur", "posts": "280M+"},
-            {"hashtag": "#marketing", "posts": "210M+"},
-            {"hashtag": "#money", "posts": "420M+"},
-            {"hashtag": "#investing", "posts": "165M+"},
-            {"hashtag": "#financetok", "posts": "145M+"},
-            {"hashtag": "#businesstips", "posts": "125M+"},
-            {"hashtag": "#hustle", "posts": "198M+"},
-            {"hashtag": "#stocks", "posts": "156M+"},
-            {"hashtag": "#entrepreneurship", "posts": "187M+"},
-            {"hashtag": "#sidehustle", "posts": "142M+"},
-            {"hashtag": "#moneytok", "posts": "98M+"},
+        "business": [
+            "#business", "#entrepreneur", "#marketing", "#money", "#investing",
+            "#financetok", "#businesstips", "#hustle", "#stocks",
+            "#entrepreneurship", "#sidehustle", "#moneytok",
         ],
     }
-    
-    all_hashtags = []
-    
-    for industry, tags in hashtags_by_industry.items():
-        for idx, tag_data in enumerate(tags):
-            all_hashtags.append({
-                'rank': idx + 1,
-                'hashtag': tag_data['hashtag'],
-                'posts': tag_data['posts'],
-                'industry': industry,
-                'scraped_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                'source': 'Manual Curation'
-            })
-    
-    return all_hashtags
 
-def save_to_json(hashtags_data, filename="hashtags.json"):
-    """Format and save hashtag data to JSON for the website"""
-    if not hashtags_data:
-        return
-        
-    # Map the scraper industries to the keys expected by index.html
-    industry_mapping = {
-        "Fitness & Health": "fitness",
-        "Food & Beverage": "food",
-        "Beauty & Personal Care": "lifestyle", # Mapping beauty to lifestyle for the site
-        "Fashion": "fashion",
-        "Tech & Gaming": "tech",
-        "Travel": "travel",
-        "Business & Finance": "business",
-        "All": "general"
-    }
-    
+
+# ─────────────────────────────────────────────
+# Main orchestrator
+# ─────────────────────────────────────────────
+
+def scrape_all_hashtags():
+    """
+    Try each method in priority order. Build a complete hashtag dataset
+    organized by website category keys.
+    Returns (dict, source_label) where dict maps category→list of hashtag strings.
+    """
     website_data = {}
-    for item in hashtags_data:
-        original_industry = item['industry']
-        tag = item['hashtag']
-        
-        # Get the mapped key, fallback to a lowercase version of the industry name
-        key = industry_mapping.get(original_industry, original_industry.lower().replace(' ', '_'))
-        
-        if key not in website_data:
-            website_data[key] = []
-        website_data[key].append(tag)
-        
-    with open(filename, 'w', encoding='utf-8') as f:
-        json.dump(website_data, f, indent=4)
-        
-    print(f"✅ JSON data saved to {filename} for the website!")
+    source = "unknown"
 
-def save_to_excel(hashtags_data, filename="tiktok_hashtags.xlsx"):
-    """Save hashtag data to a nice formatted Excel file"""
-    
-    if not hashtags_data:
-        print("No data to save!")
+    # ── Attempt 1: API method (try each industry) ──
+    print("\n🔌 Attempting TikTok Creative Center API...")
+    api_success_count = 0
+
+    for industry_name, industry_id in INDUSTRY_IDS.items():
+        web_key = WEBSITE_KEY_MAP.get(industry_name)
+        if not web_key:
+            continue
+
+        tags = fetch_via_api(
+            industry_name=industry_name,
+            industry_id=industry_id,
+            country_code=COUNTRY_CODE,
+            period=PERIOD,
+            limit=50,
+        )
+        if tags:
+            # Merge into existing key (e.g., Games + Tech both map to "tech")
+            if web_key in website_data:
+                existing = set(t.lower() for t in website_data[web_key])
+                for t in tags:
+                    if t.lower() not in existing:
+                        website_data[web_key].append(t)
+                        existing.add(t.lower())
+            else:
+                website_data[web_key] = tags
+            api_success_count += 1
+
+        # Be polite — small delay between API calls
+        time.sleep(0.5)
+
+    if api_success_count > 0:
+        source = "api"
+        print(f"\n✅ API method succeeded for {api_success_count}/{len(INDUSTRY_IDS)} industries")
+
+    # ── Attempt 2: HTML scrape (general trending only) ──
+    if "general" not in website_data or len(website_data.get("general", [])) < 5:
+        print("\n🌐 Attempting HTML scrape of Creative Center page...")
+        html_tags = fetch_via_html(country_code=COUNTRY_CODE, period=PERIOD)
+        if html_tags:
+            website_data["general"] = html_tags
+            if source == "unknown":
+                source = "html"
+            else:
+                source = "api+html"
+            print(f"✅ HTML method got {len(html_tags)} general trending hashtags")
+
+    # ── Attempt 3: Static fallback ──
+    if not website_data or all(len(v) < 3 for v in website_data.values()):
+        print("\n⚠️  Live methods failed. Using static fallback data.")
+        website_data = get_fallback_data()
+        source = "fallback"
+    else:
+        # Fill in any missing categories from fallback so the site always has data
+        fallback = get_fallback_data()
+        for key, tags in fallback.items():
+            if key not in website_data or len(website_data[key]) < 3:
+                print(f"  Filling missing category '{key}' from fallback")
+                website_data[key] = tags
+
+    return website_data, source
+
+
+def save_to_json(website_data, source, filename="hashtags.json"):
+    """Save the hashtag data as JSON for the website to consume."""
+    output = {
+        "_meta": {
+            "scraped_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC"),
+            "source": source,
+            "country": COUNTRY_CODE or "all",
+            "period_days": PERIOD,
+        }
+    }
+    # Add each category
+    for key, tags in website_data.items():
+        output[key] = tags
+
+    with open(filename, "w", encoding="utf-8") as f:
+        json.dump(output, f, indent=2, ensure_ascii=False)
+
+    total = sum(len(v) for k, v in website_data.items() if k != "_meta")
+    print(f"\n📄 Saved {filename}")
+    print(f"   Categories: {len(website_data)}")
+    print(f"   Total hashtags: {total}")
+    print(f"   Source: {source}")
+
+
+def save_to_excel(website_data, source, filename=None):
+    """Save to formatted Excel file (optional — nice for manual review)."""
+    try:
+        import pandas as pd
+        from openpyxl.styles import Font, PatternFill, Alignment
+    except ImportError:
+        print("⚠️  pandas/openpyxl not installed — skipping Excel export")
         return
-    
-    df = pd.DataFrame(hashtags_data)
-    
-    # Create Excel writer with formatting
-    with pd.ExcelWriter(filename, engine='openpyxl') as writer:
-        # Save all hashtags
-        df.to_excel(writer, sheet_name='All Hashtags', index=False)
-        
-        # Get the workbook and sheet
-        workbook = writer.book
-        worksheet = writer.sheets['All Hashtags']
-        
-        # Format header
-        header_fill = PatternFill(start_color='4472C4', end_color='4472C4', fill_type='solid')
-        header_font = Font(bold=True, color='FFFFFF')
-        
-        for cell in worksheet[1]:
+
+    if filename is None:
+        filename = f"tiktok_hashtags_{datetime.now().strftime('%Y%m%d')}.xlsx"
+
+    rows = []
+    for category, tags in website_data.items():
+        for rank, tag in enumerate(tags, 1):
+            rows.append({
+                "rank": rank,
+                "hashtag": tag,
+                "category": category,
+                "scraped_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "source": source,
+            })
+
+    df = pd.DataFrame(rows)
+
+    with pd.ExcelWriter(filename, engine="openpyxl") as writer:
+        df.to_excel(writer, sheet_name="All Hashtags", index=False)
+
+        wb = writer.book
+        ws = writer.sheets["All Hashtags"]
+
+        header_fill = PatternFill(start_color="4472C4", end_color="4472C4", fill_type="solid")
+        header_font = Font(bold=True, color="FFFFFF")
+
+        for cell in ws[1]:
             cell.fill = header_fill
             cell.font = header_font
-            cell.alignment = Alignment(horizontal='center', vertical='center')
-        
-        # Auto-adjust column widths
-        for column in worksheet.columns:
-            max_length = 0
-            column_letter = column[0].column_letter
-            for cell in column:
-                try:
-                    if len(str(cell.value)) > max_length:
-                        max_length = len(str(cell.value))
-                except:
-                    pass
-            adjusted_width = min(max_length + 2, 50)
-            worksheet.column_dimensions[column_letter].width = adjusted_width
-        
-        # Create separate sheets for each industry
-        for industry in df['industry'].unique():
-            industry_df = df[df['industry'] == industry].copy()
-            sheet_name = industry[:30]  # Excel sheet name limit
-            industry_df.to_excel(writer, sheet_name=sheet_name, index=False)
-            
-            # Format industry sheets
-            ws = writer.sheets[sheet_name]
-            for cell in ws[1]:
+            cell.alignment = Alignment(horizontal="center", vertical="center")
+
+        for col in ws.columns:
+            max_len = max(len(str(c.value or "")) for c in col)
+            ws.column_dimensions[col[0].column_letter].width = min(max_len + 3, 50)
+
+        # Per-category sheets
+        for category in df["category"].unique():
+            cat_df = df[df["category"] == category]
+            sheet_name = category[:31]  # Excel 31-char limit
+            cat_df.to_excel(writer, sheet_name=sheet_name, index=False)
+
+            cat_ws = writer.sheets[sheet_name]
+            for cell in cat_ws[1]:
                 cell.fill = header_fill
                 cell.font = header_font
-                cell.alignment = Alignment(horizontal='center', vertical='center')
-    
-    print(f"✅ Data saved to {filename}")
-    print(f"📊 Total hashtags: {len(df)}")
-    print(f"🏷️  Industries: {df['industry'].nunique()}")
+                cell.alignment = Alignment(horizontal="center", vertical="center")
+
+    print(f"📊 Saved {filename} ({len(df)} rows across {df['category'].nunique()} categories)")
+
+
+# ─────────────────────────────────────────────
+# Entry point
+# ─────────────────────────────────────────────
 
 def main():
-    """Main function"""
     print("=" * 60)
-    print("TikTok Hashtag Scraper")
-    print(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print("  TikTok Trending Hashtags Scraper")
+    print(f"  {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 60)
-    
-    # Always use curated data (most reliable)
-    print("\nUsing curated hashtag database...")
-    hashtags = create_manual_hashtag_database()
-    
-    # Save to JSON for the website
-    save_to_json(hashtags, "hashtags.json")
-    
-    # Save to Excel with TODAY'S date
-    filename = f"tiktok_hashtags_{datetime.now().strftime('%Y%m%d')}.xlsx"
-    save_to_excel(hashtags, filename)
-    
-    print(f"\n✅ All files created successfully!")
+
+    # Scrape
+    website_data, source = scrape_all_hashtags()
+
+    # Save JSON (this is what the website reads)
+    save_to_json(website_data, source, "hashtags.json")
+
+    # Save Excel (nice for review / archives)
+    save_to_excel(website_data, source)
+
+    print(f"\n{'=' * 60}")
+    print(f"  ✅ Done! Source: {source}")
+    print(f"{'=' * 60}")
+
 
 if __name__ == "__main__":
     main()
