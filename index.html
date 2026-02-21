@@ -1012,15 +1012,22 @@
                 const data = await res.json();
 
                 // Basic validation: must be an object with at least one array
-                const keys = Object.keys(data);
+                const keys = Object.keys(data).filter(k => k !== '_meta');
                 if (keys.length === 0 || !Array.isArray(data[keys[0]])) throw new Error('Invalid JSON shape');
 
-                hashtagDb = data;
+                // Strip metadata key — only keep category arrays
+                hashtagDb = {};
+                for (const key of keys) {
+                    if (Array.isArray(data[key])) hashtagDb[key] = data[key];
+                }
                 hashtagSource = 'live';
 
                 dot.classList.add('live');
                 dot.classList.remove('fallback');
-                label.textContent = 'Live data from weekly scraper';
+                const meta = data._meta;
+                const dateStr = meta?.scraped_at ? ` (${meta.scraped_at.split(' ')[0]})` : '';
+                const srcStr = meta?.source ? ` via ${meta.source}` : '';
+                label.textContent = `Live data${srcStr}${dateStr}`;
 
                 console.log(`[Hashtags] Loaded ${keys.length} categories from hashtags.json`);
             } catch (err) {
