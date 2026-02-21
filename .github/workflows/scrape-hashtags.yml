@@ -1,5 +1,4 @@
 name: Update TikTok Hashtags Weekly
-
 on:
   schedule:
     - cron: '0 3 * * 1'  # Every Monday at 3 AM UTC
@@ -14,16 +13,16 @@ jobs:
     
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
+        python-version: '3.12'
     
     - name: Install dependencies
       run: |
-        pip install pandas openpyxl requests
+        pip install requests beautifulsoup4 pandas openpyxl
     
     - name: Run hashtag scraper
       run: |
@@ -31,8 +30,11 @@ jobs:
     
     - name: Verify files were created
       run: |
-        echo "Files created:"
+        echo "=== Files created ==="
         ls -lah *.xlsx *.json 2>/dev/null || echo "No files found"
+        echo ""
+        echo "=== hashtags.json preview ==="
+        head -50 hashtags.json 2>/dev/null || echo "No JSON file"
     
     - name: Commit and push updated files
       run: |
@@ -40,14 +42,14 @@ jobs:
         git config user.email "github-actions[bot]@users.noreply.github.com"
         
         # Add files
+        git add hashtags.json 2>/dev/null || true
         git add *.xlsx 2>/dev/null || true
-        git add *.json 2>/dev/null || true
         
         # Commit if there are changes
         if ! git diff --staged --quiet; then
-          git commit -m "Update hashtags - $(date +'%Y-%m-%d')"
+          git commit -m "Update trending hashtags — $(date +'%Y-%m-%d') [$(python -c "import json; d=json.load(open('hashtags.json')); print(d.get('_meta',{}).get('source','unknown'))")"]"
           git push
           echo "✅ Files committed and pushed!"
         else
-          echo "No changes to commit"
+          echo "ℹ️  No changes to commit"
         fi
