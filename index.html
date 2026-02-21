@@ -444,6 +444,13 @@
             .row {
                 flex-direction: column;
             }
+            #rate-card-grid > div {
+                flex-direction: column;
+                text-align: center;
+            }
+            #rate-card-grid > div > div:last-child {
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -477,6 +484,10 @@
                 <div class="nav-item" onclick="switchView('view-times', this)">
                     <span class="nav-icon">⏱️</span>
                     <span>Post Times</span>
+                </div>
+                <div class="nav-item" onclick="switchView('view-rates', this)">
+                    <span class="nav-icon">💰</span>
+                    <span>Rate Card</span>
                 </div>
             </div>
         </nav>
@@ -688,6 +699,98 @@
                     <div id="times-result" class="output-box">
                         <label class="input-label">Suggested Windows</label>
                         <div id="times-grid" class="times-grid"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RATE CALCULATOR VIEW -->
+            <section id="view-rates" class="view-section">
+                <div class="view-header">
+                    <h1 class="view-title">Rate Calculator</h1>
+                    <p class="view-subtitle">Know your worth. Get data-backed pricing for brand deals based on your actual reach.</p>
+                </div>
+
+                <div class="card">
+                    <div class="row">
+                        <div class="input-group">
+                            <label class="input-label">Platform</label>
+                            <select id="rate-platform">
+                                <option value="tiktok">TikTok</option>
+                                <option value="instagram">Instagram Reels</option>
+                                <option value="youtube">YouTube</option>
+                                <option value="twitter">X (Twitter)</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Content Niche</label>
+                            <select id="rate-niche">
+                                <option value="general">General / Lifestyle</option>
+                                <option value="beauty">Beauty & Fashion</option>
+                                <option value="fitness">Fitness & Health</option>
+                                <option value="tech">Tech & Gaming</option>
+                                <option value="food">Food & Cooking</option>
+                                <option value="finance">Business & Finance</option>
+                                <option value="travel">Travel</option>
+                                <option value="education">Education</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="input-group">
+                            <label class="input-label">Total Followers</label>
+                            <input type="number" id="rate-followers" placeholder="e.g. 50000" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Avg Views (Last 30 Posts)</label>
+                            <input type="number" id="rate-views" placeholder="e.g. 12000" min="0">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="input-group">
+                            <label class="input-label">Avg Likes Per Post</label>
+                            <input type="number" id="rate-likes" placeholder="e.g. 800" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Avg Comments Per Post</label>
+                            <input type="number" id="rate-comments" placeholder="e.g. 45" min="0">
+                        </div>
+                    </div>
+
+                    <button class="btn btn-gradient" onclick="calculateRates()">Calculate My Rates</button>
+
+                    <div id="rate-result" class="output-box">
+                        <!-- Engagement Summary -->
+                        <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px;">
+                            <div id="rate-eng-badge" style="flex: 1; min-width: 140px; background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 16px; text-align: center;">
+                                <div class="time-label">Engagement Rate</div>
+                                <div id="rate-eng-value" class="time-value" style="font-size: 1.8rem;"></div>
+                                <div id="rate-eng-tier" style="font-size: 0.8rem; margin-top: 4px;"></div>
+                            </div>
+                            <div style="flex: 1; min-width: 140px; background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 16px; text-align: center;">
+                                <div class="time-label">Creator Tier</div>
+                                <div id="rate-tier-label" class="time-value" style="font-size: 1.3rem;"></div>
+                                <div id="rate-tier-range" style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;"></div>
+                            </div>
+                            <div style="flex: 1; min-width: 140px; background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 16px; text-align: center;">
+                                <div class="time-label">Est. CPM</div>
+                                <div id="rate-cpm-value" class="time-value" style="font-size: 1.8rem;"></div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">Cost per 1K views</div>
+                            </div>
+                        </div>
+
+                        <!-- Rate Card -->
+                        <label class="input-label">Your Rate Card</label>
+                        <div id="rate-card-grid" style="display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 12px;"></div>
+
+                        <!-- Explanation -->
+                        <div id="rate-explanation" style="margin-top: 24px; padding: 20px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);"></div>
+
+                        <div class="row" style="margin-top: 16px;">
+                            <button class="btn btn-primary" onclick="copyRateCard()">Copy Rate Card</button>
+                            <button class="btn btn-outline" onclick="shareRateCard()">Share as Text</button>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -1111,6 +1214,195 @@
                     </div>`;
             });
             document.getElementById('times-result').classList.add('show');
+        }
+
+        // =============================================
+        // Rate Calculator
+        // =============================================
+
+        // Base CPM rates by platform ($ per 1,000 views)
+        // Source: Industry averages from influencer marketing reports
+        const baseCPM = {
+            tiktok:    { low: 4,  mid: 8,   high: 15  },
+            instagram: { low: 5,  mid: 12,  high: 25  },
+            youtube:   { low: 10, mid: 22,  high: 50  },
+            twitter:   { low: 3,  mid: 6,   high: 12  },
+        };
+
+        // Niche multipliers — some niches command higher rates
+        const nicheMultiplier = {
+            general:   1.0,
+            beauty:    1.2,
+            fitness:   1.1,
+            tech:      1.3,
+            food:      1.0,
+            finance:   1.5,   // Finance/business brands pay premium
+            travel:    1.15,
+            education: 1.2,
+        };
+
+        // Engagement rate tier bonuses
+        function getEngagementMultiplier(engRate) {
+            if (engRate >= 8)  return { mult: 1.5,  label: 'Exceptional', color: '#22c55e' };
+            if (engRate >= 5)  return { mult: 1.3,  label: 'Excellent',   color: '#a855f7' };
+            if (engRate >= 3)  return { mult: 1.15, label: 'Great',       color: '#3b82f6' };
+            if (engRate >= 1.5) return { mult: 1.0,  label: 'Average',     color: '#f59e0b' };
+            return              { mult: 0.8,  label: 'Below Avg',   color: '#ef4444' };
+        }
+
+        // Creator tier by follower count
+        function getCreatorTier(followers) {
+            if (followers >= 1000000) return { name: 'Mega',       range: '1M+',       tierMult: 1.2 };
+            if (followers >= 500000)  return { name: 'Macro',      range: '500K–1M',   tierMult: 1.1 };
+            if (followers >= 100000)  return { name: 'Mid-Tier',   range: '100K–500K', tierMult: 1.0 };
+            if (followers >= 10000)   return { name: 'Micro',      range: '10K–100K',  tierMult: 0.95 };
+            if (followers >= 1000)    return { name: 'Nano',       range: '1K–10K',    tierMult: 0.85 };
+            return                     { name: 'Starter',    range: '<1K',       tierMult: 0.7 };
+        }
+
+        let lastRateCardText = '';
+
+        function calculateRates() {
+            const platform  = document.getElementById('rate-platform').value;
+            const niche     = document.getElementById('rate-niche').value;
+            const followers = parseInt(document.getElementById('rate-followers').value) || 0;
+            const avgViews  = parseInt(document.getElementById('rate-views').value) || 0;
+            const avgLikes  = parseInt(document.getElementById('rate-likes').value) || 0;
+            const avgComments = parseInt(document.getElementById('rate-comments').value) || 0;
+
+            if (!followers || !avgViews) {
+                return showToast('Enter your followers and average views');
+            }
+
+            // 1. Calculate engagement rate
+            const engRate = followers > 0
+                ? ((avgLikes + avgComments) / followers) * 100
+                : 0;
+            const engData = getEngagementMultiplier(engRate);
+
+            // 2. Creator tier
+            const tier = getCreatorTier(followers);
+
+            // 3. Compute effective CPM
+            const cpmBase = baseCPM[platform];
+            const nMult   = nicheMultiplier[niche];
+            const effectiveCPM = {
+                low:  cpmBase.low  * nMult * engData.mult * tier.tierMult,
+                mid:  cpmBase.mid  * nMult * engData.mult * tier.tierMult,
+                high: cpmBase.high * nMult * engData.mult * tier.tierMult,
+            };
+
+            // 4. Calculate rates per deliverable type using avg views
+            const deliverables = [
+                {
+                    type: 'Sponsored Post / Video',
+                    desc: 'Single in-feed video featuring brand',
+                    low:  (avgViews / 1000) * effectiveCPM.low,
+                    mid:  (avgViews / 1000) * effectiveCPM.mid,
+                    high: (avgViews / 1000) * effectiveCPM.high,
+                },
+                {
+                    type: 'Story / Repost',
+                    desc: 'Story mention or reshare (24hr)',
+                    low:  (avgViews / 1000) * effectiveCPM.low * 0.35,
+                    mid:  (avgViews / 1000) * effectiveCPM.mid * 0.35,
+                    high: (avgViews / 1000) * effectiveCPM.high * 0.35,
+                },
+                {
+                    type: 'Brand Deal Package',
+                    desc: '3 posts + stories over 30 days',
+                    low:  (avgViews / 1000) * effectiveCPM.low * 2.5,
+                    mid:  (avgViews / 1000) * effectiveCPM.mid * 2.5,
+                    high: (avgViews / 1000) * effectiveCPM.high * 2.5,
+                },
+                {
+                    type: 'Usage Rights (30 days)',
+                    desc: 'Brand can reuse your content in ads',
+                    low:  (avgViews / 1000) * effectiveCPM.low * 0.5,
+                    mid:  (avgViews / 1000) * effectiveCPM.mid * 0.5,
+                    high: (avgViews / 1000) * effectiveCPM.high * 0.5,
+                },
+            ];
+
+            // Enforce minimum rates
+            deliverables.forEach(d => {
+                d.low  = Math.max(d.low, 15);
+                d.mid  = Math.max(d.mid, 25);
+                d.high = Math.max(d.high, 50);
+            });
+
+            // ── Render results ──
+
+            // Engagement badge
+            document.getElementById('rate-eng-value').textContent = engRate.toFixed(1) + '%';
+            const engTierEl = document.getElementById('rate-eng-tier');
+            engTierEl.textContent = engData.label;
+            engTierEl.style.color = engData.color;
+
+            // Creator tier
+            document.getElementById('rate-tier-label').textContent = tier.name;
+            document.getElementById('rate-tier-range').textContent = tier.range + ' followers';
+
+            // CPM
+            document.getElementById('rate-cpm-value').textContent = '$' + effectiveCPM.mid.toFixed(0);
+
+            // Rate cards
+            const grid = document.getElementById('rate-card-grid');
+            grid.innerHTML = '';
+            deliverables.forEach(d => {
+                grid.innerHTML += `
+                    <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                        <div>
+                            <div style="font-weight: 600; font-size: 1.05rem; margin-bottom: 4px;">${d.type}</div>
+                            <div style="font-size: 0.85rem; color: var(--text-secondary);">${d.desc}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 1.4rem; font-weight: 700; background: var(--gradient-brand); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">$${Math.round(d.mid).toLocaleString()}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">$${Math.round(d.low).toLocaleString()} – $${Math.round(d.high).toLocaleString()}</div>
+                        </div>
+                    </div>`;
+            });
+
+            // Explanation text
+            const platformNames = { tiktok: 'TikTok', instagram: 'Instagram', youtube: 'YouTube', twitter: 'X (Twitter)' };
+            document.getElementById('rate-explanation').innerHTML = `
+                <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7;">
+                    <strong style="color: var(--text-primary);">How this is calculated:</strong>
+                    Rates are based on your average views (${avgViews.toLocaleString()}) multiplied by the effective CPM for ${platformNames[platform]}.
+                    Your ${engRate.toFixed(1)}% engagement rate earns a <span style="color: ${engData.color};">${engData.mult}x</span> multiplier,
+                    and the ${niche} niche commands a ${nMult}x rate.
+                    The range reflects low–high market rates. Use the middle number as your starting ask, and negotiate up from there.
+                    <br><br>
+                    <strong style="color: var(--text-primary);">Pro tip:</strong> Always charge for usage rights separately — if a brand wants to run your content as a paid ad, that's worth 50–100% extra on top.
+                </div>`;
+
+            // Build copy text
+            lastRateCardText = `📊 My Creator Rate Card (${platformNames[platform]})\n`;
+            lastRateCardText += `Followers: ${followers.toLocaleString()} | Avg Views: ${avgViews.toLocaleString()} | Engagement: ${engRate.toFixed(1)}%\n\n`;
+            deliverables.forEach(d => {
+                lastRateCardText += `${d.type}: $${Math.round(d.mid).toLocaleString()} ($${Math.round(d.low).toLocaleString()}–$${Math.round(d.high).toLocaleString()})\n`;
+            });
+            lastRateCardText += `\nGenerated at creatortoolkit.com`;
+
+            document.getElementById('rate-result').classList.add('show');
+            showToast('Rate card generated!');
+        }
+
+        async function copyRateCard() {
+            if (!lastRateCardText) return showToast('Calculate rates first');
+            const ok = await copyToClipboard(lastRateCardText);
+            showToast(ok ? 'Rate card copied!' : 'Failed to copy');
+        }
+
+        async function shareRateCard() {
+            if (!lastRateCardText) return showToast('Calculate rates first');
+            if (navigator.share) {
+                try {
+                    await navigator.share({ title: 'My Creator Rate Card', text: lastRateCardText });
+                } catch {}
+            } else {
+                await copyRateCard();
+            }
         }
     </script>
 </body>
