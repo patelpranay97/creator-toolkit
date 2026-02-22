@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,1509 +13,1528 @@
             --bg-panel: #09090b;
             --bg-card: #18181b;
             --bg-hover: #27272a;
-            
-            --border-subtle: #27272a;
-            --border-focus: #52525b;
-            
-            --text-primary: #ffffff;
-            --text-secondary: #a1a1aa;
-            
-            --accent-glow: rgba(139, 92, 246, 0.4);
-            --gradient-brand: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
-            --gradient-card: linear-gradient(180deg, rgba(39, 39, 42, 0) 0%, rgba(39, 39, 42, 0.4) 100%);
-            
-            --radius-sm: 8px;
-            --radius-md: 16px;
-            --radius-lg: 24px;
-            
-            --shadow-float: 0 20px 40px -10px rgba(0,0,0,0.5);
-            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-root);
-            color: var(--text-primary);
-            height: 100dvh;
-            display: flex;
-            overflow: hidden;
-            background-image: radial-gradient(circle at 50% -20%, var(--accent-glow), transparent 40%);
-        }
-        /* --- APP LAYOUT --- */
+
+```
+        --border-subtle: #27272a;
+        --border-focus: #52525b;
+        
+        --text-primary: #ffffff;
+        --text-secondary: #a1a1aa;
+        
+        --accent-glow: rgba(139, 92, 246, 0.4);
+        --gradient-brand: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+        --gradient-card: linear-gradient(180deg, rgba(39, 39, 42, 0) 0%, rgba(39, 39, 42, 0.4) 100%);
+        
+        --radius-sm: 8px;
+        --radius-md: 16px;
+        --radius-lg: 24px;
+        
+        --shadow-float: 0 20px 40px -10px rgba(0,0,0,0.5);
+        --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+    }
+    body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: var(--bg-root);
+        color: var(--text-primary);
+        height: 100dvh;
+        display: flex;
+        overflow: hidden;
+        background-image: radial-gradient(circle at 50% -20%, var(--accent-glow), transparent 40%);
+    }
+    /* --- APP LAYOUT --- */
+    #app-container {
+        display: flex;
+        width: 100%;
+        height: 100%;
+    }
+    /* SIDEBAR (Desktop) */
+    .sidebar {
+        width: 280px;
+        background: rgba(9, 9, 11, 0.6);
+        backdrop-filter: blur(20px);
+        border-right: 1px solid var(--border-subtle);
+        display: flex;
+        flex-direction: column;
+        padding: 24px;
+        z-index: 50;
+    }
+    .brand {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 40px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .brand-icon {
+        width: 32px;
+        height: 32px;
+        background: var(--gradient-brand);
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        font-size: 1rem;
+    }
+    .nav-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex-grow: 1;
+    }
+    .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 14px 16px;
+        border-radius: var(--radius-sm);
+        color: var(--text-secondary);
+        font-weight: 500;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    .nav-item:hover {
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--text-primary);
+    }
+    .nav-item.active {
+        background: var(--bg-hover);
+        color: var(--text-primary);
+        box-shadow: inset 2px 0 0 #a855f7;
+    }
+    .nav-icon {
+        font-size: 1.25rem;
+    }
+    /* MAIN CONTENT AREA */
+    .main-content {
+        flex-grow: 1;
+        position: relative;
+        overflow-y: auto;
+        background: var(--bg-panel);
+        border-top-left-radius: var(--radius-lg);
+        border-bottom-left-radius: var(--radius-lg);
+        box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+        scroll-behavior: smooth;
+    }
+    .view-section {
+        display: none;
+        padding: 40px 60px;
+        max-width: 1000px;
+        margin: 0 auto;
+        animation: fadeIn 0.4s ease-out forwards;
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    .view-section.active {
+        display: block;
+    }
+    @keyframes fadeIn {
+        to { opacity: 1; transform: translateY(0); }
+    }
+    /* TYPOGRAPHY & HEADERS */
+    .view-header {
+        margin-bottom: 40px;
+    }
+    .view-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        margin-bottom: 8px;
+    }
+    .view-subtitle {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+    }
+    /* UI COMPONENTS */
+    .card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        padding: 32px;
+        box-shadow: var(--shadow-float);
+        background-image: var(--gradient-card);
+        margin-bottom: 24px;
+    }
+    .input-group {
+        margin-bottom: 24px;
+    }
+    .input-label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    select, input[type="text"], input[type="number"], textarea {
+        width: 100%;
+        background: var(--bg-root);
+        border: 1px solid var(--border-subtle);
+        color: var(--text-primary);
+        padding: 16px;
+        border-radius: var(--radius-sm);
+        font-family: inherit;
+        font-size: 1rem;
+        transition: var(--transition);
+        appearance: none;
+        line-height: 1.5;
+    }
+    input[type="range"] {
+        width: 100%;
+        background: transparent;
+        padding: 0;
+        appearance: auto;
+        border: none;
+        height: auto;
+        cursor: pointer;
+    }
+    select {
+        background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9L12 15L18 9' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 16px center;
+        padding-right: 48px;
+    }
+    select:focus, textarea:focus {
+        outline: none;
+        border-color: #a855f7;
+        box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+    }
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        padding: 16px 24px;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        font-family: inherit;
+    }
+    .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none !important;
+        box-shadow: none !important;
+    }
+    .btn-primary {
+        background: var(--text-primary);
+        color: var(--bg-root);
+    }
+    .btn-primary:hover:not(:disabled) {
+        transform: translateY(-2px);
+        background: #e4e4e7;
+        box-shadow: 0 10px 20px rgba(255,255,255,0.1);
+    }
+    .btn-gradient {
+        background: var(--gradient-brand);
+        color: white;
+    }
+    .btn-gradient:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(236, 72, 153, 0.3);
+    }
+    .btn-outline {
+        background: transparent;
+        border: 1px solid var(--border-focus);
+        color: var(--text-primary);
+    }
+    .btn-outline:hover:not(:disabled) {
+        background: rgba(255,255,255,0.05);
+    }
+    /* Drag & Drop Area */
+    .dropzone {
+        border: 2px dashed var(--border-focus);
+        border-radius: var(--radius-md);
+        padding: 40px 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: var(--transition);
+        background: rgba(0,0,0,0.2);
+    }
+    .dropzone:hover, .dropzone.dragover {
+        border-color: #a855f7;
+        background: rgba(168, 85, 247, 0.05);
+    }
+    .drop-icon {
+        font-size: 2.5rem;
+        margin-bottom: 12px;
+        opacity: 0.7;
+    }
+    /* Hashtags Grid */
+    .hashtag-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 24px;
+    }
+    .tag-pill {
+        background: rgba(168, 85, 247, 0.1);
+        border: 1px solid rgba(168, 85, 247, 0.3);
+        color: #d8b4fe;
+        padding: 8px 16px;
+        border-radius: 100px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+    .tag-pill:hover {
+        background: #a855f7;
+        color: white;
+        transform: scale(1.05);
+    }
+    /* Results / Output States */
+    .output-box {
+        display: none;
+        margin-top: 24px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border-subtle);
+        animation: fadeIn 0.3s ease;
+    }
+    .output-box.show {
+        display: block;
+    }
+    /* Time Grid Layout */
+    .times-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 16px;
+        margin-top: 24px;
+    }
+    .time-slot {
+        background: rgba(0,0,0,0.4);
+        border: 1px solid var(--border-subtle);
+        padding: 20px;
+        border-radius: var(--radius-sm);
+        text-align: center;
+    }
+    .time-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 8px;
+    }
+    .time-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+    /* Toast Notification */
+    .toast {
+        position: fixed;
+        top: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-100px);
+        background: var(--text-primary);
+        color: var(--bg-root);
+        padding: 12px 24px;
+        border-radius: 100px;
+        font-weight: 600;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        z-index: 9999;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .toast.visible {
+        transform: translateX(-50%) translateY(0);
+    }
+    /* Data freshness badge */
+    .freshness-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        margin-top: 8px;
+    }
+    .freshness-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #52525b;
+    }
+    .freshness-dot.live {
+        background: #22c55e;
+        box-shadow: 0 0 6px rgba(34, 197, 94, 0.5);
+    }
+    .freshness-dot.fallback {
+        background: #f59e0b;
+    }
+    /* Custom Keyframes */
+    @keyframes pulse-dot {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(0.8); }
+    }
+    /* FLEX UTILS */
+    .row {
+        display: flex;
+        gap: 12px;
+    }
+    .row > * { flex: 1; }
+    /* --- MOBILE ADAPTATION --- */
+    @media (max-width: 768px) {
         #app-container {
-            display: flex;
-            width: 100%;
-            height: 100%;
-        }
-        /* SIDEBAR (Desktop) */
-        .sidebar {
-            width: 280px;
-            background: rgba(9, 9, 11, 0.6);
-            backdrop-filter: blur(20px);
-            border-right: 1px solid var(--border-subtle);
-            display: flex;
             flex-direction: column;
-            padding: 24px;
-            z-index: 50;
         }
-        .brand {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 40px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .brand-icon {
-            width: 32px;
-            height: 32px;
-            background: var(--gradient-brand);
-            border-radius: 10px;
-            display: grid;
-            place-items: center;
-            font-size: 1rem;
-        }
-        .nav-menu {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            flex-grow: 1;
-        }
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 14px 16px;
-            border-radius: var(--radius-sm);
-            color: var(--text-secondary);
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .nav-item:hover {
-            background: rgba(255, 255, 255, 0.03);
-            color: var(--text-primary);
-        }
-        .nav-item.active {
-            background: var(--bg-hover);
-            color: var(--text-primary);
-            box-shadow: inset 2px 0 0 #a855f7;
-        }
-        .nav-icon {
-            font-size: 1.25rem;
-        }
-        /* MAIN CONTENT AREA */
         .main-content {
-            flex-grow: 1;
-            position: relative;
-            overflow-y: auto;
-            background: var(--bg-panel);
-            border-top-left-radius: var(--radius-lg);
-            border-bottom-left-radius: var(--radius-lg);
-            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
-            scroll-behavior: smooth;
+            border-radius: 0;
+            box-shadow: none;
+            padding-bottom: 90px;
         }
         .view-section {
-            display: none;
-            padding: 40px 60px;
-            max-width: 1000px;
-            margin: 0 auto;
-            animation: fadeIn 0.4s ease-out forwards;
-            opacity: 0;
-            transform: translateY(10px);
-        }
-        .view-section.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            to { opacity: 1; transform: translateY(0); }
-        }
-        /* TYPOGRAPHY & HEADERS */
-        .view-header {
-            margin-bottom: 40px;
+            padding: 32px 20px;
         }
         .view-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            margin-bottom: 8px;
+            font-size: 2rem;
         }
-        .view-subtitle {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-        }
-        /* UI COMPONENTS */
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            padding: 32px;
-            box-shadow: var(--shadow-float);
-            background-image: var(--gradient-card);
-            margin-bottom: 24px;
-        }
-        .input-group {
-            margin-bottom: 24px;
-        }
-        .input-label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        select, input[type="text"], input[type="number"], textarea {
-            width: 100%;
-            background: var(--bg-root);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-primary);
-            padding: 16px;
-            border-radius: var(--radius-sm);
-            font-family: inherit;
-            font-size: 1rem;
-            transition: var(--transition);
-            appearance: none;
-            line-height: 1.5;
-        }
-        input[type="range"] {
-            width: 100%;
-            background: transparent;
-            padding: 0;
-            appearance: auto;
-            border: none;
-            height: auto;
-            cursor: pointer;
-        }
-        select {
-            background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9L12 15L18 9' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 16px center;
-            padding-right: 48px;
-        }
-        select:focus, textarea:focus {
-            outline: none;
-            border-color: #a855f7;
-            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
-        }
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            padding: 16px 24px;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: inherit;
-        }
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
-            box-shadow: none !important;
-        }
-        .btn-primary {
-            background: var(--text-primary);
-            color: var(--bg-root);
-        }
-        .btn-primary:hover:not(:disabled) {
-            transform: translateY(-2px);
-            background: #e4e4e7;
-            box-shadow: 0 10px 20px rgba(255,255,255,0.1);
-        }
-        .btn-gradient {
-            background: var(--gradient-brand);
-            color: white;
-        }
-        .btn-gradient:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(236, 72, 153, 0.3);
-        }
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--border-focus);
-            color: var(--text-primary);
-        }
-        .btn-outline:hover:not(:disabled) {
-            background: rgba(255,255,255,0.05);
-        }
-        /* Drag & Drop Area */
-        .dropzone {
-            border: 2px dashed var(--border-focus);
-            border-radius: var(--radius-md);
-            padding: 40px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-            background: rgba(0,0,0,0.2);
-        }
-        .dropzone:hover, .dropzone.dragover {
-            border-color: #a855f7;
-            background: rgba(168, 85, 247, 0.05);
-        }
-        .drop-icon {
-            font-size: 2.5rem;
-            margin-bottom: 12px;
-            opacity: 0.7;
-        }
-        /* Hashtags Grid */
-        .hashtag-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 24px;
-        }
-        .tag-pill {
-            background: rgba(168, 85, 247, 0.1);
-            border: 1px solid rgba(168, 85, 247, 0.3);
-            color: #d8b4fe;
-            padding: 8px 16px;
-            border-radius: 100px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .tag-pill:hover {
-            background: #a855f7;
-            color: white;
-            transform: scale(1.05);
-        }
-        /* Results / Output States */
-        .output-box {
-            display: none;
-            margin-top: 24px;
-            padding-top: 24px;
-            border-top: 1px solid var(--border-subtle);
-            animation: fadeIn 0.3s ease;
-        }
-        .output-box.show {
-            display: block;
-        }
-        /* Time Grid Layout */
-        .times-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 16px;
-            margin-top: 24px;
-        }
-        .time-slot {
-            background: rgba(0,0,0,0.4);
-            border: 1px solid var(--border-subtle);
-            padding: 20px;
-            border-radius: var(--radius-sm);
-            text-align: center;
-        }
-        .time-label {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 8px;
-        }
-        .time-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-        /* Toast Notification */
-        .toast {
+        .sidebar {
             position: fixed;
-            top: 24px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-100px);
-            background: var(--text-primary);
-            color: var(--bg-root);
-            padding: 12px 24px;
-            border-radius: 100px;
-            font-weight: 600;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            z-index: 9999;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+            flex-direction: row;
+            padding: 8px 0;
+            border-right: none;
+            border-top: 1px solid var(--border-subtle);
+            background: rgba(9, 9, 11, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 100;
+            padding-bottom: calc(8px + env(safe-area-inset-bottom));
         }
-        .toast.visible {
-            transform: translateX(-50%) translateY(0);
+        .brand {
+            display: none;
         }
-        /* Data freshness badge */
-        .freshness-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-top: 8px;
+        .nav-menu {
+            flex-direction: row;
+            justify-content: flex-start;
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            gap: 0;
+            padding: 0 8px;
         }
-        .freshness-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #52525b;
+        .nav-menu::-webkit-scrollbar {
+            display: none;
         }
-        .freshness-dot.live {
-            background: #22c55e;
-            box-shadow: 0 0 6px rgba(34, 197, 94, 0.5);
+        .nav-item {
+            flex-direction: column;
+            gap: 3px;
+            padding: 6px 4px;
+            flex: 0 0 auto;
+            min-width: 64px;
+            font-size: 0.65rem;
+            text-align: center;
+            border-radius: 12px;
+            white-space: nowrap;
         }
-        .freshness-dot.fallback {
-            background: #f59e0b;
+        .nav-item.active {
+            box-shadow: none;
+            background: transparent;
+            color: #a855f7;
         }
-        /* Custom Keyframes */
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.8); }
+        .nav-item.active .nav-icon {
+            transform: scale(1.1);
         }
-        /* FLEX UTILS */
+        .nav-icon {
+            font-size: 1.3rem;
+            transition: var(--transition);
+        }
+        .card {
+            padding: 24px 20px;
+        }
         .row {
-            display: flex;
-            gap: 12px;
+            flex-direction: column;
         }
-        .row > * { flex: 1; }
-        /* --- MOBILE ADAPTATION --- */
-        @media (max-width: 768px) {
-            #app-container {
-                flex-direction: column;
-            }
-            .main-content {
-                border-radius: 0;
-                box-shadow: none;
-                padding-bottom: 90px;
-            }
-            .view-section {
-                padding: 32px 20px;
-            }
-            .view-title {
-                font-size: 2rem;
-            }
-            .sidebar {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                height: auto;
-                flex-direction: row;
-                padding: 12px 16px;
-                border-right: none;
-                border-top: 1px solid var(--border-subtle);
-                background: rgba(9, 9, 11, 0.85);
-                z-index: 100;
-                padding-bottom: calc(12px + env(safe-area-inset-bottom));
-            }
-            .brand {
-                display: none;
-            }
-            .nav-menu {
-                flex-direction: row;
-                justify-content: space-around;
-                width: 100%;
-            }
-            .nav-item {
-                flex-direction: column;
-                gap: 4px;
-                padding: 8px;
-                flex: 1;
-                font-size: 0.7rem;
-                text-align: center;
-                border-radius: 12px;
-            }
-            .nav-item.active {
-                box-shadow: none;
-                background: transparent;
-                color: #a855f7;
-            }
-            .nav-item.active .nav-icon {
-                transform: scale(1.1);
-            }
-            .nav-icon {
-                font-size: 1.5rem;
-                transition: var(--transition);
-            }
-            .card {
-                padding: 24px 20px;
-            }
-            .row {
-                flex-direction: column;
-            }
-            #rate-card-grid > div {
-                flex-direction: column;
-                text-align: center;
-            }
-            #rate-card-grid > div > div:last-child {
-                text-align: center;
-            }
+        #rate-card-grid > div {
+            flex-direction: column;
+            text-align: center;
         }
-    </style>
+        #rate-card-grid > div > div:last-child {
+            text-align: center;
+        }
+    }
+</style>
+```
+
 </head>
 <body>
     <div id="toast" class="toast">Action Successful</div>
     <div id="app-container">
-        
-        <!-- SIDEBAR / BOTTOM NAV -->
-        <nav class="sidebar">
-            <div class="brand">
-                <div class="brand-icon">⚡</div>
-              Creator Toolkit
+
+```
+    <!-- SIDEBAR / BOTTOM NAV -->
+    <nav class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">⚡</div>
+            Toolkit
+        </div>
+        <div class="nav-menu">
+            <div class="nav-item active" onclick="switchView('view-about', this)">
+                <span class="nav-icon">👤</span>
+                <span>About</span>
             </div>
-            <div class="nav-menu">
-                <div class="nav-item active" onclick="switchView('view-about', this)">
-                    <span class="nav-icon">👤</span>
-                    <span>About</span>
-                </div>
-                <div class="nav-item" onclick="switchView('view-teleprompter', this)">
-                    <span class="nav-icon">📹</span>
-                    <span>Teleprompter</span>
-                </div>
-                <div class="nav-item" onclick="switchView('view-image', this)">
-                    <span class="nav-icon">🖼️</span>
-                    <span>Converter</span>
-                </div>
-                <div class="nav-item" onclick="switchView('view-audio', this)">
-                    <span class="nav-icon">🎙️</span>
-                    <span>Voice to Text</span>
-                </div>
-                <div class="nav-item" onclick="switchView('view-hashtags', this)">
-                    <span class="nav-icon">#️⃣</span>
-                    <span>Hashtags</span>
-                </div>
-                <div class="nav-item" onclick="switchView('view-times', this)">
-                    <span class="nav-icon">⏱️</span>
-                    <span>Post Times</span>
-                </div>
-                <div class="nav-item" onclick="switchView('view-rates', this)">
-                    <span class="nav-icon">💰</span>
-                    <span>Rate Card</span>
-                </div>
+            <div class="nav-item" onclick="switchView('view-teleprompter', this)">
+                <span class="nav-icon">📹</span>
+                <span>Teleprompter</span>
             </div>
-        </nav>
+            <div class="nav-item" onclick="switchView('view-image', this)">
+                <span class="nav-icon">🖼️</span>
+                <span>Converter</span>
+            </div>
+            <div class="nav-item" onclick="switchView('view-audio', this)">
+                <span class="nav-icon">🎙️</span>
+                <span>Voice</span>
+            </div>
+            <div class="nav-item" onclick="switchView('view-hashtags', this)">
+                <span class="nav-icon">#️⃣</span>
+                <span>Hashtags</span>
+            </div>
+            <div class="nav-item" onclick="switchView('view-times', this)">
+                <span class="nav-icon">⏱️</span>
+                <span>Times</span>
+            </div>
+            <div class="nav-item" onclick="switchView('view-rates', this)">
+                <span class="nav-icon">💰</span>
+                <span>Rates</span>
+            </div>
+        </div>
+    </nav>
 
-        <!-- MAIN WORKSPACE -->
-        <main class="main-content">
+    <!-- MAIN WORKSPACE -->
+    <main class="main-content">
 
-            <!-- ABOUT ME VIEW -->
-            <section id="view-about" class="view-section active">
-                <div style="display: flex; flex-direction: column; align-items: center; text-align: center; padding: 20px 0;">
+        <!-- ABOUT ME VIEW -->
+        <section id="view-about" class="view-section active">
+            <div style="display: flex; flex-direction: column; align-items: center; text-align: center; padding: 20px 0;">
 
-                    <!-- Profile Photo -->
-                    <div style="width: 130px; height: 130px; border-radius: 50%; overflow: hidden; border: 3px solid transparent; background: var(--gradient-brand); padding: 3px; margin-bottom: 24px;">
-                        <img id="about-avatar" src="https://github.com/patelpranay97.png" alt="Pranay Patel"
-                            style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: var(--bg-card);"
-                            onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'width:100%;height:100%;border-radius:50%;background:var(--bg-card);display:grid;place-items:center;font-size:3rem;\'>PP</div>';">
-                    </div>
-
-                    <!-- Name -->
-                    <h1 style="font-size: 2.2rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 8px;">Pranay Patel</h1>
-
-                    <!-- Tagline -->
-                    <p style="color: var(--text-secondary); font-size: 1.05rem; max-width: 480px; line-height: 1.6; margin-bottom: 32px; font-style: italic;">
-                        "Successful people don't do different things, they do things differently"
-                    </p>
-
-                    <!-- Social Links -->
-                    <div style="display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 380px; margin-bottom: 40px;">
-                        <a href="https://www.instagram.com/patel_pranay/" target="_blank" rel="noopener"
-                            style="display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); text-decoration: none; color: var(--text-primary); font-weight: 600; font-size: 1rem; transition: var(--transition);"
-                            onmouseover="this.style.background='var(--bg-hover)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.3)';"
-                            onmouseout="this.style.background='var(--bg-card)'; this.style.transform='none'; this.style.boxShadow='none';">
-                            <span style="width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0;">
-                                <img src="Instagram_Glyph_Gradient.svg" alt="Instagram" width="40" height="40" style="border-radius: 10px;">
-                            </span>
-                            <span style="flex: 1; text-align: left;">Instagram</span>
-                            <span style="color: var(--text-secondary); font-size: 0.85rem;">@patel_pranay</span>
-                        </a>
-                        <a href="https://www.tiktok.com/@pranaypatel007" target="_blank" rel="noopener"
-                            style="display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); text-decoration: none; color: var(--text-primary); font-weight: 600; font-size: 1rem; transition: var(--transition);"
-                            onmouseover="this.style.background='var(--bg-hover)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.3)';"
-                            onmouseout="this.style.background='var(--bg-card)'; this.style.transform='none'; this.style.boxShadow='none';">
-                            <span style="width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0;">
-                                <img src="TIKTOK_SOCIAL_ICON_CIRCLE_BLACK.png" alt="TikTok" width="40" height="40" style="border-radius: 10px;">
-                            </span>
-                            <span style="flex: 1; text-align: left;">TikTok</span>
-                            <span style="color: var(--text-secondary); font-size: 0.85rem;">@pranaypatel007</span>
-                        </a>
-                        <a href="https://www.youtube.com/@Pranay-Patel" target="_blank" rel="noopener"
-                            style="display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); text-decoration: none; color: var(--text-primary); font-weight: 600; font-size: 1rem; transition: var(--transition);"
-                            onmouseover="this.style.background='var(--bg-hover)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.3)';"
-                            onmouseout="this.style.background='var(--bg-card)'; this.style.transform='none'; this.style.boxShadow='none';">
-                            <span style="width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: #ff0000; flex-shrink: 0;">
-                                <svg width="22" height="16" viewBox="0 0 576 512" fill="white"><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/></svg>
-                            </span>
-                            <span style="flex: 1; text-align: left;">YouTube</span>
-                            <span style="color: var(--text-secondary); font-size: 0.85rem;">@Pranay-Patel</span>
-                        </a>
-                    </div>
-
-                    <!-- Divider -->
-                    <div style="width: 60px; height: 2px; background: var(--gradient-brand); border-radius: 2px; margin-bottom: 32px;"></div>
+                <!-- Profile Photo -->
+                <div style="width: 130px; height: 130px; border-radius: 50%; overflow: hidden; border: 3px solid transparent; background: var(--gradient-brand); padding: 3px; margin-bottom: 24px;">
+                    <img id="about-avatar" src="https://github.com/patelpranay97.png" alt="Pranay Patel"
+                        style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: var(--bg-card);"
+                        onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'width:100%;height:100%;border-radius:50%;background:var(--bg-card);display:grid;place-items:center;font-size:3rem;\'>PP</div>';">
                 </div>
-            </section>
 
-            <!-- IMAGE CONVERTER VIEW -->
-            <section id="view-image" class="view-section">
-                <div class="view-header">
-                    <h1 class="view-title">Image Converter</h1>
-                    <p class="view-subtitle">Format images locally in milliseconds. Zero server uploads.</p>
+                <!-- Name -->
+                <h1 style="font-size: 2.2rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 8px;">Pranay Patel</h1>
+
+                <!-- Tagline -->
+                <p style="color: var(--text-secondary); font-size: 1.05rem; max-width: 480px; line-height: 1.6; margin-bottom: 32px; font-style: italic;">
+                    "Successful people don't do different things, they do things differently"
+                </p>
+
+                <!-- Social Links -->
+                <div style="display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 380px; margin-bottom: 40px;">
+                    <a href="https://www.instagram.com/patel_pranay/" target="_blank" rel="noopener"
+                        style="display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); text-decoration: none; color: var(--text-primary); font-weight: 600; font-size: 1rem; transition: var(--transition);"
+                        onmouseover="this.style.background='var(--bg-hover)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.3)';"
+                        onmouseout="this.style.background='var(--bg-card)'; this.style.transform='none'; this.style.boxShadow='none';">
+                        <span style="width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0;">
+                            <img src="Instagram_Glyph_Gradient.svg" alt="Instagram" width="40" height="40" style="border-radius: 10px;">
+                        </span>
+                        <span style="flex: 1; text-align: left;">Instagram</span>
+                        <span style="color: var(--text-secondary); font-size: 0.85rem;">@patel_pranay</span>
+                    </a>
+                    <a href="https://www.tiktok.com/@pranaypatel007" target="_blank" rel="noopener"
+                        style="display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); text-decoration: none; color: var(--text-primary); font-weight: 600; font-size: 1rem; transition: var(--transition);"
+                        onmouseover="this.style.background='var(--bg-hover)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.3)';"
+                        onmouseout="this.style.background='var(--bg-card)'; this.style.transform='none'; this.style.boxShadow='none';">
+                        <span style="width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0;">
+                            <img src="TIKTOK_SOCIAL_ICON_CIRCLE_BLACK.png" alt="TikTok" width="40" height="40" style="border-radius: 10px;">
+                        </span>
+                        <span style="flex: 1; text-align: left;">TikTok</span>
+                        <span style="color: var(--text-secondary); font-size: 0.85rem;">@pranaypatel007</span>
+                    </a>
+                    <a href="https://www.youtube.com/@Pranay-Patel" target="_blank" rel="noopener"
+                        style="display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); text-decoration: none; color: var(--text-primary); font-weight: 600; font-size: 1rem; transition: var(--transition);"
+                        onmouseover="this.style.background='var(--bg-hover)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.3)';"
+                        onmouseout="this.style.background='var(--bg-card)'; this.style.transform='none'; this.style.boxShadow='none';">
+                        <span style="width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: #ff0000; flex-shrink: 0;">
+                            <svg width="22" height="16" viewBox="0 0 576 512" fill="white"><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/></svg>
+                        </span>
+                        <span style="flex: 1; text-align: left;">YouTube</span>
+                        <span style="color: var(--text-secondary); font-size: 0.85rem;">@Pranay-Patel</span>
+                    </a>
+                </div>
+
+                <!-- Divider -->
+                <div style="width: 60px; height: 2px; background: var(--gradient-brand); border-radius: 2px; margin-bottom: 32px;"></div>
+            </div>
+        </section>
+
+        <!-- IMAGE CONVERTER VIEW -->
+        <section id="view-image" class="view-section">
+            <div class="view-header">
+                <h1 class="view-title">Image Converter</h1>
+                <p class="view-subtitle">Format images locally in milliseconds. Zero server uploads.</p>
+            </div>
+            
+            <div class="card">
+                <div class="dropzone" id="image-upload-area">
+                    <div class="drop-icon">📸</div>
+                    <h3 style="margin-bottom: 8px;">Tap to Upload or Drop File</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Supports JPG, PNG, WEBP</p>
+                    <input type="file" id="image-input" accept="image/*" style="display: none;">
                 </div>
                 
-                <div class="card">
-                    <div class="dropzone" id="image-upload-area">
-                        <div class="drop-icon">📸</div>
-                        <h3 style="margin-bottom: 8px;">Tap to Upload or Drop File</h3>
-                        <p style="color: var(--text-secondary); font-size: 0.9rem;">Supports JPG, PNG, WEBP</p>
-                        <input type="file" id="image-input" accept="image/*" style="display: none;">
+                <div class="row" style="margin-top: 24px;">
+                    <div class="input-group" style="margin: 0; flex: 2;">
+                        <label class="input-label">Output Format</label>
+                        <select id="image-format">
+                            <option value="png">PNG (Lossless)</option>
+                            <option value="jpeg">JPEG (Compressed)</option>
+                            <option value="webp">WebP (Next-Gen)</option>
+                        </select>
                     </div>
-                    
-                    <div class="row" style="margin-top: 24px;">
-                        <div class="input-group" style="margin: 0; flex: 2;">
-                            <label class="input-label">Output Format</label>
-                            <select id="image-format">
-                                <option value="png">PNG (Lossless)</option>
-                                <option value="jpeg">JPEG (Compressed)</option>
-                                <option value="webp">WebP (Next-Gen)</option>
-                            </select>
-                        </div>
-                        <div style="flex: 1; display: flex; align-items: flex-end;">
-                            <button class="btn btn-gradient" onclick="convertImage()">Convert</button>
-                        </div>
-                    </div>
-                    <div id="image-result" class="output-box">
-                        <label class="input-label">Result Preview</label>
-                        <canvas id="image-canvas" style="max-width: 100%; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); background: var(--bg-root); display: block; margin-bottom: 16px;"></canvas>
-                        <button class="btn btn-primary" onclick="downloadImage()">⬇️ Download Asset</button>
+                    <div style="flex: 1; display: flex; align-items: flex-end;">
+                        <button class="btn btn-gradient" onclick="convertImage()">Convert</button>
                     </div>
                 </div>
-            </section>
+                <div id="image-result" class="output-box">
+                    <label class="input-label">Result Preview</label>
+                    <canvas id="image-canvas" style="max-width: 100%; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); background: var(--bg-root); display: block; margin-bottom: 16px;"></canvas>
+                    <button class="btn btn-primary" onclick="downloadImage()">⬇️ Download Asset</button>
+                </div>
+            </div>
+        </section>
 
-            <!-- TELEPROMPTER STUDIO VIEW -->
-            <section id="view-teleprompter" class="view-section">
-                <div class="view-header">
-                    <h1 class="view-title">Video Teleprompter</h1>
-                    <p class="view-subtitle">Record videos perfectly while maintaining eye contact with your camera.</p>
+        <!-- TELEPROMPTER STUDIO VIEW -->
+        <section id="view-teleprompter" class="view-section">
+            <div class="view-header">
+                <h1 class="view-title">Video Teleprompter</h1>
+                <p class="view-subtitle">Record videos perfectly while maintaining eye contact with your camera.</p>
+            </div>
+            <div class="card">
+                <div class="row">
+                    <div style="flex: 1.2;">
+                        <div class="input-group">
+                            <label class="input-label">Your Script</label>
+                            <textarea id="tp-script" rows="8" placeholder="Paste your video script here..."></textarea>
+                        </div>
+                        <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 20px; margin-bottom: 24px;">
+                            <label class="input-label" style="margin-bottom: 16px;">Teleprompter Settings</label>
+                            <div style="margin-bottom: 16px;">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">
+                                    <span>Scroll Speed</span>
+                                    <span id="tp-speed-val">2x</span>
+                                </div>
+                                <input type="range" id="tp-speed" min="1" max="5" step="0.5" value="2" oninput="document.getElementById('tp-speed-val').innerText = this.value + 'x'">
+                            </div>
+                            <div style="margin-bottom: 16px;">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">
+                                    <span>Text Size</span>
+                                    <span id="tp-size-val">48px</span>
+                                </div>
+                                <input type="range" id="tp-size" min="24" max="72" value="48" oninput="document.getElementById('tp-size-val').innerText = this.value + 'px'">
+                            </div>
+                            <div>
+                                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">
+                                    <span>Edge Brightness</span>
+                                    <span id="tp-brightness-val">80%</span>
+                                </div>
+                                <input type="range" id="tp-brightness" min="0" max="100" value="80" oninput="tpUpdateBrightness(this.value)">
+                            </div>
+                        </div>
+                        <div id="tp-controls" style="display: flex; flex-direction: column; gap: 12px;">
+                            <button id="btn-tp-camera" class="btn btn-primary" onclick="tpStartCamera()">📹 Enable Camera</button>
+                            <button id="btn-tp-record" class="btn btn-gradient" style="display: none;" onclick="tpStartCountdown()">🔴 Start Recording (Fullscreen)</button>
+                            <div id="tp-result-controls" class="row" style="display: none;">
+                                <button class="btn btn-primary" onclick="tpDownload()">⬇️ Download Video</button>
+                                <button class="btn btn-outline" onclick="tpReset()">🔄 New Recording</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="flex: 1;">
+                        <label class="input-label">Camera Preview</label>
+                        <div style="background: var(--bg-root); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); overflow: hidden; aspect-ratio: 9/16; position: relative; max-width: 320px; margin: 0 auto;">
+                            <div id="tp-preview-brightness" style="position: absolute; inset: 0; pointer-events: none; z-index: 10; box-shadow: inset 0 0 100px 80px rgba(255, 255, 255, 0.8);"></div>
+                            <video id="tp-preview-video" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1);"></video>
+                            <div id="tp-preview-placeholder" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-secondary); z-index: 5; background: var(--bg-card); padding: 20px; text-align: center;">
+                                <span style="font-size: 2rem; margin-bottom: 8px;">📹</span>
+                                <span style="font-size: 0.9rem;">Click "Enable Camera" to begin</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card">
+            </div>
+        </section>
+
+        <!-- AUDIO TRANSCRIBER VIEW -->
+        <section id="view-audio" class="view-section">
+            <div class="view-header">
+                <h1 class="view-title">Voice to Text</h1>
+                <p class="view-subtitle">Live, on-device transcription for scripting and captions.</p>
+            </div>
+            
+            <div class="card">
+                <div style="text-align: center; padding: 20px 0 40px;">
+                    <button id="record-btn" onclick="toggleRecording()" class="btn btn-gradient" style="border-radius: 100px; padding: 20px 40px; font-size: 1.1rem; width: auto;">
+                        🎤 Start Listening
+                    </button>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 24px;">
+                    <h4 style="color: var(--text-secondary); margin-bottom: 12px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">📁 Have an audio file?</h4>
                     <div class="row">
-                        <div style="flex: 1.2;">
-                            <div class="input-group">
-                                <label class="input-label">Your Script</label>
-                                <textarea id="tp-script" rows="8" placeholder="Paste your video script here..."></textarea>
-                            </div>
-                            <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 20px; margin-bottom: 24px;">
-                                <label class="input-label" style="margin-bottom: 16px;">Teleprompter Settings</label>
-                                <div style="margin-bottom: 16px;">
-                                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">
-                                        <span>Scroll Speed</span>
-                                        <span id="tp-speed-val">2x</span>
-                                    </div>
-                                    <input type="range" id="tp-speed" min="1" max="5" step="0.5" value="2" oninput="document.getElementById('tp-speed-val').innerText = this.value + 'x'">
-                                </div>
-                                <div style="margin-bottom: 16px;">
-                                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">
-                                        <span>Text Size</span>
-                                        <span id="tp-size-val">48px</span>
-                                    </div>
-                                    <input type="range" id="tp-size" min="24" max="72" value="48" oninput="document.getElementById('tp-size-val').innerText = this.value + 'px'">
-                                </div>
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">
-                                        <span>Edge Brightness</span>
-                                        <span id="tp-brightness-val">80%</span>
-                                    </div>
-                                    <input type="range" id="tp-brightness" min="0" max="100" value="80" oninput="tpUpdateBrightness(this.value)">
-                                </div>
-                            </div>
-                            <div id="tp-controls" style="display: flex; flex-direction: column; gap: 12px;">
-                                <button id="btn-tp-camera" class="btn btn-primary" onclick="tpStartCamera()">📹 Enable Camera</button>
-                                <button id="btn-tp-record" class="btn btn-gradient" style="display: none;" onclick="tpStartCountdown()">🔴 Start Recording (Fullscreen)</button>
-                                <div id="tp-result-controls" class="row" style="display: none;">
-                                    <button class="btn btn-primary" onclick="tpDownload()">⬇️ Download Video</button>
-                                    <button class="btn btn-outline" onclick="tpReset()">🔄 New Recording</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div style="flex: 1;">
-                            <label class="input-label">Camera Preview</label>
-                            <div style="background: var(--bg-root); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); overflow: hidden; aspect-ratio: 9/16; position: relative; max-width: 320px; margin: 0 auto;">
-                                <div id="tp-preview-brightness" style="position: absolute; inset: 0; pointer-events: none; z-index: 10; box-shadow: inset 0 0 100px 80px rgba(255, 255, 255, 0.8);"></div>
-                                <video id="tp-preview-video" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1);"></video>
-                                <div id="tp-preview-placeholder" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-secondary); z-index: 5; background: var(--bg-card); padding: 20px; text-align: center;">
-                                    <span style="font-size: 2rem; margin-bottom: 8px;">📹</span>
-                                    <span style="font-size: 0.9rem;">Click "Enable Camera" to begin</span>
-                                </div>
-                            </div>
-                        </div>
+                        <a href="https://voicetotextonline.com/" target="_blank" class="btn btn-outline" style="font-size: 0.85rem; padding: 10px; text-decoration: none;">Voice to Text Online ↗</a>
+                        <a href="https://synthronai.com/free-audio-transcription-tool/" target="_blank" class="btn btn-outline" style="font-size: 0.85rem; padding: 10px; text-decoration: none;">SynthronAI ↗</a>
                     </div>
                 </div>
-            </section>
+                <div class="input-group">
+                    <label class="input-label">Live Transcript</label>
+                    <textarea id="transcription-text" rows="8" placeholder="Speech will appear here in real-time..."></textarea>
+                </div>
+                <div class="row">
+                    <button class="btn btn-primary" onclick="copyTranscription()">Copy Text</button>
+                    <button class="btn btn-outline" onclick="clearTranscription()">Clear Canvas</button>
+                </div>
+            </div>
+        </section>
 
-            <!-- AUDIO TRANSCRIBER VIEW -->
-            <section id="view-audio" class="view-section">
-                <div class="view-header">
-                    <h1 class="view-title">Voice to Text</h1>
-                    <p class="view-subtitle">Live, on-device transcription for scripting and captions.</p>
+        <!-- HASHTAGS VIEW -->
+        <section id="view-hashtags" class="view-section">
+            <div class="view-header">
+                <h1 class="view-title">Trending Tags</h1>
+                <p class="view-subtitle">Auto-updated hashtag clusters scraped weekly from TikTok Creative Center.</p>
+                <div id="hashtag-freshness" class="freshness-badge">
+                    <div class="freshness-dot"></div>
+                    <span>Loading data source...</span>
                 </div>
-                
-                <div class="card">
-                    <div style="text-align: center; padding: 20px 0 40px;">
-                        <button id="record-btn" onclick="toggleRecording()" class="btn btn-gradient" style="border-radius: 100px; padding: 20px 40px; font-size: 1.1rem; width: auto;">
-                            🎤 Start Listening
-                        </button>
+            </div>
+            
+            <div class="card">
+                <div class="row">
+                    <div class="input-group" style="margin: 0; flex: 2;">
+                        <label class="input-label">Content Category</label>
+                        <select id="niche-select">
+                            <option value="general">General / Viral</option>
+                            <option value="fitness">Fitness & Health</option>
+                            <option value="food">Food & Cooking</option>
+                            <option value="lifestyle">Beauty & Personal Care</option>
+                            <option value="fashion">Fashion & Style</option>
+                            <option value="tech">Tech & Gaming</option>
+                            <option value="travel">Travel & Adventure</option>
+                            <option value="business">Business & Finance</option>
+                        </select>
                     </div>
-                    <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 24px;">
-                        <h4 style="color: var(--text-secondary); margin-bottom: 12px; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">📁 Have an audio file?</h4>
-                        <div class="row">
-                            <a href="https://voicetotextonline.com/" target="_blank" class="btn btn-outline" style="font-size: 0.85rem; padding: 10px; text-decoration: none;">Voice to Text Online ↗</a>
-                            <a href="https://synthronai.com/free-audio-transcription-tool/" target="_blank" class="btn btn-outline" style="font-size: 0.85rem; padding: 10px; text-decoration: none;">SynthronAI ↗</a>
-                        </div>
+                    <div style="flex: 1; display: flex; align-items: flex-end;">
+                        <button id="btn-generate-tags" class="btn btn-gradient" onclick="generateHashtags()">Generate</button>
+                    </div>
+                </div>
+
+                <div id="hashtag-result" class="output-box">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <label class="input-label" style="margin: 0;">Tap tags to copy individually</label>
+                        <button class="btn btn-outline" style="width: auto; padding: 8px 16px; font-size: 0.8rem;" onclick="copyAllHashtags()">Copy All</button>
+                    </div>
+                    <div id="hashtag-list" class="hashtag-container"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- POSTING TIMES VIEW -->
+        <section id="view-times" class="view-section">
+            <div class="view-header">
+                <h1 class="view-title">Algorithm Times</h1>
+                <p class="view-subtitle">Statistically optimized posting windows tailored to your timezone.</p>
+            </div>
+            
+            <div class="card">
+                <div class="row">
+                    <div class="input-group">
+                        <label class="input-label">Platform</label>
+                        <select id="platform-select">
+                            <option value="tiktok">TikTok</option>
+                            <option value="instagram">Instagram Reels</option>
+                            <option value="youtube">YouTube Shorts</option>
+                            <option value="twitter">X (Twitter)</option>
+                        </select>
                     </div>
                     <div class="input-group">
-                        <label class="input-label">Live Transcript</label>
-                        <textarea id="transcription-text" rows="8" placeholder="Speech will appear here in real-time..."></textarea>
-                    </div>
-                    <div class="row">
-                        <button class="btn btn-primary" onclick="copyTranscription()">Copy Text</button>
-                        <button class="btn btn-outline" onclick="clearTranscription()">Clear Canvas</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- HASHTAGS VIEW -->
-            <section id="view-hashtags" class="view-section">
-                <div class="view-header">
-                    <h1 class="view-title">Trending Tags</h1>
-                    <p class="view-subtitle">Auto-updated hashtag clusters scraped weekly from TikTok Creative Center.</p>
-                    <div id="hashtag-freshness" class="freshness-badge">
-                        <div class="freshness-dot"></div>
-                        <span>Loading data source...</span>
+                        <label class="input-label">Your Timezone</label>
+                        <select id="timezone-select">
+                            <option value="EST">Eastern (EST)</option>
+                            <option value="CST">Central (CST)</option>
+                            <option value="MST">Mountain (MST)</option>
+                            <option value="PST">Pacific (PST)</option>
+                            <option value="GMT">GMT (London)</option>
+                        </select>
                     </div>
                 </div>
                 
-                <div class="card">
-                    <div class="row">
-                        <div class="input-group" style="margin: 0; flex: 2;">
-                            <label class="input-label">Content Category</label>
-                            <select id="niche-select">
-                                <option value="general">General / Viral</option>
-                                <option value="fitness">Fitness & Health</option>
-                                <option value="food">Food & Cooking</option>
-                                <option value="lifestyle">Beauty & Personal Care</option>
-                                <option value="fashion">Fashion & Style</option>
-                                <option value="tech">Tech & Gaming</option>
-                                <option value="travel">Travel & Adventure</option>
-                                <option value="business">Business & Finance</option>
-                            </select>
-                        </div>
-                        <div style="flex: 1; display: flex; align-items: flex-end;">
-                            <button id="btn-generate-tags" class="btn btn-gradient" onclick="generateHashtags()">Generate</button>
-                        </div>
-                    </div>
-
-                    <div id="hashtag-result" class="output-box">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                            <label class="input-label" style="margin: 0;">Tap tags to copy individually</label>
-                            <button class="btn btn-outline" style="width: auto; padding: 8px 16px; font-size: 0.8rem;" onclick="copyAllHashtags()">Copy All</button>
-                        </div>
-                        <div id="hashtag-list" class="hashtag-container"></div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- POSTING TIMES VIEW -->
-            <section id="view-times" class="view-section">
-                <div class="view-header">
-                    <h1 class="view-title">Algorithm Times</h1>
-                    <p class="view-subtitle">Statistically optimized posting windows tailored to your timezone.</p>
-                </div>
+                <button class="btn btn-gradient" onclick="getPostingTimes()">Analyze Best Times</button>
                 
-                <div class="card">
-                    <div class="row">
-                        <div class="input-group">
-                            <label class="input-label">Platform</label>
-                            <select id="platform-select">
-                                <option value="tiktok">TikTok</option>
-                                <option value="instagram">Instagram Reels</option>
-                                <option value="youtube">YouTube Shorts</option>
-                                <option value="twitter">X (Twitter)</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Your Timezone</label>
-                            <select id="timezone-select">
-                                <option value="EST">Eastern (EST)</option>
-                                <option value="CST">Central (CST)</option>
-                                <option value="MST">Mountain (MST)</option>
-                                <option value="PST">Pacific (PST)</option>
-                                <option value="GMT">GMT (London)</option>
-                            </select>
-                        </div>
+                <div id="times-result" class="output-box">
+                    <label class="input-label">Suggested Windows</label>
+                    <div id="times-grid" class="times-grid"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RATE CALCULATOR VIEW -->
+        <section id="view-rates" class="view-section">
+            <div class="view-header">
+                <h1 class="view-title">Rate Calculator</h1>
+                <p class="view-subtitle">Know your worth. Get data-backed pricing for brand deals based on your actual reach.</p>
+            </div>
+
+            <div class="card">
+                <div class="row">
+                    <div class="input-group">
+                        <label class="input-label">Platform</label>
+                        <select id="rate-platform">
+                            <option value="tiktok">TikTok</option>
+                            <option value="instagram">Instagram Reels</option>
+                            <option value="youtube">YouTube</option>
+                            <option value="twitter">X (Twitter)</option>
+                        </select>
                     </div>
-                    
-                    <button class="btn btn-gradient" onclick="getPostingTimes()">Analyze Best Times</button>
-                    
-                    <div id="times-result" class="output-box">
-                        <label class="input-label">Suggested Windows</label>
-                        <div id="times-grid" class="times-grid"></div>
+                    <div class="input-group">
+                        <label class="input-label">Content Niche</label>
+                        <select id="rate-niche">
+                            <option value="general">General / Lifestyle</option>
+                            <option value="beauty">Beauty & Fashion</option>
+                            <option value="fitness">Fitness & Health</option>
+                            <option value="tech">Tech & Gaming</option>
+                            <option value="food">Food & Cooking</option>
+                            <option value="finance">Business & Finance</option>
+                            <option value="travel">Travel</option>
+                            <option value="education">Education</option>
+                        </select>
                     </div>
                 </div>
-            </section>
 
-            <!-- RATE CALCULATOR VIEW -->
-            <section id="view-rates" class="view-section">
-                <div class="view-header">
-                    <h1 class="view-title">Rate Calculator</h1>
-                    <p class="view-subtitle">Know your worth. Get data-backed pricing for brand deals based on your actual reach.</p>
-                </div>
-
-                <div class="card">
-                    <div class="row">
-                        <div class="input-group">
-                            <label class="input-label">Platform</label>
-                            <select id="rate-platform">
-                                <option value="tiktok">TikTok</option>
-                                <option value="instagram">Instagram Reels</option>
-                                <option value="youtube">YouTube</option>
-                                <option value="twitter">X (Twitter)</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Content Niche</label>
-                            <select id="rate-niche">
-                                <option value="general">General / Lifestyle</option>
-                                <option value="beauty">Beauty & Fashion</option>
-                                <option value="fitness">Fitness & Health</option>
-                                <option value="tech">Tech & Gaming</option>
-                                <option value="food">Food & Cooking</option>
-                                <option value="finance">Business & Finance</option>
-                                <option value="travel">Travel</option>
-                                <option value="education">Education</option>
-                            </select>
-                        </div>
+                <div class="row">
+                    <div class="input-group">
+                        <label class="input-label">Total Followers</label>
+                        <input type="number" id="rate-followers" placeholder="e.g. 50000" min="0">
                     </div>
-
-                    <div class="row">
-                        <div class="input-group">
-                            <label class="input-label">Total Followers</label>
-                            <input type="number" id="rate-followers" placeholder="e.g. 50000" min="0">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Avg Views (Last 30 Posts)</label>
-                            <input type="number" id="rate-views" placeholder="e.g. 12000" min="0">
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="input-group">
-                            <label class="input-label">Avg Likes Per Post</label>
-                            <input type="number" id="rate-likes" placeholder="e.g. 800" min="0">
-                        </div>
-                        <div class="input-group">
-                            <label class="input-label">Avg Comments Per Post</label>
-                            <input type="number" id="rate-comments" placeholder="e.g. 45" min="0">
-                        </div>
-                    </div>
-
-                    <button class="btn btn-gradient" onclick="calculateRates()">Calculate My Rates</button>
-
-                    <div id="rate-result" class="output-box">
-                        <!-- Engagement Summary -->
-                        <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px;">
-                            <div id="rate-eng-badge" style="flex: 1; min-width: 140px; background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 16px; text-align: center;">
-                                <div class="time-label">Engagement Rate</div>
-                                <div id="rate-eng-value" class="time-value" style="font-size: 1.8rem;"></div>
-                                <div id="rate-eng-tier" style="font-size: 0.8rem; margin-top: 4px;"></div>
-                            </div>
-                            <div style="flex: 1; min-width: 140px; background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 16px; text-align: center;">
-                                <div class="time-label">Creator Tier</div>
-                                <div id="rate-tier-label" class="time-value" style="font-size: 1.3rem;"></div>
-                                <div id="rate-tier-range" style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;"></div>
-                            </div>
-                            <div style="flex: 1; min-width: 140px; background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 16px; text-align: center;">
-                                <div class="time-label">Est. CPM</div>
-                                <div id="rate-cpm-value" class="time-value" style="font-size: 1.8rem;"></div>
-                                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">Cost per 1K views</div>
-                            </div>
-                        </div>
-
-                        <!-- Rate Card -->
-                        <label class="input-label">Your Rate Card</label>
-                        <div id="rate-card-grid" style="display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 12px;"></div>
-
-                        <!-- Explanation -->
-                        <div id="rate-explanation" style="margin-top: 24px; padding: 20px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);"></div>
-
-                        <div class="row" style="margin-top: 16px;">
-                            <button class="btn btn-primary" onclick="copyRateCard()">Copy Rate Card</button>
-                            <button class="btn btn-outline" onclick="shareRateCard()">Share as Text</button>
-                        </div>
+                    <div class="input-group">
+                        <label class="input-label">Avg Views (Last 30 Posts)</label>
+                        <input type="number" id="rate-views" placeholder="e.g. 12000" min="0">
                     </div>
                 </div>
-            </section>
-        </main>
+
+                <div class="row">
+                    <div class="input-group">
+                        <label class="input-label">Avg Likes Per Post</label>
+                        <input type="number" id="rate-likes" placeholder="e.g. 800" min="0">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Avg Comments Per Post</label>
+                        <input type="number" id="rate-comments" placeholder="e.g. 45" min="0">
+                    </div>
+                </div>
+
+                <button class="btn btn-gradient" onclick="calculateRates()">Calculate My Rates</button>
+
+                <div id="rate-result" class="output-box">
+                    <!-- Engagement Summary -->
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px;">
+                        <div id="rate-eng-badge" style="flex: 1; min-width: 140px; background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 16px; text-align: center;">
+                            <div class="time-label">Engagement Rate</div>
+                            <div id="rate-eng-value" class="time-value" style="font-size: 1.8rem;"></div>
+                            <div id="rate-eng-tier" style="font-size: 0.8rem; margin-top: 4px;"></div>
+                        </div>
+                        <div style="flex: 1; min-width: 140px; background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 16px; text-align: center;">
+                            <div class="time-label">Creator Tier</div>
+                            <div id="rate-tier-label" class="time-value" style="font-size: 1.3rem;"></div>
+                            <div id="rate-tier-range" style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;"></div>
+                        </div>
+                        <div style="flex: 1; min-width: 140px; background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 16px; text-align: center;">
+                            <div class="time-label">Est. CPM</div>
+                            <div id="rate-cpm-value" class="time-value" style="font-size: 1.8rem;"></div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">Cost per 1K views</div>
+                        </div>
+                    </div>
+
+                    <!-- Rate Card -->
+                    <label class="input-label">Your Rate Card</label>
+                    <div id="rate-card-grid" style="display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 12px;"></div>
+
+                    <!-- Explanation -->
+                    <div id="rate-explanation" style="margin-top: 24px; padding: 20px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);"></div>
+
+                    <div class="row" style="margin-top: 16px;">
+                        <button class="btn btn-primary" onclick="copyRateCard()">Copy Rate Card</button>
+                        <button class="btn btn-outline" onclick="shareRateCard()">Share as Text</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- TELEPROMPTER FULLSCREEN OVERLAY -->
+<div id="tp-fullscreen-overlay" style="display:none; position: fixed; inset: 0; z-index: 9999; background: #000;">
+    <div id="tp-record-brightness" style="position: absolute; inset: 0; pointer-events: none; z-index: 10; box-shadow: inset 0 0 100px 80px rgba(255, 255, 255, 0.8);"></div>
+    <video id="tp-record-video" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1);"></video>
+    <div id="tp-countdown-display" style="display:none; position: absolute; inset: 0; align-items: center; justify-content: center; z-index: 30; font-size: 8rem; font-weight: bold; color: white; text-shadow: 0 10px 30px rgba(0,0,0,0.5);"></div>
+    <div style="position: absolute; inset: 0; display: flex; justify-content: center; pointer-events: none; z-index: 20; overflow: hidden; padding-top: 5vh;">
+        <div id="tp-scrolling-text" style="text-align: center; padding: 0 2rem; color: white; font-weight: 600; text-shadow: 3px 3px 12px rgba(0,0,0,0.95), -3px -3px 12px rgba(0,0,0,0.95), 0 0 20px rgba(0,0,0,0.9); max-width: 90%; white-space: pre-wrap; transform: translateY(0px); line-height: 1.6;"></div>
     </div>
-
-    <!-- TELEPROMPTER FULLSCREEN OVERLAY -->
-    <div id="tp-fullscreen-overlay" style="display:none; position: fixed; inset: 0; z-index: 9999; background: #000;">
-        <div id="tp-record-brightness" style="position: absolute; inset: 0; pointer-events: none; z-index: 10; box-shadow: inset 0 0 100px 80px rgba(255, 255, 255, 0.8);"></div>
-        <video id="tp-record-video" autoplay muted playsinline style="width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1);"></video>
-        <div id="tp-countdown-display" style="display:none; position: absolute; inset: 0; align-items: center; justify-content: center; z-index: 30; font-size: 8rem; font-weight: bold; color: white; text-shadow: 0 10px 30px rgba(0,0,0,0.5);"></div>
-        <div style="position: absolute; inset: 0; display: flex; justify-content: center; pointer-events: none; z-index: 20; overflow: hidden; padding-top: 5vh;">
-            <div id="tp-scrolling-text" style="text-align: center; padding: 0 2rem; color: white; font-weight: 600; text-shadow: 3px 3px 12px rgba(0,0,0,0.95), -3px -3px 12px rgba(0,0,0,0.95), 0 0 20px rgba(0,0,0,0.9); max-width: 90%; white-space: pre-wrap; transform: translateY(0px); line-height: 1.6;"></div>
-        </div>
-        <div id="tp-rec-indicator" style="display:none; position: absolute; top: 1.5rem; right: 1.5rem; z-index: 30; background: #ef4444; color: white; padding: 0.5rem 1rem; border-radius: 100px; font-weight: bold; display: flex; align-items: center; gap: 0.5rem; font-family: 'Plus Jakarta Sans', sans-serif;">
-            <div style="width:12px; height:12px; background:white; border-radius:50%; animation: pulse-dot 1s infinite;"></div> REC
-        </div>
-        <button id="btn-tp-stop" class="btn" style="display:none; position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); z-index: 30; width: auto; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 12px 32px;" onclick="tpStopRecording()">⏹️ Stop Recording</button>
+    <div id="tp-rec-indicator" style="display:none; position: absolute; top: 1.5rem; right: 1.5rem; z-index: 30; background: #ef4444; color: white; padding: 0.5rem 1rem; border-radius: 100px; font-weight: bold; display: flex; align-items: center; gap: 0.5rem; font-family: 'Plus Jakarta Sans', sans-serif;">
+        <div style="width:12px; height:12px; background:white; border-radius:50%; animation: pulse-dot 1s infinite;"></div> REC
     </div>
+    <button id="btn-tp-stop" class="btn" style="display:none; position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); z-index: 30; width: auto; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 12px 32px;" onclick="tpStopRecording()">⏹️ Stop Recording</button>
+</div>
 
-    <script>
-        // =============================================
-        // UI Navigation
-        // =============================================
-        function switchView(viewId, navElement) {
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            navElement.classList.add('active');
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-            document.getElementById(viewId).classList.add('active');
-            document.querySelector('.main-content').scrollTop = 0;
-            // Track tab views in GoatCounter
-            if (window.goatcounter && window.goatcounter.count) {
-                window.goatcounter.count({ path: '/' + viewId.replace('view-', '') });
-            }
+<script>
+    // =============================================
+    // UI Navigation
+    // =============================================
+    function switchView(viewId, navElement) {
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        navElement.classList.add('active');
+        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+        document.getElementById(viewId).classList.add('active');
+        document.querySelector('.main-content').scrollTop = 0;
+        // Track tab views in GoatCounter
+        if (window.goatcounter && window.goatcounter.count) {
+            window.goatcounter.count({ path: '/' + viewId.replace('view-', '') });
         }
+    }
 
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.classList.add('visible');
-            setTimeout(() => toast.classList.remove('visible'), 3500);
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.add('visible');
+        setTimeout(() => toast.classList.remove('visible'), 3500);
+    }
+
+    // Modern clipboard helper
+    async function copyToClipboard(text) {
+        try {
+            await navigator.clipboard.writeText(text);
+            return true;
+        } catch {
+            // Fallback for older browsers / insecure contexts
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            let ok = false;
+            try { ok = document.execCommand('copy'); } catch {}
+            document.body.removeChild(ta);
+            return ok;
         }
+    }
 
-        // Modern clipboard helper
-        async function copyToClipboard(text) {
-            try {
-                await navigator.clipboard.writeText(text);
-                return true;
-            } catch {
-                // Fallback for older browsers / insecure contexts
-                const ta = document.createElement('textarea');
-                ta.value = text;
-                ta.style.position = 'fixed';
-                ta.style.opacity = '0';
-                document.body.appendChild(ta);
-                ta.select();
-                let ok = false;
-                try { ok = document.execCommand('copy'); } catch {}
-                document.body.removeChild(ta);
-                return ok;
-            }
-        }
+    // =============================================
+    // Image Converter
+    // =============================================
+    let uploadedImage = null;
+    const imageInput = document.getElementById('image-input');
+    const imageUploadArea = document.getElementById('image-upload-area');
+    imageUploadArea.addEventListener('click', () => imageInput.click());
+    imageUploadArea.addEventListener('dragover', (e) => { e.preventDefault(); imageUploadArea.classList.add('dragover'); });
+    imageUploadArea.addEventListener('dragleave', () => imageUploadArea.classList.remove('dragover'));
+    imageUploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        imageUploadArea.classList.remove('dragover');
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) loadImage(file);
+    });
+    imageInput.addEventListener('change', (e) => { if (e.target.files[0]) loadImage(e.target.files[0]); });
 
-        // =============================================
-        // Image Converter
-        // =============================================
-        let uploadedImage = null;
-        const imageInput = document.getElementById('image-input');
-        const imageUploadArea = document.getElementById('image-upload-area');
-        imageUploadArea.addEventListener('click', () => imageInput.click());
-        imageUploadArea.addEventListener('dragover', (e) => { e.preventDefault(); imageUploadArea.classList.add('dragover'); });
-        imageUploadArea.addEventListener('dragleave', () => imageUploadArea.classList.remove('dragover'));
-        imageUploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            imageUploadArea.classList.remove('dragover');
-            const file = e.dataTransfer.files[0];
-            if (file && file.type.startsWith('image/')) loadImage(file);
-        });
-        imageInput.addEventListener('change', (e) => { if (e.target.files[0]) loadImage(e.target.files[0]); });
-
-        function loadImage(file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = new Image();
-                img.onload = () => {
-                    uploadedImage = img;
-                    imageUploadArea.innerHTML = `<div class="drop-icon" style="color: #a855f7;">✅</div><h3 style="margin-bottom: 8px;">${file.name}</h3><p style="color: var(--text-secondary); font-size: 0.9rem;">Ready to convert</p>`;
-                };
-                img.src = e.target.result;
+    function loadImage(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                uploadedImage = img;
+                imageUploadArea.innerHTML = `<div class="drop-icon" style="color: #a855f7;">✅</div><h3 style="margin-bottom: 8px;">${file.name}</h3><p style="color: var(--text-secondary); font-size: 0.9rem;">Ready to convert</p>`;
             };
-            reader.readAsDataURL(file);
-        }
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
 
-        function convertImage() {
-            if (!uploadedImage) return showToast('Upload an image first!');
-            const canvas = document.getElementById('image-canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = uploadedImage.width;
-            canvas.height = uploadedImage.height;
-            ctx.drawImage(uploadedImage, 0, 0);
-            document.getElementById('image-result').classList.add('show');
-            showToast('Conversion Complete');
-        }
+    function convertImage() {
+        if (!uploadedImage) return showToast('Upload an image first!');
+        const canvas = document.getElementById('image-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = uploadedImage.width;
+        canvas.height = uploadedImage.height;
+        ctx.drawImage(uploadedImage, 0, 0);
+        document.getElementById('image-result').classList.add('show');
+        showToast('Conversion Complete');
+    }
 
-        function downloadImage() {
-            const canvas = document.getElementById('image-canvas');
-            const format = document.getElementById('image-format').value;
-            canvas.toBlob((blob) => {
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `converted.${format}`;
-                a.click();
-                URL.revokeObjectURL(url);
-            }, `image/${format}`);
-        }
-
-        // =============================================
-        // Video Teleprompter
-        // =============================================
-        let tpStream = null, tpMediaRecorder = null, tpChunks = [], tpBlob = null;
-        let tpScrollInterval = null, tpScrollPos = 0, tpIsRecording = false;
-
-        function tpUpdateBrightness(value) {
-            document.getElementById('tp-brightness-val').innerText = value + '%';
-            const shadowStyle = `inset 0 0 100px ${value}px rgba(255, 255, 255, ${value / 100})`;
-            document.getElementById('tp-preview-brightness').style.boxShadow = shadowStyle;
-            document.getElementById('tp-record-brightness').style.boxShadow = shadowStyle;
-        }
-
-        async function tpStartCamera() {
-            try {
-                tpStream = await navigator.mediaDevices.getUserMedia({
-                    video: { width: { ideal: 3840 }, height: { ideal: 2160 }, facingMode: "user" },
-                    audio: true
-                });
-                document.getElementById('tp-preview-video').srcObject = tpStream;
-                document.getElementById('tp-record-video').srcObject = tpStream;
-                document.getElementById('tp-preview-placeholder').style.display = 'none';
-                document.getElementById('btn-tp-camera').style.display = 'none';
-                document.getElementById('btn-tp-record').style.display = 'inline-flex';
-            } catch (err) {
-                console.error(err);
-                showToast('Camera/Microphone access denied. Please grant permissions.');
-            }
-        }
-
-        function tpStartCountdown() {
-            const script = document.getElementById('tp-script').value;
-            if (!script.trim()) return showToast('Please enter a script first!');
-            const textSize = document.getElementById('tp-size').value;
-            const textEl = document.getElementById('tp-scrolling-text');
-            textEl.innerText = script;
-            textEl.style.fontSize = `${textSize}px`;
-            textEl.style.transform = `translateY(0px)`;
-            tpScrollPos = 0;
-            const overlay = document.getElementById('tp-fullscreen-overlay');
-            overlay.style.display = 'block';
-            const elem = document.documentElement;
-            if (elem.requestFullscreen) elem.requestFullscreen();
-            else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
-            const countdownEl = document.getElementById('tp-countdown-display');
-            countdownEl.style.display = 'flex';
-            document.getElementById('tp-rec-indicator').style.display = 'none';
-            document.getElementById('btn-tp-stop').style.display = 'none';
-            let count = 3;
-            countdownEl.innerText = count;
-            const timer = setInterval(() => {
-                count--;
-                if (count > 0) { countdownEl.innerText = count; }
-                else { clearInterval(timer); countdownEl.style.display = 'none'; tpBeginRecording(); }
-            }, 1000);
-        }
-
-        function tpBeginRecording() {
-            tpChunks = [];
-            let options = { mimeType: 'video/mp4', videoBitsPerSecond: 8000000 };
-            if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-                options = { mimeType: 'video/webm;codecs=vp9,opus', videoBitsPerSecond: 8000000 };
-                if (!MediaRecorder.isTypeSupported(options.mimeType))
-                    options = { mimeType: 'video/webm', videoBitsPerSecond: 8000000 };
-            }
-            try {
-                tpMediaRecorder = new MediaRecorder(tpStream, options);
-                tpMediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) tpChunks.push(e.data); };
-                tpMediaRecorder.onstop = () => {
-                    tpBlob = new Blob(tpChunks, { type: tpMediaRecorder.mimeType });
-                    document.getElementById('btn-tp-record').style.display = 'none';
-                    document.getElementById('tp-result-controls').style.display = 'flex';
-                };
-                tpMediaRecorder.start();
-                tpIsRecording = true;
-                document.getElementById('tp-rec-indicator').style.display = 'flex';
-                document.getElementById('btn-tp-stop').style.display = 'inline-flex';
-                const speed = parseFloat(document.getElementById('tp-speed').value);
-                const textEl = document.getElementById('tp-scrolling-text');
-                tpScrollInterval = setInterval(() => {
-                    tpScrollPos += speed;
-                    textEl.style.transform = `translateY(-${tpScrollPos}px)`;
-                }, 50);
-            } catch (err) {
-                console.error(err);
-                showToast('Error starting recording.');
-                tpStopRecording();
-            }
-        }
-
-        function tpStopRecording() {
-            if (tpMediaRecorder && tpIsRecording) tpMediaRecorder.stop();
-            tpIsRecording = false;
-            clearInterval(tpScrollInterval);
-            document.getElementById('tp-fullscreen-overlay').style.display = 'none';
-            if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
-            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-        }
-
-        function tpDownload() {
-            if (!tpBlob) return;
-            const url = URL.createObjectURL(tpBlob);
+    function downloadImage() {
+        const canvas = document.getElementById('image-canvas');
+        const format = document.getElementById('image-format').value;
+        canvas.toBlob((blob) => {
+            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `teleprompter-${Date.now()}.${tpBlob.type.includes('mp4') ? 'mp4' : 'webm'}`;
+            a.download = `converted.${format}`;
             a.click();
             URL.revokeObjectURL(url);
-        }
+        }, `image/${format}`);
+    }
 
-        function tpReset() {
-            tpBlob = null;
-            document.getElementById('tp-result-controls').style.display = 'none';
+    // =============================================
+    // Video Teleprompter
+    // =============================================
+    let tpStream = null, tpMediaRecorder = null, tpChunks = [], tpBlob = null;
+    let tpScrollInterval = null, tpScrollPos = 0, tpIsRecording = false;
+
+    function tpUpdateBrightness(value) {
+        document.getElementById('tp-brightness-val').innerText = value + '%';
+        const shadowStyle = `inset 0 0 100px ${value}px rgba(255, 255, 255, ${value / 100})`;
+        document.getElementById('tp-preview-brightness').style.boxShadow = shadowStyle;
+        document.getElementById('tp-record-brightness').style.boxShadow = shadowStyle;
+    }
+
+    async function tpStartCamera() {
+        try {
+            tpStream = await navigator.mediaDevices.getUserMedia({
+                video: { width: { ideal: 3840 }, height: { ideal: 2160 }, facingMode: "user" },
+                audio: true
+            });
+            document.getElementById('tp-preview-video').srcObject = tpStream;
+            document.getElementById('tp-record-video').srcObject = tpStream;
+            document.getElementById('tp-preview-placeholder').style.display = 'none';
+            document.getElementById('btn-tp-camera').style.display = 'none';
             document.getElementById('btn-tp-record').style.display = 'inline-flex';
+        } catch (err) {
+            console.error(err);
+            showToast('Camera/Microphone access denied. Please grant permissions.');
+        }
+    }
+
+    function tpStartCountdown() {
+        const script = document.getElementById('tp-script').value;
+        if (!script.trim()) return showToast('Please enter a script first!');
+        const textSize = document.getElementById('tp-size').value;
+        const textEl = document.getElementById('tp-scrolling-text');
+        textEl.innerText = script;
+        textEl.style.fontSize = `${textSize}px`;
+        textEl.style.transform = `translateY(0px)`;
+        tpScrollPos = 0;
+        const overlay = document.getElementById('tp-fullscreen-overlay');
+        overlay.style.display = 'block';
+        const elem = document.documentElement;
+        if (elem.requestFullscreen) elem.requestFullscreen();
+        else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+        const countdownEl = document.getElementById('tp-countdown-display');
+        countdownEl.style.display = 'flex';
+        document.getElementById('tp-rec-indicator').style.display = 'none';
+        document.getElementById('btn-tp-stop').style.display = 'none';
+        let count = 3;
+        countdownEl.innerText = count;
+        const timer = setInterval(() => {
+            count--;
+            if (count > 0) { countdownEl.innerText = count; }
+            else { clearInterval(timer); countdownEl.style.display = 'none'; tpBeginRecording(); }
+        }, 1000);
+    }
+
+    function tpBeginRecording() {
+        tpChunks = [];
+        let options = { mimeType: 'video/mp4', videoBitsPerSecond: 8000000 };
+        if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+            options = { mimeType: 'video/webm;codecs=vp9,opus', videoBitsPerSecond: 8000000 };
+            if (!MediaRecorder.isTypeSupported(options.mimeType))
+                options = { mimeType: 'video/webm', videoBitsPerSecond: 8000000 };
+        }
+        try {
+            tpMediaRecorder = new MediaRecorder(tpStream, options);
+            tpMediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) tpChunks.push(e.data); };
+            tpMediaRecorder.onstop = () => {
+                tpBlob = new Blob(tpChunks, { type: tpMediaRecorder.mimeType });
+                document.getElementById('btn-tp-record').style.display = 'none';
+                document.getElementById('tp-result-controls').style.display = 'flex';
+            };
+            tpMediaRecorder.start();
+            tpIsRecording = true;
+            document.getElementById('tp-rec-indicator').style.display = 'flex';
+            document.getElementById('btn-tp-stop').style.display = 'inline-flex';
+            const speed = parseFloat(document.getElementById('tp-speed').value);
+            const textEl = document.getElementById('tp-scrolling-text');
+            tpScrollInterval = setInterval(() => {
+                tpScrollPos += speed;
+                textEl.style.transform = `translateY(-${tpScrollPos}px)`;
+            }, 50);
+        } catch (err) {
+            console.error(err);
+            showToast('Error starting recording.');
+            tpStopRecording();
+        }
+    }
+
+    function tpStopRecording() {
+        if (tpMediaRecorder && tpIsRecording) tpMediaRecorder.stop();
+        tpIsRecording = false;
+        clearInterval(tpScrollInterval);
+        document.getElementById('tp-fullscreen-overlay').style.display = 'none';
+        if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    }
+
+    function tpDownload() {
+        if (!tpBlob) return;
+        const url = URL.createObjectURL(tpBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `teleprompter-${Date.now()}.${tpBlob.type.includes('mp4') ? 'mp4' : 'webm'}`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    function tpReset() {
+        tpBlob = null;
+        document.getElementById('tp-result-controls').style.display = 'none';
+        document.getElementById('btn-tp-record').style.display = 'inline-flex';
+    }
+
+    document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement && tpIsRecording) tpStopRecording();
+    });
+
+    // =============================================
+    // Audio Transcriber
+    // =============================================
+    let recognition = null, isRecording = false;
+
+    function toggleRecording() {
+        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window))
+            return showToast('Voice API not supported here.');
+        if (!isRecording) startRecording(); else stopRecording();
+    }
+
+    function startRecording() {
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRec();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        const textarea = document.getElementById('transcription-text');
+        let finalTranscript = textarea.value ? textarea.value + " " : "";
+        recognition.onresult = (event) => {
+            let interim = '';
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                if (event.results[i].isFinal) finalTranscript += event.results[i][0].transcript + ' ';
+                else interim += event.results[i][0].transcript;
+            }
+            textarea.value = finalTranscript + interim;
+        };
+        recognition.onend = () => { if (isRecording) recognition.start(); };
+        recognition.start();
+        isRecording = true;
+        const btn = document.getElementById('record-btn');
+        btn.innerHTML = '⏹️ Stop & Save';
+        btn.style.background = '#ef4444';
+        btn.style.boxShadow = '0 0 20px rgba(239, 68, 68, 0.4)';
+    }
+
+    function stopRecording() {
+        if (!recognition) return;
+        isRecording = false;
+        recognition.stop();
+        const btn = document.getElementById('record-btn');
+        btn.innerHTML = '🎤 Start Listening';
+        btn.style.background = 'var(--gradient-brand)';
+        btn.style.boxShadow = 'none';
+        showToast('Recording Stopped');
+    }
+
+    async function copyTranscription() {
+        const text = document.getElementById('transcription-text').value;
+        if (!text) return showToast('Nothing to copy');
+        const ok = await copyToClipboard(text);
+        showToast(ok ? 'Text Copied!' : 'Failed to copy');
+    }
+
+    function clearTranscription() {
+        document.getElementById('transcription-text').value = '';
+    }
+
+    // =============================================
+    // Hashtag Generator — Dynamic with JSON fetch
+    // =============================================
+
+    // Fallback data in case the fetch fails (matches the keys the scraper outputs)
+    const hashtagFallback = {
+        general: ['#fyp', '#foryou', '#viral', '#trending', '#foryoupage', '#tiktok', '#xyzbca', '#tiktokviral', '#viralvideo', '#fypシ'],
+        fitness: ['#fitness', '#workout', '#gym', '#fitfam', '#healthylifestyle', '#weightloss', '#motivation', '#fitnessmotivation', '#health', '#wellness', '#fittok', '#gymtok'],
+        food: ['#food', '#foodie', '#cooking', '#recipe', '#foodtok', '#baking', '#chef', '#foodporn', '#homecooking', '#easyrecipe', '#cookingtiktok', '#yummy'],
+        lifestyle: ['#beauty', '#makeup', '#skincare', '#beautytips', '#makeuptutorial', '#beautytok', '#skincareroutine', '#grwm', '#beautyhacks', '#skintok', '#makeupartist'],
+        fashion: ['#fashion', '#style', '#ootd', '#outfit', '#streetstyle', '#fashiontok', '#fashioninspo', '#outfitinspo', '#styleinspo', '#fashiontrends', '#fashionblogger'],
+        tech: ['#tech', '#technology', '#gaming', '#gamer', '#ai', '#techtok', '#gamedev', '#pc', '#gamingsetup', '#techreview', '#esports', '#twitch'],
+        travel: ['#travel', '#traveltok', '#adventure', '#wanderlust', '#vacation', '#explore', '#traveling', '#travelgram', '#travelphotography', '#travelblogger', '#travelvlog'],
+        business: ['#business', '#entrepreneur', '#marketing', '#money', '#investing', '#financetok', '#businesstips', '#hustle', '#stocks', '#entrepreneurship', '#sidehustle', '#moneytok']
+    };
+
+    let hashtagDb = null;       // Will hold the loaded data
+    let hashtagSource = null;    // 'live' | 'fallback'
+    let lastGeneratedTags = [];  // For "Copy All"
+
+    /**
+     * Fetch hashtags.json from the same directory (GitHub Pages serves it from repo root).
+     * Falls back to hardcoded data on any error.
+     */
+    async function loadHashtags() {
+        const badge = document.getElementById('hashtag-freshness');
+        const dot = badge.querySelector('.freshness-dot');
+        const label = badge.querySelector('span');
+
+        try {
+            const res = await fetch('hashtags.json', { cache: 'no-cache' });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+
+            // Basic validation: must be an object with at least one array
+            const keys = Object.keys(data).filter(k => k !== '_meta');
+            if (keys.length === 0 || !Array.isArray(data[keys[0]])) throw new Error('Invalid JSON shape');
+
+            // Strip metadata key — only keep category arrays
+            hashtagDb = {};
+            for (const key of keys) {
+                if (Array.isArray(data[key])) hashtagDb[key] = data[key];
+            }
+            hashtagSource = 'live';
+
+            dot.classList.add('live');
+            dot.classList.remove('fallback');
+            const meta = data._meta;
+            const dateStr = meta?.scraped_at ? ` (${meta.scraped_at.split(' ')[0]})` : '';
+            const srcStr = meta?.source ? ` via ${meta.source}` : '';
+            label.textContent = `Live data${srcStr}${dateStr}`;
+
+            console.log(`[Hashtags] Loaded ${keys.length} categories from hashtags.json`);
+        } catch (err) {
+            console.warn('[Hashtags] Could not load hashtags.json, using fallback:', err.message);
+            hashtagDb = hashtagFallback;
+            hashtagSource = 'fallback';
+
+            dot.classList.add('fallback');
+            dot.classList.remove('live');
+            label.textContent = 'Using built-in data (hashtags.json unavailable)';
+        }
+    }
+
+    function generateHashtags() {
+        if (!hashtagDb) {
+            showToast('Hashtag data still loading...');
+            return;
         }
 
-        document.addEventListener('fullscreenchange', () => {
-            if (!document.fullscreenElement && tpIsRecording) tpStopRecording();
+        const niche = document.getElementById('niche-select').value;
+        const hashtags = hashtagDb[niche];
+
+        if (!hashtags || hashtags.length === 0) {
+            showToast('No tags found for this category');
+            return;
+        }
+
+        // Shuffle and pick up to 15
+        const selected = [...hashtags].sort(() => 0.5 - Math.random()).slice(0, 15);
+        lastGeneratedTags = selected;
+
+        const list = document.getElementById('hashtag-list');
+        list.innerHTML = '';
+
+        selected.forEach(tag => {
+            const pill = document.createElement('div');
+            pill.className = 'tag-pill';
+            pill.textContent = tag;
+            pill.onclick = async () => {
+                const ok = await copyToClipboard(tag);
+                if (ok) showToast('Copied: ' + tag);
+            };
+            list.appendChild(pill);
         });
 
-        // =============================================
-        // Audio Transcriber
-        // =============================================
-        let recognition = null, isRecording = false;
+        document.getElementById('hashtag-result').classList.add('show');
+    }
 
-        function toggleRecording() {
-            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window))
-                return showToast('Voice API not supported here.');
-            if (!isRecording) startRecording(); else stopRecording();
-        }
+    async function copyAllHashtags() {
+        if (!lastGeneratedTags.length) return showToast('Generate tags first');
+        const text = lastGeneratedTags.join(' ');
+        const ok = await copyToClipboard(text);
+        showToast(ok ? 'All tags copied!' : 'Failed to copy');
+    }
 
-        function startRecording() {
-            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-            recognition = new SpeechRec();
-            recognition.continuous = true;
-            recognition.interimResults = true;
-            const textarea = document.getElementById('transcription-text');
-            let finalTranscript = textarea.value ? textarea.value + " " : "";
-            recognition.onresult = (event) => {
-                let interim = '';
-                for (let i = event.resultIndex; i < event.results.length; i++) {
-                    if (event.results[i].isFinal) finalTranscript += event.results[i][0].transcript + ' ';
-                    else interim += event.results[i][0].transcript;
-                }
-                textarea.value = finalTranscript + interim;
-            };
-            recognition.onend = () => { if (isRecording) recognition.start(); };
-            recognition.start();
-            isRecording = true;
-            const btn = document.getElementById('record-btn');
-            btn.innerHTML = '⏹️ Stop & Save';
-            btn.style.background = '#ef4444';
-            btn.style.boxShadow = '0 0 20px rgba(239, 68, 68, 0.4)';
-        }
+    // Load hashtags on page init
+    loadHashtags();
 
-        function stopRecording() {
-            if (!recognition) return;
-            isRecording = false;
-            recognition.stop();
-            const btn = document.getElementById('record-btn');
-            btn.innerHTML = '🎤 Start Listening';
-            btn.style.background = 'var(--gradient-brand)';
-            btn.style.boxShadow = 'none';
-            showToast('Recording Stopped');
-        }
+    // =============================================
+    // Posting Times
+    // =============================================
+    const timesDb = {
+        instagram: { EST: ['9:00 AM', '2:00 PM', '5:00 PM'], CST: ['8:00 AM', '1:00 PM', '4:00 PM'], MST: ['7:00 AM', '12:00 PM', '3:00 PM'], PST: ['6:00 AM', '11:00 AM', '2:00 PM'], GMT: ['2:00 PM', '7:00 PM', '10:00 PM'] },
+        tiktok: { EST: ['6:00 AM', '7:00 PM', '9:00 PM'], CST: ['5:00 AM', '6:00 PM', '8:00 PM'], MST: ['4:00 AM', '5:00 PM', '7:00 PM'], PST: ['3:00 AM', '4:00 PM', '6:00 PM'], GMT: ['11:00 AM', '12:00 AM', '2:00 AM'] },
+        youtube: { EST: ['3:00 PM', '6:00 PM', '9:00 PM'], CST: ['2:00 PM', '5:00 PM', '8:00 PM'], MST: ['1:00 PM', '4:00 PM', '7:00 PM'], PST: ['12:00 PM', '3:00 PM', '6:00 PM'], GMT: ['8:00 PM', '11:00 PM', '2:00 AM'] },
+        twitter: { EST: ['8:00 AM', '12:00 PM', '3:00 PM'], CST: ['7:00 AM', '11:00 AM', '2:00 PM'], MST: ['6:00 AM', '10:00 AM', '1:00 PM'], PST: ['5:00 AM', '9:00 AM', '12:00 PM'], GMT: ['1:00 PM', '5:00 PM', '8:00 PM'] }
+    };
 
-        async function copyTranscription() {
-            const text = document.getElementById('transcription-text').value;
-            if (!text) return showToast('Nothing to copy');
-            const ok = await copyToClipboard(text);
-            showToast(ok ? 'Text Copied!' : 'Failed to copy');
-        }
-
-        function clearTranscription() {
-            document.getElementById('transcription-text').value = '';
-        }
-
-        // =============================================
-        // Hashtag Generator — Dynamic with JSON fetch
-        // =============================================
-
-        // Fallback data in case the fetch fails (matches the keys the scraper outputs)
-        const hashtagFallback = {
-            general: ['#fyp', '#foryou', '#viral', '#trending', '#foryoupage', '#tiktok', '#xyzbca', '#tiktokviral', '#viralvideo', '#fypシ'],
-            fitness: ['#fitness', '#workout', '#gym', '#fitfam', '#healthylifestyle', '#weightloss', '#motivation', '#fitnessmotivation', '#health', '#wellness', '#fittok', '#gymtok'],
-            food: ['#food', '#foodie', '#cooking', '#recipe', '#foodtok', '#baking', '#chef', '#foodporn', '#homecooking', '#easyrecipe', '#cookingtiktok', '#yummy'],
-            lifestyle: ['#beauty', '#makeup', '#skincare', '#beautytips', '#makeuptutorial', '#beautytok', '#skincareroutine', '#grwm', '#beautyhacks', '#skintok', '#makeupartist'],
-            fashion: ['#fashion', '#style', '#ootd', '#outfit', '#streetstyle', '#fashiontok', '#fashioninspo', '#outfitinspo', '#styleinspo', '#fashiontrends', '#fashionblogger'],
-            tech: ['#tech', '#technology', '#gaming', '#gamer', '#ai', '#techtok', '#gamedev', '#pc', '#gamingsetup', '#techreview', '#esports', '#twitch'],
-            travel: ['#travel', '#traveltok', '#adventure', '#wanderlust', '#vacation', '#explore', '#traveling', '#travelgram', '#travelphotography', '#travelblogger', '#travelvlog'],
-            business: ['#business', '#entrepreneur', '#marketing', '#money', '#investing', '#financetok', '#businesstips', '#hustle', '#stocks', '#entrepreneurship', '#sidehustle', '#moneytok']
-        };
-
-        let hashtagDb = null;       // Will hold the loaded data
-        let hashtagSource = null;    // 'live' | 'fallback'
-        let lastGeneratedTags = [];  // For "Copy All"
-
-        /**
-         * Fetch hashtags.json from the same directory (GitHub Pages serves it from repo root).
-         * Falls back to hardcoded data on any error.
-         */
-        async function loadHashtags() {
-            const badge = document.getElementById('hashtag-freshness');
-            const dot = badge.querySelector('.freshness-dot');
-            const label = badge.querySelector('span');
-
-            try {
-                const res = await fetch('hashtags.json', { cache: 'no-cache' });
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const data = await res.json();
-
-                // Basic validation: must be an object with at least one array
-                const keys = Object.keys(data).filter(k => k !== '_meta');
-                if (keys.length === 0 || !Array.isArray(data[keys[0]])) throw new Error('Invalid JSON shape');
-
-                // Strip metadata key — only keep category arrays
-                hashtagDb = {};
-                for (const key of keys) {
-                    if (Array.isArray(data[key])) hashtagDb[key] = data[key];
-                }
-                hashtagSource = 'live';
-
-                dot.classList.add('live');
-                dot.classList.remove('fallback');
-                const meta = data._meta;
-                const dateStr = meta?.scraped_at ? ` (${meta.scraped_at.split(' ')[0]})` : '';
-                const srcStr = meta?.source ? ` via ${meta.source}` : '';
-                label.textContent = `Live data${srcStr}${dateStr}`;
-
-                console.log(`[Hashtags] Loaded ${keys.length} categories from hashtags.json`);
-            } catch (err) {
-                console.warn('[Hashtags] Could not load hashtags.json, using fallback:', err.message);
-                hashtagDb = hashtagFallback;
-                hashtagSource = 'fallback';
-
-                dot.classList.add('fallback');
-                dot.classList.remove('live');
-                label.textContent = 'Using built-in data (hashtags.json unavailable)';
-            }
-        }
-
-        function generateHashtags() {
-            if (!hashtagDb) {
-                showToast('Hashtag data still loading...');
-                return;
-            }
-
-            const niche = document.getElementById('niche-select').value;
-            const hashtags = hashtagDb[niche];
-
-            if (!hashtags || hashtags.length === 0) {
-                showToast('No tags found for this category');
-                return;
-            }
-
-            // Shuffle and pick up to 15
-            const selected = [...hashtags].sort(() => 0.5 - Math.random()).slice(0, 15);
-            lastGeneratedTags = selected;
-
-            const list = document.getElementById('hashtag-list');
-            list.innerHTML = '';
-
-            selected.forEach(tag => {
-                const pill = document.createElement('div');
-                pill.className = 'tag-pill';
-                pill.textContent = tag;
-                pill.onclick = async () => {
-                    const ok = await copyToClipboard(tag);
-                    if (ok) showToast('Copied: ' + tag);
-                };
-                list.appendChild(pill);
-            });
-
-            document.getElementById('hashtag-result').classList.add('show');
-        }
-
-        async function copyAllHashtags() {
-            if (!lastGeneratedTags.length) return showToast('Generate tags first');
-            const text = lastGeneratedTags.join(' ');
-            const ok = await copyToClipboard(text);
-            showToast(ok ? 'All tags copied!' : 'Failed to copy');
-        }
-
-        // Load hashtags on page init
-        loadHashtags();
-
-        // =============================================
-        // Posting Times
-        // =============================================
-        const timesDb = {
-            instagram: { EST: ['9:00 AM', '2:00 PM', '5:00 PM'], CST: ['8:00 AM', '1:00 PM', '4:00 PM'], MST: ['7:00 AM', '12:00 PM', '3:00 PM'], PST: ['6:00 AM', '11:00 AM', '2:00 PM'], GMT: ['2:00 PM', '7:00 PM', '10:00 PM'] },
-            tiktok: { EST: ['6:00 AM', '7:00 PM', '9:00 PM'], CST: ['5:00 AM', '6:00 PM', '8:00 PM'], MST: ['4:00 AM', '5:00 PM', '7:00 PM'], PST: ['3:00 AM', '4:00 PM', '6:00 PM'], GMT: ['11:00 AM', '12:00 AM', '2:00 AM'] },
-            youtube: { EST: ['3:00 PM', '6:00 PM', '9:00 PM'], CST: ['2:00 PM', '5:00 PM', '8:00 PM'], MST: ['1:00 PM', '4:00 PM', '7:00 PM'], PST: ['12:00 PM', '3:00 PM', '6:00 PM'], GMT: ['8:00 PM', '11:00 PM', '2:00 AM'] },
-            twitter: { EST: ['8:00 AM', '12:00 PM', '3:00 PM'], CST: ['7:00 AM', '11:00 AM', '2:00 PM'], MST: ['6:00 AM', '10:00 AM', '1:00 PM'], PST: ['5:00 AM', '9:00 AM', '12:00 PM'], GMT: ['1:00 PM', '5:00 PM', '8:00 PM'] }
-        };
-
-        function getPostingTimes() {
-            const platform = document.getElementById('platform-select').value;
-            const tz = document.getElementById('timezone-select').value;
-            const times = timesDb[platform][tz];
-            const grid = document.getElementById('times-grid');
-            grid.innerHTML = '';
-            const labels = ['Prime Peak', 'Secondary', 'Night Owl'];
-            times.forEach((time, i) => {
-                grid.innerHTML += `
-                    <div class="time-slot">
-                        <div class="time-label">${labels[i]}</div>
-                        <div class="time-value">${time}</div>
-                    </div>`;
-            });
-            document.getElementById('times-result').classList.add('show');
-        }
-
-        // =============================================
-        // Rate Calculator
-        // =============================================
-
-        /*
-         * PRICING MODEL — Two-layer approach:
-         *
-         * Layer 1: LABOR FLOOR — the minimum any creator should charge
-         *   Creating a sponsored video takes real work: scripting, filming,
-         *   editing, revisions, posting. Even a nano creator spends 2-4 hours.
-         *   At a reasonable creative freelance rate ($25-50/hr), that's $75-150
-         *   minimum before you even look at metrics.
-         *
-         * Layer 2: CPM VALUE — what your reach is worth to a brand
-         *   (Avg Views ÷ 1,000) × effective CPM
-         *   This scales up as your audience grows.
-         *
-         * FINAL RATE = whichever is HIGHER (labor floor or CPM value)
-         *   Small creators get protected by the labor floor.
-         *   Bigger creators get paid for their reach.
-         *   The crossover happens naturally around 15K-25K avg views.
-         */
-
-        // Labor floor minimums by platform (accounts for content effort)
-        // TikTok/Reels = shorter content but still real production work
-        // YouTube = longer content, more editing, higher floor
-        const laborFloor = {
-            tiktok:    { low: 75,   mid: 125,  high: 200  },
-            instagram: { low: 100,  mid: 150,  high: 250  },
-            youtube:   { low: 150,  mid: 250,  high: 500  },
-            twitter:   { low: 50,   mid: 80,   high: 150  },
-        };
-
-        // CPM rates by platform ($ per 1,000 views)
-        const baseCPM = {
-            tiktok:    { low: 8,   mid: 15,  high: 25  },
-            instagram: { low: 10,  mid: 20,  high: 40  },
-            youtube:   { low: 15,  mid: 30,  high: 60  },
-            twitter:   { low: 5,   mid: 10,  high: 20  },
-        };
-
-        // Niche multipliers — some niches pay more
-        const nicheMultiplier = {
-            general:   1.0,
-            beauty:    1.2,
-            fitness:   1.1,
-            tech:      1.3,
-            food:      1.0,
-            finance:   1.5,
-            travel:    1.15,
-            education: 1.2,
-        };
-
-        // Engagement rate scoring
-        function getEngagementMultiplier(engRate) {
-            if (engRate >= 8)   return { mult: 1.5,  label: 'Exceptional', color: '#22c55e' };
-            if (engRate >= 5)   return { mult: 1.3,  label: 'Excellent',   color: '#a855f7' };
-            if (engRate >= 3)   return { mult: 1.15, label: 'Great',       color: '#3b82f6' };
-            if (engRate >= 1.5) return { mult: 1.0,  label: 'Average',     color: '#f59e0b' };
-            return                { mult: 0.85, label: 'Below Avg',   color: '#ef4444' };
-        }
-
-        // Creator tier by follower count
-        function getCreatorTier(followers) {
-            if (followers >= 1000000) return { name: 'Mega',     range: '1M+',       tierMult: 1.2 };
-            if (followers >= 500000)  return { name: 'Macro',    range: '500K–1M',   tierMult: 1.1 };
-            if (followers >= 100000)  return { name: 'Mid-Tier', range: '100K–500K', tierMult: 1.0 };
-            if (followers >= 10000)   return { name: 'Micro',    range: '10K–100K',  tierMult: 1.0 };
-            if (followers >= 1000)    return { name: 'Nano',     range: '1K–10K',    tierMult: 1.0 };
-            return                      { name: 'Starter',  range: '<1K',       tierMult: 0.9 };
-        }
-
-        let lastRateCardText = '';
-
-        function calculateRates() {
-            const platform    = document.getElementById('rate-platform').value;
-            const niche       = document.getElementById('rate-niche').value;
-            const followers   = parseInt(document.getElementById('rate-followers').value) || 0;
-            const avgViews    = parseInt(document.getElementById('rate-views').value) || 0;
-            const avgLikes    = parseInt(document.getElementById('rate-likes').value) || 0;
-            const avgComments = parseInt(document.getElementById('rate-comments').value) || 0;
-
-            if (!followers || !avgViews) {
-                return showToast('Enter your followers and average views');
-            }
-
-            // 1. Engagement rate
-            const engRate = ((avgLikes + avgComments) / followers) * 100;
-            const engData = getEngagementMultiplier(engRate);
-
-            // 2. Creator tier
-            const tier = getCreatorTier(followers);
-
-            // 3. CPM-based value (what your reach is worth)
-            const cpmBase = baseCPM[platform];
-            const nMult   = nicheMultiplier[niche];
-            const effectiveCPM = {
-                low:  cpmBase.low  * nMult * engData.mult * tier.tierMult,
-                mid:  cpmBase.mid  * nMult * engData.mult * tier.tierMult,
-                high: cpmBase.high * nMult * engData.mult * tier.tierMult,
-            };
-
-            const cpmValue = {
-                low:  (avgViews / 1000) * effectiveCPM.low,
-                mid:  (avgViews / 1000) * effectiveCPM.mid,
-                high: (avgViews / 1000) * effectiveCPM.high,
-            };
-
-            // 4. Labor floor (minimum for the work involved)
-            const floor = laborFloor[platform];
-
-            // 5. FINAL RATE = max(labor floor, CPM value)
-            // This is the key: small creators get the labor floor,
-            // bigger creators get the CPM value once it exceeds it
-            const sponsoredPost = {
-                low:  Math.max(floor.low,  cpmValue.low),
-                mid:  Math.max(floor.mid,  cpmValue.mid),
-                high: Math.max(floor.high, cpmValue.high),
-            };
-
-            // Which pricing model won?
-            const pricingModel = cpmValue.mid >= floor.mid ? 'reach' : 'labor';
-
-            // 6. Build deliverable rates from the sponsored post base
-            const deliverables = [
-                {
-                    type: 'Sponsored Post / Video',
-                    desc: 'Single in-feed video featuring brand',
-                    low:  sponsoredPost.low,
-                    mid:  sponsoredPost.mid,
-                    high: sponsoredPost.high,
-                },
-                {
-                    type: 'Story / Repost',
-                    desc: 'Story mention or reshare (24hr)',
-                    low:  Math.max(25,  sponsoredPost.low  * 0.35),
-                    mid:  Math.max(40,  sponsoredPost.mid  * 0.35),
-                    high: Math.max(75,  sponsoredPost.high * 0.35),
-                },
-                {
-                    type: 'Brand Deal Package',
-                    desc: '3 posts + stories over 30 days',
-                    low:  sponsoredPost.low  * 2.5,
-                    mid:  sponsoredPost.mid  * 2.5,
-                    high: sponsoredPost.high * 2.5,
-                },
-                {
-                    type: 'Usage Rights (30 days)',
-                    desc: 'Brand can reuse your content in ads',
-                    low:  Math.max(50,  sponsoredPost.low  * 0.5),
-                    mid:  Math.max(75,  sponsoredPost.mid  * 0.5),
-                    high: Math.max(125, sponsoredPost.high * 0.5),
-                },
-            ];
-
-            // ── Render results ──
-
-            // Engagement badge
-            document.getElementById('rate-eng-value').textContent = engRate.toFixed(1) + '%';
-            const engTierEl = document.getElementById('rate-eng-tier');
-            engTierEl.textContent = engData.label;
-            engTierEl.style.color = engData.color;
-
-            // Creator tier
-            document.getElementById('rate-tier-label').textContent = tier.name;
-            document.getElementById('rate-tier-range').textContent = tier.range + ' followers';
-
-            // CPM
-            document.getElementById('rate-cpm-value').textContent = '$' + effectiveCPM.mid.toFixed(0);
-
-            // Rate cards
-            const grid = document.getElementById('rate-card-grid');
-            grid.innerHTML = '';
-            deliverables.forEach(d => {
-                grid.innerHTML += `
-                    <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-                        <div>
-                            <div style="font-weight: 600; font-size: 1.05rem; margin-bottom: 4px;">${d.type}</div>
-                            <div style="font-size: 0.85rem; color: var(--text-secondary);">${d.desc}</div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-size: 1.4rem; font-weight: 700; background: var(--gradient-brand); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">$${Math.round(d.mid).toLocaleString()}</div>
-                            <div style="font-size: 0.8rem; color: var(--text-secondary);">$${Math.round(d.low).toLocaleString()} – $${Math.round(d.high).toLocaleString()}</div>
-                        </div>
-                    </div>`;
-            });
-
-            // Explanation text
-            const platformNames = { tiktok: 'TikTok', instagram: 'Instagram', youtube: 'YouTube', twitter: 'X (Twitter)' };
-            const pricingExplanation = pricingModel === 'labor'
-                ? `Your rate is based on the <strong style="color: #a855f7;">creative labor floor</strong> — the minimum value of the work involved in producing a sponsored video (scripting, filming, editing, revisions). As your average views grow past ~${Math.ceil(floor.mid / effectiveCPM.mid * 1000).toLocaleString()} views, your rate will start scaling with your reach instead.`
-                : `Your rate is based on <strong style="color: #a855f7;">audience reach</strong> — your ${avgViews.toLocaleString()} average views exceed the labor floor, so brands are paying for the exposure you deliver.`;
-
-            document.getElementById('rate-explanation').innerHTML = `
-                <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7;">
-                    <strong style="color: var(--text-primary);">How this is calculated:</strong>
-                    ${pricingExplanation}
-                    Your ${engRate.toFixed(1)}% engagement rate earns a <span style="color: ${engData.color};">${engData.mult}x</span> multiplier,
-                    and the ${niche} niche commands a ${nMult}x premium on ${platformNames[platform]}.
-                    <br><br>
-                    <strong style="color: var(--text-primary);">Pro tip:</strong> These are starting points — always negotiate. If a brand wants exclusivity (you can't post competitors for 30-90 days), add 25-50% on top. Usage rights for paid ads should always be charged separately.
+    function getPostingTimes() {
+        const platform = document.getElementById('platform-select').value;
+        const tz = document.getElementById('timezone-select').value;
+        const times = timesDb[platform][tz];
+        const grid = document.getElementById('times-grid');
+        grid.innerHTML = '';
+        const labels = ['Prime Peak', 'Secondary', 'Night Owl'];
+        times.forEach((time, i) => {
+            grid.innerHTML += `
+                <div class="time-slot">
+                    <div class="time-label">${labels[i]}</div>
+                    <div class="time-value">${time}</div>
                 </div>`;
+        });
+        document.getElementById('times-result').classList.add('show');
+    }
 
-            // Build copy text
-            lastRateCardText = `📊 My Creator Rate Card (${platformNames[platform]})\n`;
-            lastRateCardText += `Followers: ${followers.toLocaleString()} | Avg Views: ${avgViews.toLocaleString()} | Engagement: ${engRate.toFixed(1)}%\n\n`;
-            deliverables.forEach(d => {
-                lastRateCardText += `${d.type}: $${Math.round(d.mid).toLocaleString()} ($${Math.round(d.low).toLocaleString()}–$${Math.round(d.high).toLocaleString()})\n`;
-            });
-            lastRateCardText += `\nGenerated at creatortoolkit.com`;
+    // =============================================
+    // Rate Calculator
+    // =============================================
 
-            document.getElementById('rate-result').classList.add('show');
-            showToast('Rate card generated!');
+    /*
+     * PRICING MODEL — Two-layer approach:
+     *
+     * Layer 1: LABOR FLOOR — the minimum any creator should charge
+     *   Creating a sponsored video takes real work: scripting, filming,
+     *   editing, revisions, posting. Even a nano creator spends 2-4 hours.
+     *   At a reasonable creative freelance rate ($25-50/hr), that's $75-150
+     *   minimum before you even look at metrics.
+     *
+     * Layer 2: CPM VALUE — what your reach is worth to a brand
+     *   (Avg Views ÷ 1,000) × effective CPM
+     *   This scales up as your audience grows.
+     *
+     * FINAL RATE = whichever is HIGHER (labor floor or CPM value)
+     *   Small creators get protected by the labor floor.
+     *   Bigger creators get paid for their reach.
+     *   The crossover happens naturally around 15K-25K avg views.
+     */
+
+    // Labor floor minimums by platform (accounts for content effort)
+    // TikTok/Reels = shorter content but still real production work
+    // YouTube = longer content, more editing, higher floor
+    const laborFloor = {
+        tiktok:    { low: 75,   mid: 125,  high: 200  },
+        instagram: { low: 100,  mid: 150,  high: 250  },
+        youtube:   { low: 150,  mid: 250,  high: 500  },
+        twitter:   { low: 50,   mid: 80,   high: 150  },
+    };
+
+    // CPM rates by platform ($ per 1,000 views)
+    const baseCPM = {
+        tiktok:    { low: 8,   mid: 15,  high: 25  },
+        instagram: { low: 10,  mid: 20,  high: 40  },
+        youtube:   { low: 15,  mid: 30,  high: 60  },
+        twitter:   { low: 5,   mid: 10,  high: 20  },
+    };
+
+    // Niche multipliers — some niches pay more
+    const nicheMultiplier = {
+        general:   1.0,
+        beauty:    1.2,
+        fitness:   1.1,
+        tech:      1.3,
+        food:      1.0,
+        finance:   1.5,
+        travel:    1.15,
+        education: 1.2,
+    };
+
+    // Engagement rate scoring
+    function getEngagementMultiplier(engRate) {
+        if (engRate >= 8)   return { mult: 1.5,  label: 'Exceptional', color: '#22c55e' };
+        if (engRate >= 5)   return { mult: 1.3,  label: 'Excellent',   color: '#a855f7' };
+        if (engRate >= 3)   return { mult: 1.15, label: 'Great',       color: '#3b82f6' };
+        if (engRate >= 1.5) return { mult: 1.0,  label: 'Average',     color: '#f59e0b' };
+        return                { mult: 0.85, label: 'Below Avg',   color: '#ef4444' };
+    }
+
+    // Creator tier by follower count
+    function getCreatorTier(followers) {
+        if (followers >= 1000000) return { name: 'Mega',     range: '1M+',       tierMult: 1.2 };
+        if (followers >= 500000)  return { name: 'Macro',    range: '500K–1M',   tierMult: 1.1 };
+        if (followers >= 100000)  return { name: 'Mid-Tier', range: '100K–500K', tierMult: 1.0 };
+        if (followers >= 10000)   return { name: 'Micro',    range: '10K–100K',  tierMult: 1.0 };
+        if (followers >= 1000)    return { name: 'Nano',     range: '1K–10K',    tierMult: 1.0 };
+        return                      { name: 'Starter',  range: '<1K',       tierMult: 0.9 };
+    }
+
+    let lastRateCardText = '';
+
+    function calculateRates() {
+        const platform    = document.getElementById('rate-platform').value;
+        const niche       = document.getElementById('rate-niche').value;
+        const followers   = parseInt(document.getElementById('rate-followers').value) || 0;
+        const avgViews    = parseInt(document.getElementById('rate-views').value) || 0;
+        const avgLikes    = parseInt(document.getElementById('rate-likes').value) || 0;
+        const avgComments = parseInt(document.getElementById('rate-comments').value) || 0;
+
+        if (!followers || !avgViews) {
+            return showToast('Enter your followers and average views');
         }
 
-        async function copyRateCard() {
-            if (!lastRateCardText) return showToast('Calculate rates first');
-            const ok = await copyToClipboard(lastRateCardText);
-            showToast(ok ? 'Rate card copied!' : 'Failed to copy');
-        }
+        // 1. Engagement rate
+        const engRate = ((avgLikes + avgComments) / followers) * 100;
+        const engData = getEngagementMultiplier(engRate);
 
-        async function shareRateCard() {
-            if (!lastRateCardText) return showToast('Calculate rates first');
-            if (navigator.share) {
-                try {
-                    await navigator.share({ title: 'My Creator Rate Card', text: lastRateCardText });
-                } catch {}
-            } else {
-                await copyRateCard();
-            }
+        // 2. Creator tier
+        const tier = getCreatorTier(followers);
+
+        // 3. CPM-based value (what your reach is worth)
+        const cpmBase = baseCPM[platform];
+        const nMult   = nicheMultiplier[niche];
+        const effectiveCPM = {
+            low:  cpmBase.low  * nMult * engData.mult * tier.tierMult,
+            mid:  cpmBase.mid  * nMult * engData.mult * tier.tierMult,
+            high: cpmBase.high * nMult * engData.mult * tier.tierMult,
+        };
+
+        const cpmValue = {
+            low:  (avgViews / 1000) * effectiveCPM.low,
+            mid:  (avgViews / 1000) * effectiveCPM.mid,
+            high: (avgViews / 1000) * effectiveCPM.high,
+        };
+
+        // 4. Labor floor (minimum for the work involved)
+        const floor = laborFloor[platform];
+
+        // 5. FINAL RATE = max(labor floor, CPM value)
+        // This is the key: small creators get the labor floor,
+        // bigger creators get the CPM value once it exceeds it
+        const sponsoredPost = {
+            low:  Math.max(floor.low,  cpmValue.low),
+            mid:  Math.max(floor.mid,  cpmValue.mid),
+            high: Math.max(floor.high, cpmValue.high),
+        };
+
+        // Which pricing model won?
+        const pricingModel = cpmValue.mid >= floor.mid ? 'reach' : 'labor';
+
+        // 6. Build deliverable rates from the sponsored post base
+        const deliverables = [
+            {
+                type: 'Sponsored Post / Video',
+                desc: 'Single in-feed video featuring brand',
+                low:  sponsoredPost.low,
+                mid:  sponsoredPost.mid,
+                high: sponsoredPost.high,
+            },
+            {
+                type: 'Story / Repost',
+                desc: 'Story mention or reshare (24hr)',
+                low:  Math.max(25,  sponsoredPost.low  * 0.35),
+                mid:  Math.max(40,  sponsoredPost.mid  * 0.35),
+                high: Math.max(75,  sponsoredPost.high * 0.35),
+            },
+            {
+                type: 'Brand Deal Package',
+                desc: '3 posts + stories over 30 days',
+                low:  sponsoredPost.low  * 2.5,
+                mid:  sponsoredPost.mid  * 2.5,
+                high: sponsoredPost.high * 2.5,
+            },
+            {
+                type: 'Usage Rights (30 days)',
+                desc: 'Brand can reuse your content in ads',
+                low:  Math.max(50,  sponsoredPost.low  * 0.5),
+                mid:  Math.max(75,  sponsoredPost.mid  * 0.5),
+                high: Math.max(125, sponsoredPost.high * 0.5),
+            },
+        ];
+
+        // ── Render results ──
+
+        // Engagement badge
+        document.getElementById('rate-eng-value').textContent = engRate.toFixed(1) + '%';
+        const engTierEl = document.getElementById('rate-eng-tier');
+        engTierEl.textContent = engData.label;
+        engTierEl.style.color = engData.color;
+
+        // Creator tier
+        document.getElementById('rate-tier-label').textContent = tier.name;
+        document.getElementById('rate-tier-range').textContent = tier.range + ' followers';
+
+        // CPM
+        document.getElementById('rate-cpm-value').textContent = '$' + effectiveCPM.mid.toFixed(0);
+
+        // Rate cards
+        const grid = document.getElementById('rate-card-grid');
+        grid.innerHTML = '';
+        deliverables.forEach(d => {
+            grid.innerHTML += `
+                <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                    <div>
+                        <div style="font-weight: 600; font-size: 1.05rem; margin-bottom: 4px;">${d.type}</div>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary);">${d.desc}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 1.4rem; font-weight: 700; background: var(--gradient-brand); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">$${Math.round(d.mid).toLocaleString()}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">$${Math.round(d.low).toLocaleString()} – $${Math.round(d.high).toLocaleString()}</div>
+                    </div>
+                </div>`;
+        });
+
+        // Explanation text
+        const platformNames = { tiktok: 'TikTok', instagram: 'Instagram', youtube: 'YouTube', twitter: 'X (Twitter)' };
+        const pricingExplanation = pricingModel === 'labor'
+            ? `Your rate is based on the <strong style="color: #a855f7;">creative labor floor</strong> — the minimum value of the work involved in producing a sponsored video (scripting, filming, editing, revisions). As your average views grow past ~${Math.ceil(floor.mid / effectiveCPM.mid * 1000).toLocaleString()} views, your rate will start scaling with your reach instead.`
+            : `Your rate is based on <strong style="color: #a855f7;">audience reach</strong> — your ${avgViews.toLocaleString()} average views exceed the labor floor, so brands are paying for the exposure you deliver.`;
+
+        document.getElementById('rate-explanation').innerHTML = `
+            <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7;">
+                <strong style="color: var(--text-primary);">How this is calculated:</strong>
+                ${pricingExplanation}
+                Your ${engRate.toFixed(1)}% engagement rate earns a <span style="color: ${engData.color};">${engData.mult}x</span> multiplier,
+                and the ${niche} niche commands a ${nMult}x premium on ${platformNames[platform]}.
+                <br><br>
+                <strong style="color: var(--text-primary);">Pro tip:</strong> These are starting points — always negotiate. If a brand wants exclusivity (you can't post competitors for 30-90 days), add 25-50% on top. Usage rights for paid ads should always be charged separately.
+            </div>`;
+
+        // Build copy text
+        lastRateCardText = `📊 My Creator Rate Card (${platformNames[platform]})\n`;
+        lastRateCardText += `Followers: ${followers.toLocaleString()} | Avg Views: ${avgViews.toLocaleString()} | Engagement: ${engRate.toFixed(1)}%\n\n`;
+        deliverables.forEach(d => {
+            lastRateCardText += `${d.type}: $${Math.round(d.mid).toLocaleString()} ($${Math.round(d.low).toLocaleString()}–$${Math.round(d.high).toLocaleString()})\n`;
+        });
+        lastRateCardText += `\nGenerated at creatortoolkit.com`;
+
+        document.getElementById('rate-result').classList.add('show');
+        showToast('Rate card generated!');
+    }
+
+    async function copyRateCard() {
+        if (!lastRateCardText) return showToast('Calculate rates first');
+        const ok = await copyToClipboard(lastRateCardText);
+        showToast(ok ? 'Rate card copied!' : 'Failed to copy');
+    }
+
+    async function shareRateCard() {
+        if (!lastRateCardText) return showToast('Calculate rates first');
+        if (navigator.share) {
+            try {
+                await navigator.share({ title: 'My Creator Rate Card', text: lastRateCardText });
+            } catch {}
+        } else {
+            await copyRateCard();
         }
-    </script>
-    <script data-goatcounter="https://pranaypatel.goatcounter.com/count"
-            async src="//gc.zgo.at/count.js"></script>
+    }
+</script>
+<script data-goatcounter="https://pranaypatel.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+```
+
 </body>
 </html>
