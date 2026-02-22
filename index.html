@@ -45,13 +45,13 @@
         height: 100dvh;
         display: flex;
         overflow: hidden;
-        background-image: radial-gradient(circle at 50% -20%, var(--accent-glow), transparent 40%);
     }
     /* --- APP LAYOUT --- */
     #app-container {
         display: flex;
         width: 100%;
         height: 100%;
+        overflow: hidden;
     }
     /* SIDEBAR (Desktop) */
     .sidebar {
@@ -109,6 +109,13 @@
     }
     .nav-icon {
         font-size: 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .nav-icon svg {
+        width: 20px;
+        height: 20px;
     }
     /* MAIN CONTENT AREA */
     .main-content {
@@ -453,6 +460,10 @@
             font-size: 1.3rem;
             transition: var(--transition);
         }
+        .nav-icon svg {
+            width: 18px;
+            height: 18px;
+        }
         .card {
             padding: 24px 20px;
         }
@@ -484,31 +495,31 @@
         </div>
         <div class="nav-menu">
             <div class="nav-item active" onclick="switchView('view-about', this)">
-                <span class="nav-icon">👤</span>
+                <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
                 <span>About</span>
             </div>
             <div class="nav-item" onclick="switchView('view-teleprompter', this)">
-                <span class="nav-icon">📹</span>
-                <span>Teleprompter</span>
+                <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></span>
+                <span>Prompter</span>
             </div>
             <div class="nav-item" onclick="switchView('view-image', this)">
-                <span class="nav-icon">🖼️</span>
-                <span>Converter</span>
+                <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span>
+                <span>Convert</span>
             </div>
             <div class="nav-item" onclick="switchView('view-audio', this)">
-                <span class="nav-icon">🎙️</span>
+                <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></span>
                 <span>Voice</span>
             </div>
             <div class="nav-item" onclick="switchView('view-hashtags', this)">
-                <span class="nav-icon">#️⃣</span>
-                <span>Hashtags</span>
+                <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg></span>
+                <span>Tags</span>
             </div>
             <div class="nav-item" onclick="switchView('view-times', this)">
-                <span class="nav-icon">⏱️</span>
+                <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
                 <span>Times</span>
             </div>
             <div class="nav-item" onclick="switchView('view-rates', this)">
-                <span class="nav-icon">💰</span>
+                <span class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span>
                 <span>Rates</span>
             </div>
         </div>
