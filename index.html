@@ -397,6 +397,8 @@
             border-radius: 0;
             box-shadow: none;
             padding-bottom: 90px;
+            flex: 1;
+            min-height: 0;
         }
         .view-section {
             padding: 32px 20px;
@@ -408,8 +410,12 @@
             position: fixed;
             bottom: 0;
             left: 0;
+            right: 0;
+            top: auto;
             width: 100%;
             height: auto;
+            flex: 0 0 0px;
+            min-height: 0;
             flex-direction: row;
             padding: 8px 0;
             border-right: none;
@@ -421,7 +427,10 @@
             padding-bottom: calc(8px + env(safe-area-inset-bottom));
         }
         .brand {
-            display: none;
+            display: none !important;
+            visibility: hidden;
+            height: 0;
+            overflow: hidden;
         }
         .nav-menu {
             flex-direction: row;
@@ -491,7 +500,7 @@
     <nav class="sidebar">
         <div class="brand">
             <div class="brand-icon">⚡</div>
-            Toolkit
+            Creator Toolkit
         </div>
         <div class="nav-menu">
             <div class="nav-item active" onclick="switchView('view-about', this)">
