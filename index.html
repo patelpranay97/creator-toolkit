@@ -462,16 +462,20 @@
         <nav class="sidebar">
             <div class="brand">
                 <div class="brand-icon">⚡</div>
-               Creator Toolkit
+                Toolkit
             </div>
             <div class="nav-menu">
-                <div class="nav-item active" onclick="switchView('view-image', this)">
-                    <span class="nav-icon">🖼️</span>
-                    <span>Converter</span>
+                <div class="nav-item active" onclick="switchView('view-about', this)">
+                    <span class="nav-icon">👤</span>
+                    <span>About</span>
                 </div>
                 <div class="nav-item" onclick="switchView('view-teleprompter', this)">
                     <span class="nav-icon">📹</span>
                     <span>Teleprompter</span>
+                </div>
+                <div class="nav-item" onclick="switchView('view-image', this)">
+                    <span class="nav-icon">🖼️</span>
+                    <span>Converter</span>
                 </div>
                 <div class="nav-item" onclick="switchView('view-audio', this)">
                     <span class="nav-icon">🎙️</span>
@@ -495,8 +499,66 @@
         <!-- MAIN WORKSPACE -->
         <main class="main-content">
 
+            <!-- ABOUT ME VIEW -->
+            <section id="view-about" class="view-section active">
+                <div style="display: flex; flex-direction: column; align-items: center; text-align: center; padding: 20px 0;">
+
+                    <!-- Profile Photo -->
+                    <div style="width: 130px; height: 130px; border-radius: 50%; overflow: hidden; border: 3px solid transparent; background: var(--gradient-brand); padding: 3px; margin-bottom: 24px;">
+                        <img id="about-avatar" src="https://github.com/patelpranay97.png" alt="Pranay Patel"
+                            style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: var(--bg-card);"
+                            onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'width:100%;height:100%;border-radius:50%;background:var(--bg-card);display:grid;place-items:center;font-size:3rem;\'>PP</div>';">
+                    </div>
+
+                    <!-- Name -->
+                    <h1 style="font-size: 2.2rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 8px;">Pranay Patel</h1>
+
+                    <!-- Tagline -->
+                    <p style="color: var(--text-secondary); font-size: 1.05rem; max-width: 480px; line-height: 1.6; margin-bottom: 32px; font-style: italic;">
+                        "Successful people don't do different things, they do things differently"
+                    </p>
+
+                    <!-- Social Links -->
+                    <div style="display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 380px; margin-bottom: 40px;">
+                        <a href="https://www.instagram.com/patel_pranay/" target="_blank" rel="noopener"
+                            style="display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); text-decoration: none; color: var(--text-primary); font-weight: 600; font-size: 1rem; transition: var(--transition);"
+                            onmouseover="this.style.background='var(--bg-hover)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.3)';"
+                            onmouseout="this.style.background='var(--bg-card)'; this.style.transform='none'; this.style.boxShadow='none';">
+                            <span style="width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0;">
+                                <img src="Instagram_Glyph_Gradient.svg" alt="Instagram" width="40" height="40" style="border-radius: 10px;">
+                            </span>
+                            <span style="flex: 1; text-align: left;">Instagram</span>
+                            <span style="color: var(--text-secondary); font-size: 0.85rem;">@patel_pranay</span>
+                        </a>
+                        <a href="https://www.tiktok.com/@pranaypatel007" target="_blank" rel="noopener"
+                            style="display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); text-decoration: none; color: var(--text-primary); font-weight: 600; font-size: 1rem; transition: var(--transition);"
+                            onmouseover="this.style.background='var(--bg-hover)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.3)';"
+                            onmouseout="this.style.background='var(--bg-card)'; this.style.transform='none'; this.style.boxShadow='none';">
+                            <span style="width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0;">
+                                <img src="TIKTOK_SOCIAL_ICON_CIRCLE_BLACK.png" alt="TikTok" width="40" height="40" style="border-radius: 10px;">
+                            </span>
+                            <span style="flex: 1; text-align: left;">TikTok</span>
+                            <span style="color: var(--text-secondary); font-size: 0.85rem;">@pranaypatel007</span>
+                        </a>
+                        <a href="https://www.youtube.com/@Pranay-Patel" target="_blank" rel="noopener"
+                            style="display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); text-decoration: none; color: var(--text-primary); font-weight: 600; font-size: 1rem; transition: var(--transition);"
+                            onmouseover="this.style.background='var(--bg-hover)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.3)';"
+                            onmouseout="this.style.background='var(--bg-card)'; this.style.transform='none'; this.style.boxShadow='none';">
+                            <span style="width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: #ff0000; flex-shrink: 0;">
+                                <svg width="22" height="16" viewBox="0 0 576 512" fill="white"><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/></svg>
+                            </span>
+                            <span style="flex: 1; text-align: left;">YouTube</span>
+                            <span style="color: var(--text-secondary); font-size: 0.85rem;">@Pranay-Patel</span>
+                        </a>
+                    </div>
+
+                    <!-- Divider -->
+                    <div style="width: 60px; height: 2px; background: var(--gradient-brand); border-radius: 2px; margin-bottom: 32px;"></div>
+                </div>
+            </section>
+
             <!-- IMAGE CONVERTER VIEW -->
-            <section id="view-image" class="view-section active">
+            <section id="view-image" class="view-section">
                 <div class="view-header">
                     <h1 class="view-title">Image Converter</h1>
                     <p class="view-subtitle">Format images locally in milliseconds. Zero server uploads.</p>
@@ -821,6 +883,10 @@
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
             document.querySelector('.main-content').scrollTop = 0;
+            // Track tab views in GoatCounter
+            if (window.goatcounter && window.goatcounter.count) {
+                window.goatcounter.count({ path: '/' + viewId.replace('view-', '') });
+            }
         }
 
         function showToast(message) {
@@ -1449,6 +1515,6 @@
         }
     </script>
     <script data-goatcounter="https://pranaypatel.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
+            async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
