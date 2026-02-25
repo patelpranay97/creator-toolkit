@@ -551,25 +551,54 @@
 
                     <!-- Instagram Posts Grid -->
                     <div style="width: 100%; max-width: 900px;">
-                        <p style="color: var(--text-secondary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; margin-bottom: 16px;">Latest on Instagram</p>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+                        <p style="color: var(--text-secondary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; margin-bottom: 20px;">Latest on Instagram</p>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 24px;">
 
-                            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DINcg69x3zC/?utm_source=ig_embed&utm_campaign=loading" data-instgrm-version="14" style="background:#18181b; border:1px solid #27272a; border-radius:16px; margin:0; padding:0; width:100%;"></blockquote>
+                            <div style="background: #000; border-radius: var(--radius-sm); overflow: hidden;">
+                                <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DINcg69x3zC/?utm_source=ig_embed&utm_campaign=loading" data-instgrm-version="14" style="background:#000; border:0; border-radius:0; margin:0; padding:0; width:100%; min-width:0;"></blockquote>
+                            </div>
 
-                            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DK-DGlwPRpx/?utm_source=ig_embed&utm_campaign=loading" data-instgrm-version="14" style="background:#18181b; border:1px solid #27272a; border-radius:16px; margin:0; padding:0; width:100%;"></blockquote>
+                            <div style="background: #000; border-radius: var(--radius-sm); overflow: hidden;">
+                                <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DK-DGlwPRpx/?utm_source=ig_embed&utm_campaign=loading" data-instgrm-version="14" style="background:#000; border:0; border-radius:0; margin:0; padding:0; width:100%; min-width:0;"></blockquote>
+                            </div>
 
-                            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DNi4ydkvklg/?utm_source=ig_embed&utm_campaign=loading" data-instgrm-version="14" style="background:#18181b; border:1px solid #27272a; border-radius:16px; margin:0; padding:0; width:100%;"></blockquote>
+                            <div style="background: #000; border-radius: var(--radius-sm); overflow: hidden;">
+                                <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DNi4ydkvklg/?utm_source=ig_embed&utm_campaign=loading" data-instgrm-version="14" style="background:#000; border:0; border-radius:0; margin:0; padding:0; width:100%; min-width:0;"></blockquote>
+                            </div>
 
-                            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DLXxNSSucDT/?utm_source=ig_embed&utm_campaign=loading" data-instgrm-version="14" style="background:#18181b; border:1px solid #27272a; border-radius:16px; margin:0; padding:0; width:100%;"></blockquote>
+                            <div style="background: #000; border-radius: var(--radius-sm); overflow: hidden;">
+                                <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DLXxNSSucDT/?utm_source=ig_embed&utm_campaign=loading" data-instgrm-version="14" style="background:#000; border:0; border-radius:0; margin:0; padding:0; width:100%; min-width:0;"></blockquote>
+                            </div>
 
-                            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DUBCHpGDqGe/?utm_source=ig_embed&utm_campaign=loading" data-instgrm-version="14" style="background:#18181b; border:1px solid #27272a; border-radius:16px; margin:0; padding:0; width:100%;"></blockquote>
+                            <div style="background: #000; border-radius: var(--radius-sm); overflow: hidden;">
+                                <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DUBCHpGDqGe/?utm_source=ig_embed&utm_campaign=loading" data-instgrm-version="14" style="background:#000; border:0; border-radius:0; margin:0; padding:0; width:100%; min-width:0;"></blockquote>
+                            </div>
 
-                            <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DKfFtCvuXVB/?utm_source=ig_embed&utm_campaign=loading" data-instgrm-version="14" style="background:#18181b; border:1px solid #27272a; border-radius:16px; margin:0; padding:0; width:100%;"></blockquote>
+                            <div style="background: #000; border-radius: var(--radius-sm); overflow: hidden;">
+                                <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DKfFtCvuXVB/?utm_source=ig_embed&utm_campaign=loading" data-instgrm-version="14" style="background:#000; border:0; border-radius:0; margin:0; padding:0; width:100%; min-width:0;"></blockquote>
+                            </div>
 
                         </div>
                     </div>
                     <!-- Instagram embed script with Iframely fallback -->
                     <script async onerror="var a=document.createElement('script');a.src='https://iframely.net/files/instagram_embed.js';document.body.appendChild(a);" src="https://www.instagram.com/embed.js"></script>
+                    <style>
+                        /* Override Instagram embed white backgrounds where possible */
+                        .instagram-media, .instagram-media-rendered {
+                            background: #000 !important;
+                            border: none !important;
+                            box-shadow: none !important;
+                            min-width: 0 !important;
+                        }
+                        .instagram-media iframe {
+                            border-radius: var(--radius-sm) !important;
+                        }
+                        @media (max-width: 768px) {
+                            #view-about [style*="grid-template-columns"] {
+                                grid-template-columns: 1fr !important;
+                            }
+                        }
+                    </style>
                 </div>
             </section>
 
